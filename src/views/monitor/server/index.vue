@@ -1,20 +1,20 @@
 <script setup lang="ts">
-import type { ComponentInternalInstance } from 'vue'
-import { getCurrentInstance, ref } from 'vue'
-import { getServer } from '@/api/monitor/server'
+import { getCurrentInstance, ref } from "vue";
+import { getServer } from "@/api/monitor/server";
+import type { ComponentInternalInstance } from "vue";
 
-const server = ref<any>([])
-const { proxy } = getCurrentInstance() as ComponentInternalInstance
+const server = ref<any>([]);
+const { proxy } = getCurrentInstance() as ComponentInternalInstance;
 
 function getList() {
-  proxy!.$modal.loading('正在加载服务监控数据，请稍候！')
+  proxy!.$modal.loading("正在加载服务监控数据，请稍候！");
   getServer().then((response) => {
-    server.value = response.data
-    proxy!.$modal.closeLoading()
-  })
+    server.value = response.data;
+    proxy!.$modal.closeLoading();
+  });
 }
 
-getList()
+getList();
 </script>
 
 <template>
@@ -23,30 +23,25 @@ getList()
       <el-col :span="12" class="card-box">
         <el-card>
           <template #header>
-            <Cpu style="width: 1em; height: 1em; vertical-align: middle;" /> <span style="vertical-align: middle;">CPU</span>
+            <Cpu style="width: 1em; height: 1em; vertical-align: middle" />
+            <span style="vertical-align: middle">CPU</span>
           </template>
           <div class="el-table el-table--enable-row-hover el-table--medium">
             <table cellspacing="0" style="width: 100%">
               <thead>
                 <tr>
                   <th class="el-table__cell is-leaf">
-                    <div class="cell">
-                      属性
-                    </div>
+                    <div class="cell">属性</div>
                   </th>
                   <th class="el-table__cell is-leaf">
-                    <div class="cell">
-                      值
-                    </div>
+                    <div class="cell">值</div>
                   </th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <td class="el-table__cell is-leaf">
-                    <div class="cell">
-                      核心数
-                    </div>
+                    <div class="cell">核心数</div>
                   </td>
                   <td class="el-table__cell is-leaf">
                     <div v-if="server.cpu" class="cell">
@@ -56,9 +51,7 @@ getList()
                 </tr>
                 <tr>
                   <td class="el-table__cell is-leaf">
-                    <div class="cell">
-                      用户使用率
-                    </div>
+                    <div class="cell">用户使用率</div>
                   </td>
                   <td class="el-table__cell is-leaf">
                     <div v-if="server.cpu" class="cell">
@@ -68,9 +61,7 @@ getList()
                 </tr>
                 <tr>
                   <td class="el-table__cell is-leaf">
-                    <div class="cell">
-                      系统使用率
-                    </div>
+                    <div class="cell">系统使用率</div>
                   </td>
                   <td class="el-table__cell is-leaf">
                     <div v-if="server.cpu" class="cell">
@@ -80,9 +71,7 @@ getList()
                 </tr>
                 <tr>
                   <td class="el-table__cell is-leaf">
-                    <div class="cell">
-                      当前空闲率
-                    </div>
+                    <div class="cell">当前空闲率</div>
                   </td>
                   <td class="el-table__cell is-leaf">
                     <div v-if="server.cpu" class="cell">
@@ -99,35 +88,28 @@ getList()
       <el-col :span="12" class="card-box">
         <el-card>
           <template #header>
-            <Tickets style="width: 1em; height: 1em; vertical-align: middle;" /> <span style="vertical-align: middle;">内存</span>
+            <Tickets style="width: 1em; height: 1em; vertical-align: middle" />
+            <span style="vertical-align: middle">内存</span>
           </template>
           <div class="el-table el-table--enable-row-hover el-table--medium">
             <table cellspacing="0" style="width: 100%">
               <thead>
                 <tr>
                   <th class="el-table__cell is-leaf">
-                    <div class="cell">
-                      属性
-                    </div>
+                    <div class="cell">属性</div>
                   </th>
                   <th class="el-table__cell is-leaf">
-                    <div class="cell">
-                      内存
-                    </div>
+                    <div class="cell">内存</div>
                   </th>
                   <th class="el-table__cell is-leaf">
-                    <div class="cell">
-                      JVM
-                    </div>
+                    <div class="cell">JVM</div>
                   </th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <td class="el-table__cell is-leaf">
-                    <div class="cell">
-                      总内存
-                    </div>
+                    <div class="cell">总内存</div>
                   </td>
                   <td class="el-table__cell is-leaf">
                     <div v-if="server.mem" class="cell">
@@ -142,9 +124,7 @@ getList()
                 </tr>
                 <tr>
                   <td class="el-table__cell is-leaf">
-                    <div class="cell">
-                      已用内存
-                    </div>
+                    <div class="cell">已用内存</div>
                   </td>
                   <td class="el-table__cell is-leaf">
                     <div v-if="server.mem" class="cell">
@@ -159,9 +139,7 @@ getList()
                 </tr>
                 <tr>
                   <td class="el-table__cell is-leaf">
-                    <div class="cell">
-                      剩余内存
-                    </div>
+                    <div class="cell">剩余内存</div>
                   </td>
                   <td class="el-table__cell is-leaf">
                     <div v-if="server.mem" class="cell">
@@ -176,9 +154,7 @@ getList()
                 </tr>
                 <tr>
                   <td class="el-table__cell is-leaf">
-                    <div class="cell">
-                      使用率
-                    </div>
+                    <div class="cell">使用率</div>
                   </td>
                   <td class="el-table__cell is-leaf">
                     <div
@@ -208,16 +184,15 @@ getList()
       <el-col :span="24" class="card-box">
         <el-card>
           <template #header>
-            <Monitor style="width: 1em; height: 1em; vertical-align: middle;" /> <span style="vertical-align: middle;">服务器信息</span>
+            <Monitor style="width: 1em; height: 1em; vertical-align: middle" />
+            <span style="vertical-align: middle">服务器信息</span>
           </template>
           <div class="el-table el-table--enable-row-hover el-table--medium">
             <table cellspacing="0" style="width: 100%">
               <tbody>
                 <tr>
                   <td class="el-table__cell is-leaf">
-                    <div class="cell">
-                      服务器名称
-                    </div>
+                    <div class="cell">服务器名称</div>
                   </td>
                   <td class="el-table__cell is-leaf">
                     <div v-if="server.sys" class="cell">
@@ -225,9 +200,7 @@ getList()
                     </div>
                   </td>
                   <td class="el-table__cell is-leaf">
-                    <div class="cell">
-                      操作系统
-                    </div>
+                    <div class="cell">操作系统</div>
                   </td>
                   <td class="el-table__cell is-leaf">
                     <div v-if="server.sys" class="cell">
@@ -237,9 +210,7 @@ getList()
                 </tr>
                 <tr>
                   <td class="el-table__cell is-leaf">
-                    <div class="cell">
-                      服务器IP
-                    </div>
+                    <div class="cell">服务器IP</div>
                   </td>
                   <td class="el-table__cell is-leaf">
                     <div v-if="server.sys" class="cell">
@@ -247,9 +218,7 @@ getList()
                     </div>
                   </td>
                   <td class="el-table__cell is-leaf">
-                    <div class="cell">
-                      系统架构
-                    </div>
+                    <div class="cell">系统架构</div>
                   </td>
                   <td class="el-table__cell is-leaf">
                     <div v-if="server.sys" class="cell">
@@ -266,16 +235,17 @@ getList()
       <el-col :span="24" class="card-box">
         <el-card>
           <template #header>
-            <CoffeeCup style="width: 1em; height: 1em; vertical-align: middle;" /> <span style="vertical-align: middle;">Java虚拟机信息</span>
+            <CoffeeCup
+              style="width: 1em; height: 1em; vertical-align: middle"
+            />
+            <span style="vertical-align: middle">Java虚拟机信息</span>
           </template>
           <div class="el-table el-table--enable-row-hover el-table--medium">
             <table cellspacing="0" style="width: 100%; table-layout: fixed">
               <tbody>
                 <tr>
                   <td class="el-table__cell is-leaf">
-                    <div class="cell">
-                      Java名称
-                    </div>
+                    <div class="cell">Java名称</div>
                   </td>
                   <td class="el-table__cell is-leaf">
                     <div v-if="server.jvm" class="cell">
@@ -283,9 +253,7 @@ getList()
                     </div>
                   </td>
                   <td class="el-table__cell is-leaf">
-                    <div class="cell">
-                      Java版本
-                    </div>
+                    <div class="cell">Java版本</div>
                   </td>
                   <td class="el-table__cell is-leaf">
                     <div v-if="server.jvm" class="cell">
@@ -295,9 +263,7 @@ getList()
                 </tr>
                 <tr>
                   <td class="el-table__cell is-leaf">
-                    <div class="cell">
-                      启动时间
-                    </div>
+                    <div class="cell">启动时间</div>
                   </td>
                   <td class="el-table__cell is-leaf">
                     <div v-if="server.jvm" class="cell">
@@ -305,9 +271,7 @@ getList()
                     </div>
                   </td>
                   <td class="el-table__cell is-leaf">
-                    <div class="cell">
-                      运行时长
-                    </div>
+                    <div class="cell">运行时长</div>
                   </td>
                   <td class="el-table__cell is-leaf">
                     <div v-if="server.jvm" class="cell">
@@ -317,9 +281,7 @@ getList()
                 </tr>
                 <tr>
                   <td colspan="1" class="el-table__cell is-leaf">
-                    <div class="cell">
-                      安装路径
-                    </div>
+                    <div class="cell">安装路径</div>
                   </td>
                   <td colspan="3" class="el-table__cell is-leaf">
                     <div v-if="server.jvm" class="cell">
@@ -329,9 +291,7 @@ getList()
                 </tr>
                 <tr>
                   <td colspan="1" class="el-table__cell is-leaf">
-                    <div class="cell">
-                      项目路径
-                    </div>
+                    <div class="cell">项目路径</div>
                   </td>
                   <td colspan="3" class="el-table__cell is-leaf">
                     <div v-if="server.sys" class="cell">
@@ -341,9 +301,7 @@ getList()
                 </tr>
                 <tr>
                   <td colspan="1" class="el-table__cell is-leaf">
-                    <div class="cell">
-                      运行参数
-                    </div>
+                    <div class="cell">运行参数</div>
                   </td>
                   <td colspan="3" class="el-table__cell is-leaf">
                     <div v-if="server.jvm" class="cell">
@@ -360,46 +318,35 @@ getList()
       <el-col :span="24" class="card-box">
         <el-card>
           <template #header>
-            <MessageBox style="width: 1em; height: 1em; vertical-align: middle;" /> <span style="vertical-align: middle;">磁盘状态</span>
+            <MessageBox
+              style="width: 1em; height: 1em; vertical-align: middle"
+            />
+            <span style="vertical-align: middle">磁盘状态</span>
           </template>
           <div class="el-table el-table--enable-row-hover el-table--medium">
             <table cellspacing="0" style="width: 100%">
               <thead>
                 <tr>
                   <th class="el-table__cell el-table__cell is-leaf">
-                    <div class="cell">
-                      盘符路径
-                    </div>
+                    <div class="cell">盘符路径</div>
                   </th>
                   <th class="el-table__cell is-leaf">
-                    <div class="cell">
-                      文件系统
-                    </div>
+                    <div class="cell">文件系统</div>
                   </th>
                   <th class="el-table__cell is-leaf">
-                    <div class="cell">
-                      盘符类型
-                    </div>
+                    <div class="cell">盘符类型</div>
                   </th>
                   <th class="el-table__cell is-leaf">
-                    <div class="cell">
-                      总大小
-                    </div>
+                    <div class="cell">总大小</div>
                   </th>
                   <th class="el-table__cell is-leaf">
-                    <div class="cell">
-                      可用大小
-                    </div>
+                    <div class="cell">可用大小</div>
                   </th>
                   <th class="el-table__cell is-leaf">
-                    <div class="cell">
-                      已用大小
-                    </div>
+                    <div class="cell">已用大小</div>
                   </th>
                   <th class="el-table__cell is-leaf">
-                    <div class="cell">
-                      已用百分比
-                    </div>
+                    <div class="cell">已用百分比</div>
                   </th>
                 </tr>
               </thead>
@@ -436,7 +383,10 @@ getList()
                     </div>
                   </td>
                   <td class="el-table__cell is-leaf">
-                    <div class="cell" :class="{ 'text-danger': sysFile.usage > 80 }">
+                    <div
+                      class="cell"
+                      :class="{ 'text-danger': sysFile.usage > 80 }"
+                    >
                       {{ sysFile.usage }}%
                     </div>
                   </td>

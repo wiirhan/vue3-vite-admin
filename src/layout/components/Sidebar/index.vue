@@ -1,32 +1,32 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useRoute } from 'vue-router'
-import Logo from './Logo.vue'
-import SidebarItem from './SidebarItem.vue'
-import variables from '@/assets/styles/variables.module.scss'
-import useAppStore from '@/store/modules/app'
-import useSettingsStore from '@/store/modules/settings'
-import usePermissionStore from '@/store/modules/permission'
+import { computed } from "vue";
+import { useRoute } from "vue-router";
+import variables from "@/assets/styles/variables.module.scss";
+import useAppStore from "@/store/modules/app";
+import usePermissionStore from "@/store/modules/permission";
+import useSettingsStore from "@/store/modules/settings";
+import Logo from "./Logo.vue";
+import SidebarItem from "./SidebarItem.vue";
 
-const route = useRoute()
-const appStore = useAppStore()
-const settingsStore = useSettingsStore()
-const permissionStore = usePermissionStore()
+const route = useRoute();
+const appStore = useAppStore();
+const settingsStore = useSettingsStore();
+const permissionStore = usePermissionStore();
 
-const sidebarRouters = computed(() => permissionStore.sidebarRouters)
-const showLogo = computed(() => settingsStore.sidebarLogo)
-const sideTheme = computed(() => settingsStore.sideTheme)
-const theme = computed(() => settingsStore.theme)
-const isCollapse = computed(() => !appStore.sidebar.opened)
+const sidebarRouters = computed(() => permissionStore.sidebarRouters);
+const showLogo = computed(() => settingsStore.sidebarLogo);
+const sideTheme = computed(() => settingsStore.sideTheme);
+const theme = computed(() => settingsStore.theme);
+const isCollapse = computed(() => !appStore.sidebar.opened);
 
 const activeMenu = computed(() => {
-  const { meta, path } = route
+  const { meta, path } = route;
   // if set path, the sidebar will highlight the path you set
   if (meta.activeMenu) {
-    return meta.activeMenu
+    return meta.activeMenu;
   }
-  return path
-})
+  return path;
+});
 </script>
 
 <template>
@@ -34,7 +34,9 @@ const activeMenu = computed(() => {
     :class="{ 'has-logo': showLogo }"
     :style="{
       backgroundColor:
-        sideTheme === 'theme-dark' ? variables.menuBackground : variables.menuLightBackground,
+        sideTheme === 'theme-dark'
+          ? variables.menuBackground
+          : variables.menuLightBackground,
     }"
   >
     <Logo v-if="showLogo" :collapse="isCollapse" />
@@ -43,9 +45,15 @@ const activeMenu = computed(() => {
         :default-active="activeMenu"
         :collapse="isCollapse"
         :background-color="
-          sideTheme === 'theme-dark' ? variables.menuBackground : variables.menuLightBackground
+          sideTheme === 'theme-dark'
+            ? variables.menuBackground
+            : variables.menuLightBackground
         "
-        :text-color="sideTheme === 'theme-dark' ? variables.menuColor : variables.menuLightColor"
+        :text-color="
+          sideTheme === 'theme-dark'
+            ? variables.menuColor
+            : variables.menuLightColor
+        "
         :unique-opened="true"
         :active-text-color="theme"
         :collapse-transition="false"

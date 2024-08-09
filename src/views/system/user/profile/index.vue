@@ -1,30 +1,30 @@
 <script setup name="Profile" lang="ts">
-import { reactive, ref } from 'vue'
-import userAvatar from './userAvatar.vue'
-import userInfo from './userInfo.vue'
-import resetPwd from './resetPwd.vue'
-import { getUserProfile } from '@/api/system/user'
+import { reactive, ref } from "vue";
+import { getUserProfile } from "@/api/system/user";
+import resetPwd from "./resetPwd.vue";
+import userAvatar from "./userAvatar.vue";
+import userInfo from "./userInfo.vue";
 
-const activeTab = ref('userinfo')
+const activeTab = ref("userinfo");
 const state = reactive<{
-  user: any
-  roleGroup: any
-  postGroup: any
+  user: any;
+  roleGroup: any;
+  postGroup: any;
 }>({
   user: {},
   roleGroup: {},
   postGroup: {},
-})
+});
 
 function getUser() {
   getUserProfile().then((response: any) => {
-    state.user = response.data
-    state.roleGroup = response.roleGroup
-    state.postGroup = response.postGroup
-  })
+    state.user = response.data;
+    state.roleGroup = response.roleGroup;
+    state.postGroup = response.postGroup;
+  });
 }
 
-getUser()
+getUser();
 </script>
 
 <template>

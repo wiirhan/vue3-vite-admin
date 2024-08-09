@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { useRoute } from 'vue-router'
-import InnerLink from '../InnerLink/index.vue'
-import useTagsViewStore from '@/store/modules/tagsView'
+import { useRoute } from "vue-router";
+import useTagsViewStore from "@/store/modules/tagsView";
+import InnerLink from "../InnerLink/index.vue";
 
-const route = useRoute()
-const tagsViewStore = useTagsViewStore()
+const route = useRoute();
+const tagsViewStore = useTagsViewStore();
 </script>
 
 <template>
@@ -14,7 +14,7 @@ const tagsViewStore = useTagsViewStore()
       v-show="route.path === item.path"
       :key="item.path"
       :iframe-id="`iframe${index}`"
-      :src="(item.meta.link as any)"
+      :src="item.meta.link as any"
     />
   </transition-group>
 </template>

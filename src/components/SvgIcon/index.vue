@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, defineComponent } from 'vue'
+import { computed, defineComponent } from "vue";
 
 export default defineComponent({
   props: {
@@ -9,11 +9,11 @@ export default defineComponent({
     },
     className: {
       type: String,
-      default: '',
+      default: "",
     },
     color: {
       type: String,
-      default: '',
+      default: "",
     },
   },
   setup(props) {
@@ -21,13 +21,13 @@ export default defineComponent({
       iconName: computed(() => `#icon-${props.iconClass}`),
       svgClass: computed(() => {
         if (props.className) {
-          return `svg-icon ${props.className}`
+          return `svg-icon ${props.className}`;
         }
-        return 'svg-icon'
+        return "svg-icon";
       }),
-    }
+    };
   },
-})
+});
 </script>
 
 <template>

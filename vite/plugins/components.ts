@@ -1,8 +1,8 @@
-import Components from 'unplugin-vue-components/vite'
-import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
+import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
+import Components from "unplugin-vue-components/vite";
 
 export default function createComponents() {
   return Components({
     resolvers: [ElementPlusResolver()],
-  })
+  });
 }

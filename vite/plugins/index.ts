@@ -1,20 +1,23 @@
-import vue from '@vitejs/plugin-vue'
+import vue from "@vitejs/plugin-vue";
 
-import type { PluginOption } from 'vite'
-import createAutoImport from './auto-import'
-import createComponents from './components'
-import createSvgIcon from './svg-icon'
-import createCompression from './compression'
-import createSetupExtend from './setup-extend'
+import createAutoImport from "./auto-import";
+import createComponents from "./components";
+import createCompression from "./compression";
+import createSetupExtend from "./setup-extend";
+import createSvgIcon from "./svg-icon";
+import type { PluginOption } from "vite";
 
-export default function createVitePlugins(viteEnv: Record<string, string>, isBuild = false) {
-  const vitePlugins: PluginOption[] = [vue()]
-  vitePlugins.push(createAutoImport())
-  vitePlugins.push(createComponents())
-  vitePlugins.push(createSetupExtend())
-  vitePlugins.push(createSvgIcon(isBuild))
+export default function createVitePlugins(
+  viteEnv: Record<string, string>,
+  isBuild = false,
+) {
+  const vitePlugins: PluginOption[] = [vue()];
+  vitePlugins.push(createAutoImport());
+  vitePlugins.push(createComponents());
+  vitePlugins.push(createSetupExtend());
+  vitePlugins.push(createSvgIcon(isBuild));
   if (isBuild) {
-    vitePlugins.push(...createCompression(viteEnv))
+    vitePlugins.push(...createCompression(viteEnv));
   }
-  return vitePlugins
+  return vitePlugins;
 }

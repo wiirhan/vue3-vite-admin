@@ -1,32 +1,43 @@
 <script setup name="Job" lang="ts">
-import type { ComponentInternalInstance } from 'vue'
-import { getCurrentInstance, reactive, ref, toRefs } from 'vue'
-import { useRouter } from 'vue-router'
-import { addJob, changeJobStatus, delJob, getJob, listJob, runJob, updateJob } from '@/api/monitor/job'
-import { parseTime } from '@/utils/ruoyi'
-import Crontab from '@/components/Crontab/index.vue'
+import { getCurrentInstance, reactive, ref, toRefs } from "vue";
+import { useRouter } from "vue-router";
+import {
+  addJob,
+  changeJobStatus,
+  delJob,
+  getJob,
+  listJob,
+  runJob,
+  updateJob,
+} from "@/api/monitor/job";
+import Crontab from "@/components/Crontab/index.vue";
+import { parseTime } from "@/utils/ruoyi";
+import type { ComponentInternalInstance } from "vue";
 
-const router = useRouter()
-const { proxy } = getCurrentInstance() as ComponentInternalInstance
-const { sys_job_group, sys_job_status } = proxy!.useDict('sys_job_group', 'sys_job_status')
+const router = useRouter();
+const { proxy } = getCurrentInstance() as ComponentInternalInstance;
+const { sys_job_group, sys_job_status } = proxy!.useDict(
+  "sys_job_group",
+  "sys_job_status",
+);
 
-const jobList = ref<any[]>([])
-const open = ref(false)
-const loading = ref(true)
-const showSearch = ref(true)
-const ids = ref<number[]>([])
-const single = ref(true)
-const multiple = ref(true)
-const total = ref(0)
-const title = ref('')
-const openView = ref(false)
-const openCron = ref(false)
-const expression = ref('')
+const jobList = ref<any[]>([]);
+const open = ref(false);
+const loading = ref(true);
+const showSearch = ref(true);
+const ids = ref<number[]>([]);
+const single = ref(true);
+const multiple = ref(true);
+const total = ref(0);
+const title = ref("");
+const openView = ref(false);
+const openCron = ref(false);
+const expression = ref("");
 
 const data = reactive<{
-  form: any
-  queryParams: any
-  rules: any
+  form: any;
+  queryParams: any;
+  rules: any;
 }>({
   form: {},
   queryParams: {
@@ -37,31 +48,35 @@ const data = reactive<{
     status: undefined,
   },
   rules: {
-    jobName: [{ required: true, message: '任务名称不能为空', trigger: 'blur' }],
-    invokeTarget: [{ required: true, message: '调用目标字符串不能为空', trigger: 'blur' }],
-    cronExpression: [{ required: true, message: 'cron执行表达式不能为空', trigger: 'change' }],
+    jobName: [{ required: true, message: "任务名称不能为空", trigger: "blur" }],
+    invokeTarget: [
+      { required: true, message: "调用目标字符串不能为空", trigger: "blur" },
+    ],
+    cronExpression: [
+      { required: true, message: "cron执行表达式不能为空", trigger: "change" },
+    ],
   },
-})
+});
 
-const { queryParams, form, rules } = toRefs(data)
+const { queryParams, form, rules } = toRefs(data);
 
 /** 查询定时任务列表 */
 function getList() {
-  loading.value = true
+  loading.value = true;
   listJob(queryParams.value).then((response: any) => {
-    jobList.value = response.rows
-    total.value = response.total
-    loading.value = false
-  })
+    jobList.value = response.rows;
+    total.value = response.total;
+    loading.value = false;
+  });
 }
 /** 任务组名字典翻译 */
 function jobGroupFormat(row: any, column?: any) {
-  return proxy!.selectDictLabel(sys_job_group.value, row.jobGroup)
+  return proxy!.selectDictLabel(sys_job_group.value, row.jobGroup);
 }
 /** 取消按钮 */
 function cancel() {
-  open.value = false
-  reset()
+  open.value = false;
+  reset();
 }
 /** 表单重置 */
 function reset() {
@@ -73,105 +88,105 @@ function reset() {
     cronExpression: undefined,
     misfirePolicy: 1,
     concurrent: 1,
-    status: '0',
-  }
-  proxy!.resetForm('jobRef')
+    status: "0",
+  };
+  proxy!.resetForm("jobRef");
 }
 /** 搜索按钮操作 */
 function handleQuery() {
-  queryParams.value.pageNum = 1
-  getList()
+  queryParams.value.pageNum = 1;
+  getList();
 }
 /** 重置按钮操作 */
 function resetQuery() {
-  proxy!.resetForm('queryRef')
-  handleQuery()
+  proxy!.resetForm("queryRef");
+  handleQuery();
 }
 // 多选框选中数据
 function handleSelectionChange(selection: any[]) {
-  ids.value = selection.map(item => item.jobId)
-  single.value = selection.length !== 1
-  multiple.value = !selection.length
+  ids.value = selection.map((item) => item.jobId);
+  single.value = selection.length !== 1;
+  multiple.value = !selection.length;
 }
 // 更多操作触发
 function handleCommand(command: any, row: any) {
   switch (command) {
-    case 'handleRun':
-      handleRun(row)
-      break
-    case 'handleView':
-      handleView(row)
-      break
-    case 'handleJobLog':
-      handleJobLog(row)
-      break
+    case "handleRun":
+      handleRun(row);
+      break;
+    case "handleView":
+      handleView(row);
+      break;
+    case "handleJobLog":
+      handleJobLog(row);
+      break;
     default:
-      break
+      break;
   }
 }
 // 任务状态修改
 function handleStatusChange(row: any) {
-  const text = row.status === '0' ? '启用' : '停用'
+  const text = row.status === "0" ? "启用" : "停用";
   proxy!.$modal
     .confirm(`确认要"${text}""${row.jobName}"任务吗?`)
     .then(() => {
-      return changeJobStatus(row.jobId, row.status)
+      return changeJobStatus(row.jobId, row.status);
     })
     .then(() => {
-      proxy!.$modal.msgSuccess(`${text}成功`)
+      proxy!.$modal.msgSuccess(`${text}成功`);
     })
     .catch(() => {
-      row.status = row.status === '0' ? '1' : '0'
-    })
+      row.status = row.status === "0" ? "1" : "0";
+    });
 }
 /* 立即执行一次 */
 function handleRun(row: any) {
   proxy!.$modal
     .confirm(`确认要立即执行一次"${row.jobName}"任务吗?`)
     .then(() => {
-      return runJob(row.jobId, row.jobGroup)
+      return runJob(row.jobId, row.jobGroup);
     })
     .then(() => {
-      proxy!.$modal.msgSuccess('执行成功')
-    })
+      proxy!.$modal.msgSuccess("执行成功");
+    });
   //   .catch(() => {});
 }
 /** 任务详细信息 */
 function handleView(row: any) {
   getJob(row.jobId).then((response) => {
-    form.value = response.data
-    openView.value = true
-  })
+    form.value = response.data;
+    openView.value = true;
+  });
 }
 /** cron表达式按钮操作 */
 function handleShowCron() {
-  expression.value = form.value.cronExpression
-  openCron.value = true
+  expression.value = form.value.cronExpression;
+  openCron.value = true;
 }
 /** 确定后回传值 */
 function crontabFill(value: any) {
-  form.value.cronExpression = value
+  form.value.cronExpression = value;
 }
 /** 任务日志列表查询 */
 function handleJobLog(row: any) {
-  const jobId = row.jobId || 0
-  router.push(`/monitor/job-log/index/${jobId}`)
+  const jobId = row.jobId || 0;
+  router.push(`/monitor/job-log/index/${jobId}`);
 }
 /** 新增按钮操作 */
 function handleAdd() {
-  reset()
-  open.value = true
-  title.value = '添加任务'
+  reset();
+  open.value = true;
+  title.value = "添加任务";
 }
 /** 修改按钮操作 */
 function handleUpdate(row: any) {
-  reset()
-  const jobId = row.jobId || ids.value
+  reset();
+  const jobId = row.jobId || ids.value;
   getJob(jobId).then((response) => {
-    form.value = response.data
-    open.value = true
-    title.value = '修改任务'
-  })
+    form.value = response.data;
+    open.value = true;
+    title.value = "修改任务";
+  });
 }
 /** 提交按钮 */
 function submitForm() {
@@ -179,52 +194,56 @@ function submitForm() {
     if (valid) {
       if (form.value.jobId !== undefined) {
         updateJob(form.value).then((response) => {
-          proxy!.$modal.msgSuccess('修改成功')
-          open.value = false
-          getList()
-        })
-      }
-      else {
+          proxy!.$modal.msgSuccess("修改成功");
+          open.value = false;
+          getList();
+        });
+      } else {
         addJob(form.value).then((response) => {
-          proxy!.$modal.msgSuccess('新增成功')
-          open.value = false
-          getList()
-        })
+          proxy!.$modal.msgSuccess("新增成功");
+          open.value = false;
+          getList();
+        });
       }
     }
-  })
+  });
 }
 /** 删除按钮操作 */
 function handleDelete(row: any) {
-  const jobIds = row.jobId || ids.value
+  const jobIds = row.jobId || ids.value;
   proxy!.$modal
     .confirm(`是否确认删除定时任务编号为"${jobIds}"的数据项?`)
     .then(() => {
-      return delJob(jobIds)
+      return delJob(jobIds);
     })
     .then(() => {
-      getList()
-      proxy!.$modal.msgSuccess('删除成功')
-    })
+      getList();
+      proxy!.$modal.msgSuccess("删除成功");
+    });
   //   .catch(() => {});
 }
 /** 导出按钮操作 */
 function handleExport() {
   proxy!.download(
-    'monitor/job/export',
+    "monitor/job/export",
     {
       ...queryParams.value,
     },
-        `job_${new Date().getTime()}.xlsx`,
-  )
+    `job_${Date.now()}.xlsx`,
+  );
 }
 
-getList()
+getList();
 </script>
 
 <template>
   <div class="app-container">
-    <el-form v-show="showSearch" ref="queryRef" :model="queryParams" :inline="true">
+    <el-form
+      v-show="showSearch"
+      ref="queryRef"
+      :model="queryParams"
+      :inline="true"
+    >
       <el-form-item label="任务名称" prop="jobName">
         <el-input
           v-model="queryParams.jobName"
@@ -235,7 +254,12 @@ getList()
         />
       </el-form-item>
       <el-form-item label="任务组名" prop="jobGroup">
-        <el-select v-model="queryParams.jobGroup" placeholder="请选择任务组名" clearable style="width: 200px">
+        <el-select
+          v-model="queryParams.jobGroup"
+          placeholder="请选择任务组名"
+          clearable
+          style="width: 200px"
+        >
           <el-option
             v-for="dict in sys_job_group"
             :key="dict.value"
@@ -245,7 +269,12 @@ getList()
         </el-select>
       </el-form-item>
       <el-form-item label="任务状态" prop="status">
-        <el-select v-model="queryParams.status" placeholder="请选择任务状态" clearable style="width: 200px">
+        <el-select
+          v-model="queryParams.status"
+          placeholder="请选择任务状态"
+          clearable
+          style="width: 200px"
+        >
           <el-option
             v-for="dict in sys_job_status"
             :key="dict.value"
@@ -258,9 +287,7 @@ getList()
         <el-button type="primary" icon="Search" @click="handleQuery">
           搜索
         </el-button>
-        <el-button icon="Refresh" @click="resetQuery">
-          重置
-        </el-button>
+        <el-button icon="Refresh" @click="resetQuery"> 重置 </el-button>
       </el-form-item>
     </el-form>
 
@@ -325,10 +352,24 @@ getList()
       <right-toolbar v-model:showSearch="showSearch" @query-table="getList" />
     </el-row>
 
-    <el-table v-loading="loading" :data="jobList" @selection-change="handleSelectionChange">
+    <el-table
+      v-loading="loading"
+      :data="jobList"
+      @selection-change="handleSelectionChange"
+    >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="任务编号" width="100" align="center" prop="jobId" />
-      <el-table-column label="任务名称" align="center" prop="jobName" :show-overflow-tooltip="true" />
+      <el-table-column
+        label="任务编号"
+        width="100"
+        align="center"
+        prop="jobId"
+      />
+      <el-table-column
+        label="任务名称"
+        align="center"
+        prop="jobName"
+        :show-overflow-tooltip="true"
+      />
       <el-table-column label="任务组名" align="center" prop="jobGroup">
         <template #default="scope">
           <dict-tag :options="sys_job_group" :value="scope.row.jobGroup" />
@@ -356,7 +397,12 @@ getList()
           />
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="200" class-name="small-padding fixed-width">
+      <el-table-column
+        label="操作"
+        align="center"
+        width="200"
+        class-name="small-padding fixed-width"
+      >
         <template #default="scope">
           <el-tooltip content="修改" placement="top">
             <el-button
@@ -445,15 +491,18 @@ getList()
                     <template #content>
                       <div>
                         Bean调用示例：ryTask.ryParams('ry')
-                        <br>Class类调用示例：com.ruoyi.quartz.task.RyTask.ryParams('ry')
-                        <br>参数说明：支持字符串，布尔类型，长整型，浮点型，整型
+                        <br />Class类调用示例：com.ruoyi.quartz.task.RyTask.ryParams('ry')
+                        <br />参数说明：支持字符串，布尔类型，长整型，浮点型，整型
                       </div>
                     </template>
                     <el-icon><question-filled /></el-icon>
                   </el-tooltip>
                 </span>
               </template>
-              <el-input v-model="form.invokeTarget" placeholder="请输入调用目标字符串" />
+              <el-input
+                v-model="form.invokeTarget"
+                placeholder="请输入调用目标字符串"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="24">
@@ -474,27 +523,17 @@ getList()
           <el-col :span="24">
             <el-form-item label="执行策略" prop="misfirePolicy">
               <el-radio-group v-model="form.misfirePolicy">
-                <el-radio-button label="1">
-                  立即执行
-                </el-radio-button>
-                <el-radio-button label="2">
-                  执行一次
-                </el-radio-button>
-                <el-radio-button label="3">
-                  放弃执行
-                </el-radio-button>
+                <el-radio-button label="1"> 立即执行 </el-radio-button>
+                <el-radio-button label="2"> 执行一次 </el-radio-button>
+                <el-radio-button label="3"> 放弃执行 </el-radio-button>
               </el-radio-group>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="是否并发" prop="concurrent">
               <el-radio-group v-model="form.concurrent">
-                <el-radio-button label="0">
-                  允许
-                </el-radio-button>
-                <el-radio-button label="1">
-                  禁止
-                </el-radio-button>
+                <el-radio-button label="0"> 允许 </el-radio-button>
+                <el-radio-button label="1"> 禁止 </el-radio-button>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -515,16 +554,17 @@ getList()
       </el-form>
       <template #footer>
         <div class="dialog-footer">
-          <el-button type="primary" @click="submitForm">
-            确 定
-          </el-button>
-          <el-button @click="cancel">
-            取 消
-          </el-button>
+          <el-button type="primary" @click="submitForm"> 确 定 </el-button>
+          <el-button @click="cancel"> 取 消 </el-button>
         </div>
       </template>
     </el-dialog>
-    <el-dialog v-model="openCron" title="Cron表达式生成器" append-to-body destroy-on-close>
+    <el-dialog
+      v-model="openCron"
+      title="Cron表达式生成器"
+      append-to-body
+      destroy-on-close
+    >
       <Crontab
         ref="crontabRef"
         :expression="expression"
@@ -559,9 +599,7 @@ getList()
           </el-col>
           <el-col :span="12">
             <el-form-item label="下次执行时间：">
-              {{
-                parseTime(form.nextValidTime)
-              }}
+              {{ parseTime(form.nextValidTime) }}
             </el-form-item>
           </el-col>
           <el-col :span="24">
@@ -571,47 +609,29 @@ getList()
           </el-col>
           <el-col :span="12">
             <el-form-item label="任务状态：">
-              <div v-if="form.status == 0">
-                正常
-              </div>
-              <div v-else-if="form.status == 1">
-                失败
-              </div>
+              <div v-if="form.status == 0">正常</div>
+              <div v-else-if="form.status == 1">失败</div>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="是否并发：">
-              <div v-if="form.concurrent == 0">
-                允许
-              </div>
-              <div v-else-if="form.concurrent == 1">
-                禁止
-              </div>
+              <div v-if="form.concurrent == 0">允许</div>
+              <div v-else-if="form.concurrent == 1">禁止</div>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="执行策略：">
-              <div v-if="form.misfirePolicy == 0">
-                默认策略
-              </div>
-              <div v-else-if="form.misfirePolicy == 1">
-                立即执行
-              </div>
-              <div v-else-if="form.misfirePolicy == 2">
-                执行一次
-              </div>
-              <div v-else-if="form.misfirePolicy == 3">
-                放弃执行
-              </div>
+              <div v-if="form.misfirePolicy == 0">默认策略</div>
+              <div v-else-if="form.misfirePolicy == 1">立即执行</div>
+              <div v-else-if="form.misfirePolicy == 2">执行一次</div>
+              <div v-else-if="form.misfirePolicy == 3">放弃执行</div>
             </el-form-item>
           </el-col>
         </el-row>
       </el-form>
       <template #footer>
         <div class="dialog-footer">
-          <el-button @click="openView = false">
-            关 闭
-          </el-button>
+          <el-button @click="openView = false"> 关 闭 </el-button>
         </div>
       </template>
     </el-dialog>

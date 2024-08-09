@@ -1,49 +1,49 @@
 <script setup name="Cache" lang="ts">
-import * as echarts from 'echarts'
-import type { ComponentInternalInstance } from 'vue'
-import { getCurrentInstance, ref } from 'vue'
-import { getCache } from '@/api/monitor/cache'
+import * as echarts from "echarts";
+import { getCurrentInstance, ref } from "vue";
+import { getCache } from "@/api/monitor/cache";
+import type { ComponentInternalInstance } from "vue";
 
-const cache = ref<any>([])
-const commandstats = ref(null)
-const usedmemory = ref(null)
-const { proxy } = getCurrentInstance() as ComponentInternalInstance
+const cache = ref<any>([]);
+const commandstats = ref(null);
+const usedmemory = ref(null);
+const { proxy } = getCurrentInstance() as ComponentInternalInstance;
 
 function getList() {
-  proxy!.$modal.loading('正在加载缓存监控数据，请稍候！')
+  proxy!.$modal.loading("正在加载缓存监控数据，请稍候！");
   getCache().then((response) => {
-    proxy!.$modal.closeLoading()
-    cache.value = response.data
+    proxy!.$modal.closeLoading();
+    cache.value = response.data;
 
-    const commandstatsIntance = echarts.init(commandstats.value!, 'macarons')
+    const commandstatsIntance = echarts.init(commandstats.value!, "macarons");
     commandstatsIntance.setOption({
       tooltip: {
-        trigger: 'item',
-        formatter: '{a} <br/>{b} : {c} ({d}%)',
+        trigger: "item",
+        formatter: "{a} <br/>{b} : {c} ({d}%)",
       },
       series: [
         {
-          name: '命令',
-          type: 'pie',
-          roseType: 'radius',
+          name: "命令",
+          type: "pie",
+          roseType: "radius",
           radius: [15, 95],
-          center: ['50%', '38%'],
+          center: ["50%", "38%"],
           data: response.data.commandStats,
-          animationEasing: 'cubicInOut',
+          animationEasing: "cubicInOut",
           animationDuration: 1000,
         },
       ],
-    })
+    });
 
-    const usedmemoryInstance = echarts.init(usedmemory.value!, 'macarons')
+    const usedmemoryInstance = echarts.init(usedmemory.value!, "macarons");
     usedmemoryInstance.setOption({
       tooltip: {
         formatter: `{b} <br/>{a} : ${cache.value.info.used_memory_human}`,
       },
       series: [
         {
-          name: '峰值',
-          type: 'gauge',
+          name: "峰值",
+          type: "gauge",
           min: 0,
           max: 1000,
           detail: {
@@ -52,16 +52,16 @@ function getList() {
           data: [
             {
               value: Number.parseFloat(cache.value.info.used_memory_human),
-              name: '内存消耗',
+              name: "内存消耗",
             },
           ],
         },
       ],
-    })
-  })
+    });
+  });
 }
 
-getList()
+getList();
 </script>
 
 <template>
@@ -78,9 +78,7 @@ getList()
               <tbody>
                 <tr>
                   <td class="el-table__cell is-leaf">
-                    <div class="cell">
-                      Redis版本
-                    </div>
+                    <div class="cell">Redis版本</div>
                   </td>
                   <td class="el-table__cell is-leaf">
                     <div v-if="cache.info" class="cell">
@@ -88,19 +86,17 @@ getList()
                     </div>
                   </td>
                   <td class="el-table__cell is-leaf">
-                    <div class="cell">
-                      运行模式
-                    </div>
+                    <div class="cell">运行模式</div>
                   </td>
                   <td class="el-table__cell is-leaf">
                     <div v-if="cache.info" class="cell">
-                      {{ cache.info.redis_mode == 'standalone' ? '单机' : '集群' }}
+                      {{
+                        cache.info.redis_mode == "standalone" ? "单机" : "集群"
+                      }}
                     </div>
                   </td>
                   <td class="el-table__cell is-leaf">
-                    <div class="cell">
-                      端口
-                    </div>
+                    <div class="cell">端口</div>
                   </td>
                   <td class="el-table__cell is-leaf">
                     <div v-if="cache.info" class="cell">
@@ -108,9 +104,7 @@ getList()
                     </div>
                   </td>
                   <td class="el-table__cell is-leaf">
-                    <div class="cell">
-                      客户端数
-                    </div>
+                    <div class="cell">客户端数</div>
                   </td>
                   <td class="el-table__cell is-leaf">
                     <div v-if="cache.info" class="cell">
@@ -120,9 +114,7 @@ getList()
                 </tr>
                 <tr>
                   <td class="el-table__cell is-leaf">
-                    <div class="cell">
-                      运行时间(天)
-                    </div>
+                    <div class="cell">运行时间(天)</div>
                   </td>
                   <td class="el-table__cell is-leaf">
                     <div v-if="cache.info" class="cell">
@@ -130,9 +122,7 @@ getList()
                     </div>
                   </td>
                   <td class="el-table__cell is-leaf">
-                    <div class="cell">
-                      使用内存
-                    </div>
+                    <div class="cell">使用内存</div>
                   </td>
                   <td class="el-table__cell is-leaf">
                     <div v-if="cache.info" class="cell">
@@ -140,19 +130,17 @@ getList()
                     </div>
                   </td>
                   <td class="el-table__cell is-leaf">
-                    <div class="cell">
-                      使用CPU
-                    </div>
+                    <div class="cell">使用CPU</div>
                   </td>
                   <td class="el-table__cell is-leaf">
                     <div v-if="cache.info" class="cell">
-                      {{ parseFloat(cache.info.used_cpu_user_children).toFixed(2) }}
+                      {{
+                        parseFloat(cache.info.used_cpu_user_children).toFixed(2)
+                      }}
                     </div>
                   </td>
                   <td class="el-table__cell is-leaf">
-                    <div class="cell">
-                      内存配置
-                    </div>
+                    <div class="cell">内存配置</div>
                   </td>
                   <td class="el-table__cell is-leaf">
                     <div v-if="cache.info" class="cell">
@@ -162,19 +150,15 @@ getList()
                 </tr>
                 <tr>
                   <td class="el-table__cell is-leaf">
-                    <div class="cell">
-                      AOF是否开启
-                    </div>
+                    <div class="cell">AOF是否开启</div>
                   </td>
                   <td class="el-table__cell is-leaf">
                     <div v-if="cache.info" class="cell">
-                      {{ cache.info.aof_enabled == '0' ? '否' : '是' }}
+                      {{ cache.info.aof_enabled == "0" ? "否" : "是" }}
                     </div>
                   </td>
                   <td class="el-table__cell is-leaf">
-                    <div class="cell">
-                      RDB是否成功
-                    </div>
+                    <div class="cell">RDB是否成功</div>
                   </td>
                   <td class="el-table__cell is-leaf">
                     <div v-if="cache.info" class="cell">
@@ -182,9 +166,7 @@ getList()
                     </div>
                   </td>
                   <td class="el-table__cell is-leaf">
-                    <div class="cell">
-                      Key数量
-                    </div>
+                    <div class="cell">Key数量</div>
                   </td>
                   <td class="el-table__cell is-leaf">
                     <div v-if="cache.dbSize" class="cell">
@@ -192,9 +174,7 @@ getList()
                     </div>
                   </td>
                   <td class="el-table__cell is-leaf">
-                    <div class="cell">
-                      网络入口/出口
-                    </div>
+                    <div class="cell">网络入口/出口</div>
                   </td>
                   <td class="el-table__cell is-leaf">
                     <div v-if="cache.info" class="cell">
@@ -213,7 +193,8 @@ getList()
       <el-col :span="12" class="card-box">
         <el-card>
           <template #header>
-            <PieChart style="width: 1em; height: 1em; vertical-align: middle;" /> <span style="vertical-align: middle;">命令统计</span>
+            <PieChart style="width: 1em; height: 1em; vertical-align: middle" />
+            <span style="vertical-align: middle">命令统计</span>
           </template>
           <div class="el-table el-table--enable-row-hover el-table--medium">
             <div ref="commandstats" style="height: 420px" />
@@ -224,7 +205,8 @@ getList()
       <el-col :span="12" class="card-box">
         <el-card>
           <template #header>
-            <Odometer style="width: 1em; height: 1em; vertical-align: middle;" /> <span style="vertical-align: middle;">内存信息</span>
+            <Odometer style="width: 1em; height: 1em; vertical-align: middle" />
+            <span style="vertical-align: middle">内存信息</span>
           </template>
           <div class="el-table el-table--enable-row-hover el-table--medium">
             <div ref="usedmemory" style="height: 420px" />

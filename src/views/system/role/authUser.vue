@@ -1,108 +1,117 @@
 <script setup name="AuthUser" lang="ts">
-import type { ComponentInternalInstance } from 'vue'
-import { getCurrentInstance, reactive, ref } from 'vue'
-import { useRoute } from 'vue-router'
-import selectUser from './selectUser.vue'
-import { allocatedUserList, authUserCancel, authUserCancelAll } from '@/api/system/role'
-import { parseTime } from '@/utils/ruoyi'
+import { getCurrentInstance, reactive, ref } from "vue";
+import { useRoute } from "vue-router";
+import {
+  allocatedUserList,
+  authUserCancel,
+  authUserCancelAll,
+} from "@/api/system/role";
+import { parseTime } from "@/utils/ruoyi";
+import selectUser from "./selectUser.vue";
+import type { ComponentInternalInstance } from "vue";
 
-const route = useRoute()
-const { proxy } = getCurrentInstance() as ComponentInternalInstance
-const { sys_normal_disable } = proxy!.useDict('sys_normal_disable')
+const route = useRoute();
+const { proxy } = getCurrentInstance() as ComponentInternalInstance;
+const { sys_normal_disable } = proxy!.useDict("sys_normal_disable");
 
-const userList = ref<any[]>([])
-const loading = ref(true)
-const showSearch = ref(true)
-const multiple = ref(true)
-const total = ref(0)
-const userIds = ref<any[]>([])
+const userList = ref<any[]>([]);
+const loading = ref(true);
+const showSearch = ref(true);
+const multiple = ref(true);
+const total = ref(0);
+const userIds = ref<any[]>([]);
 
 const queryParams = reactive<{
-  pageNum: number
-  pageSize: number
-  roleId: any
-  userName: any
-  phonenumber: any
+  pageNum: number;
+  pageSize: number;
+  roleId: any;
+  userName: any;
+  phonenumber: any;
 }>({
   pageNum: 1,
   pageSize: 10,
   roleId: route.params.roleId,
   userName: undefined,
   phonenumber: undefined,
-})
+});
 
 /** 查询授权用户列表 */
 function getList() {
-  loading.value = true
+  loading.value = true;
   allocatedUserList(queryParams).then((response: any) => {
-    userList.value = response.rows
-    total.value = response.total
-    loading.value = false
-  })
+    userList.value = response.rows;
+    total.value = response.total;
+    loading.value = false;
+  });
 }
 // 返回按钮
 function handleClose() {
-  const obj = { path: '/system/role' }
-  proxy!.$tab.closeOpenPage(obj)
+  const obj = { path: "/system/role" };
+  proxy!.$tab.closeOpenPage(obj);
 }
 /** 搜索按钮操作 */
 function handleQuery() {
-  queryParams.pageNum = 1
-  getList()
+  queryParams.pageNum = 1;
+  getList();
 }
 /** 重置按钮操作 */
 function resetQuery() {
-  proxy!.resetForm('queryRef')
-  handleQuery()
+  proxy!.resetForm("queryRef");
+  handleQuery();
 }
 // 多选框选中数据
 function handleSelectionChange(selection: any[]) {
-  userIds.value = selection.map(item => item.userId)
-  multiple.value = !selection.length
+  userIds.value = selection.map((item) => item.userId);
+  multiple.value = !selection.length;
 }
 /** 打开授权用户表弹窗 */
 function openSelectUser() {
-  (proxy?.$refs.selectRef as any).show()
+  (proxy?.$refs.selectRef as any).show();
 }
 /** 取消授权按钮操作 */
 function cancelAuthUser(row: any) {
   proxy!.$modal
     .confirm(`确认要取消该用户"${row.userName}"角色吗？`)
     .then(() => {
-      return authUserCancel({ userId: row.userId, roleId: queryParams.roleId })
+      return authUserCancel({ userId: row.userId, roleId: queryParams.roleId });
     })
     .then(() => {
-      getList()
-      proxy!.$modal.msgSuccess('取消授权成功')
+      getList();
+      proxy!.$modal.msgSuccess("取消授权成功");
     })
-    .catch((e: any) => {
-      console.log(e)
-    })
+    .catch((error: any) => {
+      console.log(error);
+    });
 }
 /** 批量取消授权按钮操作 */
 function cancelAuthUserAll(row: any) {
-  const roleId = queryParams.roleId
-  const uIds = userIds.value.join(',')
+  const roleId = queryParams.roleId;
+  const uIds = userIds.value.join(",");
   proxy!.$modal
-    .confirm('是否取消选中用户授权数据项?')
+    .confirm("是否取消选中用户授权数据项?")
     .then(() => {
-      return authUserCancelAll({ roleId, userIds: uIds })
+      return authUserCancelAll({ roleId, userIds: uIds });
     })
     .then(() => {
-      getList()
-      proxy!.$modal.msgSuccess('取消授权成功')
+      getList();
+      proxy!.$modal.msgSuccess("取消授权成功");
     })
-    .catch((e: any) => {
-      console.log(e)
-    })
+    .catch((error: any) => {
+      console.log(error);
+    });
 }
 
-getList()
+getList();
 </script>
 
 <template>
   <div class="app-container">
-    <el-form v-show="showSearch" ref="queryRef" :model="queryParams" :inline="true">
+    <el-form
+      v-show="showSearch"
+      ref="queryRef"
+      :model="queryParams"
+      :inline="true"
+    >
       <el-form-item label="用户名称" prop="userName">
         <el-input
           v-model="queryParams.userName"
@@ -125,9 +134,7 @@ getList()
         <el-button type="primary" icon="Search" @click="handleQuery">
           搜索
         </el-button>
-        <el-button icon="Refresh" @click="resetQuery">
-          重置
-        </el-button>
+        <el-button icon="Refresh" @click="resetQuery"> 重置 </el-button>
       </el-form-item>
     </el-form>
 
@@ -163,23 +170,52 @@ getList()
       <right-toolbar v-model:showSearch="showSearch" @query-table="getList" />
     </el-row>
 
-    <el-table v-loading="loading" :data="userList" @selection-change="handleSelectionChange">
+    <el-table
+      v-loading="loading"
+      :data="userList"
+      @selection-change="handleSelectionChange"
+    >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="用户名称" prop="userName" :show-overflow-tooltip="true" />
-      <el-table-column label="用户昵称" prop="nickName" :show-overflow-tooltip="true" />
-      <el-table-column label="邮箱" prop="email" :show-overflow-tooltip="true" />
-      <el-table-column label="手机" prop="phonenumber" :show-overflow-tooltip="true" />
+      <el-table-column
+        label="用户名称"
+        prop="userName"
+        :show-overflow-tooltip="true"
+      />
+      <el-table-column
+        label="用户昵称"
+        prop="nickName"
+        :show-overflow-tooltip="true"
+      />
+      <el-table-column
+        label="邮箱"
+        prop="email"
+        :show-overflow-tooltip="true"
+      />
+      <el-table-column
+        label="手机"
+        prop="phonenumber"
+        :show-overflow-tooltip="true"
+      />
       <el-table-column label="状态" align="center" prop="status">
         <template #default="scope">
           <dict-tag :options="sys_normal_disable" :value="scope.row.status" />
         </template>
       </el-table-column>
-      <el-table-column label="创建时间" align="center" prop="createTime" width="180">
+      <el-table-column
+        label="创建时间"
+        align="center"
+        prop="createTime"
+        width="180"
+      >
         <template #default="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column
+        label="操作"
+        align="center"
+        class-name="small-padding fixed-width"
+      >
         <template #default="scope">
           <el-button
             v-hasPermi="['system:role:remove']"
@@ -201,6 +237,10 @@ getList()
       :total="total"
       @pagination="getList"
     />
-    <select-user ref="selectRef" :role-id="queryParams.roleId" @ok="handleQuery" />
+    <select-user
+      ref="selectRef"
+      :role-id="queryParams.roleId"
+      @ok="handleQuery"
+    />
   </div>
 </template>

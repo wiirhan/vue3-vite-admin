@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed } from "vue";
 
 const props = defineProps({
   // 数据
@@ -9,16 +9,15 @@ const props = defineProps({
   },
   // 当前的值
   value: [Number, String, Array],
-})
+});
 
 const values = computed(() => {
-  if (props.value !== null && typeof props.value !== 'undefined') {
-    return Array.isArray(props.value) ? props.value : [String(props.value)]
+  if (props.value !== null && typeof props.value !== "undefined") {
+    return Array.isArray(props.value) ? props.value : [String(props.value)];
+  } else {
+    return [];
   }
-  else {
-    return []
-  }
-})
+});
 </script>
 
 <template>
@@ -26,16 +25,20 @@ const values = computed(() => {
     <template v-for="(item, index) in options">
       <template v-if="values.includes(item.value)">
         <span
-          v-if="item.elTagType === 'default' || item.elTagType === ''" :key="item.value" :index="index"
+          v-if="item.elTagType === 'default' || item.elTagType === ''"
+          :key="item.value"
+          :index="index"
           :class="item.elTagClass"
         >
           {{ item.label }}
         </span>
         <el-tag
           v-else
-          :key="`${item.value}`" :disable-transitions="true"
+          :key="`${item.value}`"
+          :disable-transitions="true"
           :index="index"
-          :type="item.elTagType === 'primary' ? '' : item.elTagType" :class="item.elTagClass"
+          :type="item.elTagType === 'primary' ? '' : item.elTagType"
+          :class="item.elTagClass"
         >
           {{ item.label }}
         </el-tag>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref } from "vue";
 
 const props = defineProps({
   showSearch: {
@@ -17,53 +17,53 @@ const props = defineProps({
     type: Number,
     default: 10,
   },
-})
+});
 
-const emits = defineEmits(['update:showSearch', 'queryTable'])
+const emits = defineEmits(["update:showSearch", "queryTable"]);
 
 // 显隐数据
-const value = ref<any[]>([])
+const value = ref<any[]>([]);
 // 弹出层标题
-const title = ref('显示/隐藏')
+const title = ref("显示/隐藏");
 // 是否显示弹出层
-const open = ref(false)
+const open = ref(false);
 
 const style = computed(() => {
-  const ret: any = {}
+  const ret: any = {};
   if (props.gutter) {
-    ret.marginRight = `${props.gutter / 2}px`
+    ret.marginRight = `${props.gutter / 2}px`;
   }
-  return ret
-})
+  return ret;
+});
 
 // 搜索
 function toggleSearch() {
-  emits('update:showSearch', !props.showSearch)
+  emits("update:showSearch", !props.showSearch);
 }
 
 // 刷新
 function refresh() {
-  emits('queryTable')
+  emits("queryTable");
 }
 
 // 右侧列表元素变化
 function dataChange(data: any) {
   for (const item in props.columns) {
-    const key = props.columns[item as any].key
+    const key = props.columns[item as any].key;
     // eslint-disable-next-line vue/no-mutating-props
-    props.columns[item as any].visible = !data.includes(key)
+    props.columns[item as any].visible = !data.includes(key);
   }
 }
 
 // 打开显隐列dialog
 function showColumn() {
-  open.value = true
+  open.value = true;
 }
 
 // 显隐列初始默认隐藏列
 for (const item in props.columns) {
   if (props.columns[item as any].visible === false) {
-    value.value.push(Number.parseInt(item))
+    value.value.push(Number.parseInt(item));
   }
 }
 </script>
@@ -83,7 +83,13 @@ for (const item in props.columns) {
       <el-tooltip class="item" effect="dark" content="刷新" placement="top">
         <el-button circle icon="Refresh" @click="refresh()" />
       </el-tooltip>
-      <el-tooltip v-if="columns" class="item" effect="dark" content="显隐列" placement="top">
+      <el-tooltip
+        v-if="columns"
+        class="item"
+        effect="dark"
+        content="显隐列"
+        placement="top"
+      >
         <el-button circle icon="Menu" @click="showColumn()" />
       </el-tooltip>
     </el-row>

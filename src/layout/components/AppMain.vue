@@ -1,16 +1,20 @@
 <script setup lang="ts">
-import iframeToggle from './IframeToggle/index.vue'
-import useTagsViewStore from '@/store/modules/tagsView'
+import useTagsViewStore from "@/store/modules/tagsView";
+import iframeToggle from "./IframeToggle/index.vue";
 
-const tagsViewStore = useTagsViewStore()
+const tagsViewStore = useTagsViewStore();
 </script>
 
 <template>
   <section class="app-main">
     <router-view v-slot="{ Component, route }">
       <transition name="fade-transform" mode="out-in">
-        <keep-alive :include="(tagsViewStore.cachedViews as any)">
-          <component :is="Component" v-if="!route.meta.link" :key="route.path" />
+        <keep-alive :include="tagsViewStore.cachedViews as any">
+          <component
+            :is="Component"
+            v-if="!route.meta.link"
+            :key="route.path"
+          />
         </keep-alive>
       </transition>
     </router-view>

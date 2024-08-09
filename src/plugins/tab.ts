@@ -1,34 +1,37 @@
-import useTagsViewStore from '@/store/modules/tagsView'
-import router from '@/router'
+import router from "@/router";
+import useTagsViewStore from "@/store/modules/tagsView";
 
 export default {
   // 刷新当前tab页签
   refreshPage(obj?: any) {
-    const { path, query, matched } = router.currentRoute.value
+    const { path, query, matched } = router.currentRoute.value;
     if (obj === undefined) {
       matched.forEach((m) => {
-        if (m.components && m.components.default && m.components.default.name) {
-          if (!['Layout', 'ParentView'].includes(m.components.default.name)) {
-            obj = { name: m.components.default.name, path, query }
-          }
+        if (
+          m.components &&
+          m.components.default &&
+          m.components.default.name &&
+          !["Layout", "ParentView"].includes(m.components.default.name)
+        ) {
+          obj = { name: m.components.default.name, path, query };
         }
-      })
+      });
     }
     return useTagsViewStore()
       .delCachedView(obj)
       .then(() => {
-        const { path, query } = obj
+        const { path, query } = obj;
         router.replace({
           path: `/redirect${path}`,
           query,
-        })
-      })
+        });
+      });
   },
   // 关闭当前tab页签，打开新页签
   closeOpenPage(obj?: any) {
-    useTagsViewStore().delView(router.currentRoute.value)
+    useTagsViewStore().delView(router.currentRoute.value);
     if (obj !== undefined) {
-      return router.push(obj)
+      return router.push(obj);
     }
   },
   // 关闭指定tab页签
@@ -37,33 +40,33 @@ export default {
       return useTagsViewStore()
         .delView(router.currentRoute.value)
         .then(({ lastPath }) => {
-          return router.push(lastPath || '/index')
-        })
+          return router.push(lastPath || "/index");
+        });
     }
-    return useTagsViewStore().delView(obj)
+    return useTagsViewStore().delView(obj);
   },
   // 关闭所有tab页签
   closeAllPage() {
-    return useTagsViewStore().delAllViews()
+    return useTagsViewStore().delAllViews();
   },
   // 关闭左侧tab页签
   closeLeftPage(obj: any) {
-    return useTagsViewStore().delLeftTags(obj || router.currentRoute.value)
+    return useTagsViewStore().delLeftTags(obj || router.currentRoute.value);
   },
   // 关闭右侧tab页签
   closeRightPage(obj: any) {
-    return useTagsViewStore().delRightTags(obj || router.currentRoute.value)
+    return useTagsViewStore().delRightTags(obj || router.currentRoute.value);
   },
   // 关闭其他tab页签
   closeOtherPage(obj: any) {
-    return useTagsViewStore().delOthersViews(obj || router.currentRoute.value)
+    return useTagsViewStore().delOthersViews(obj || router.currentRoute.value);
   },
   // 打开tab页签
   openPage(url: string) {
-    return router.push(url)
+    return router.push(url);
   },
   // 修改tab页签
   updatePage(obj: any) {
-    return useTagsViewStore().updateVisitedView(obj)
+    return useTagsViewStore().updateVisitedView(obj);
   },
-}
+};

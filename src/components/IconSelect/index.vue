@@ -1,30 +1,30 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import icons from './requireIcons'
+import { ref } from "vue";
+import icons from "./requireIcons";
 
-const emit = defineEmits(['selected'])
-const iconName = ref('')
-const iconList = ref(icons)
+const emit = defineEmits(["selected"]);
+const iconName = ref("");
+const iconList = ref(icons);
 function filterIcons() {
-  iconList.value = icons
+  iconList.value = icons;
   if (iconName.value) {
-    iconList.value = icons.filter(item => item.includes(iconName.value))
+    iconList.value = icons.filter((item) => item.includes(iconName.value));
   }
 }
 
 function selectedIcon(name: any) {
-  emit('selected', name)
-  document.body.click()
+  emit("selected", name);
+  document.body.click();
 }
 
 function reset() {
-  iconName.value = ''
-  iconList.value = icons
+  iconName.value = "";
+  iconList.value = icons;
 }
 
 defineExpose({
   reset,
-})
+});
 </script>
 
 <template>
@@ -42,7 +42,11 @@ defineExpose({
       </template>
     </el-input>
     <div class="icon-list">
-      <div v-for="(item, index) in iconList" :key="index" @click="selectedIcon(item)">
+      <div
+        v-for="(item, index) in iconList"
+        :key="index"
+        @click="selectedIcon(item)"
+      >
         <svg-icon :icon-class="item" style="height: 30px; width: 16px" />
         <span>{{ item }}</span>
       </div>

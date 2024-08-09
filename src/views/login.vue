@@ -1,106 +1,114 @@
 <script setup lang="ts">
-import Cookies from 'js-cookie'
-import { useRouter } from 'vue-router'
-import type { FormInstance } from 'element-plus'
-import { ref } from 'vue'
-import useUserStore from '@/store/modules/user'
-import { decrypt, encrypt } from '@/utils/jsencrypt'
-import { getCodeImg } from '@/api/login'
+import Cookies from "js-cookie";
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+import { getCodeImg } from "@/api/login";
+import useUserStore from "@/store/modules/user";
+import { decrypt, encrypt } from "@/utils/jsencrypt";
+import type { FormInstance } from "element-plus";
 
-const userStore = useUserStore()
-const router = useRouter()
+const userStore = useUserStore();
+const router = useRouter();
 const loginForm = ref<any>({
-  username: 'admin',
-  password: 'admin123',
+  username: "admin",
+  password: "admin123",
   rememberMe: false,
-  code: '',
-  uuid: '',
-})
+  code: "",
+  uuid: "",
+});
 
 const loginRules = {
-  username: [{ required: true, trigger: 'blur', message: '请输入您的账号' }],
-  password: [{ required: true, trigger: 'blur', message: '请输入您的密码' }],
-  code: [{ required: true, trigger: 'change', message: '请输入验证码' }],
-}
+  username: [{ required: true, trigger: "blur", message: "请输入您的账号" }],
+  password: [{ required: true, trigger: "blur", message: "请输入您的密码" }],
+  code: [{ required: true, trigger: "change", message: "请输入验证码" }],
+};
 
-const codeUrl = ref('')
-const loading = ref(false)
+const codeUrl = ref("");
+const loading = ref(false);
 // 验证码开关
-const captchaEnabled = ref(true)
+const captchaEnabled = ref(true);
 // 注册开关
-const register = ref(false)
-const redirect = ref(undefined)
-const loginRef = ref<FormInstance>()
+const register = ref(false);
+const redirect = ref(undefined);
+const loginRef = ref<FormInstance>();
 
 function handleLogin() {
   loginRef.value?.validate((valid) => {
     if (valid) {
-      loading.value = true
+      loading.value = true;
       // 勾选了需要记住密码设置在 cookie 中设置记住用户名和密码
       if (loginForm.value.rememberMe) {
-        Cookies.set('username', loginForm.value.username, { expires: 30 })
-        const enPwd = encrypt(loginForm.value.password)
+        Cookies.set("username", loginForm.value.username, { expires: 30 });
+        const enPwd = encrypt(loginForm.value.password);
         if (enPwd) {
-          Cookies.set('password', enPwd, { expires: 30 })
+          Cookies.set("password", enPwd, { expires: 30 });
         }
         if (loginForm.value.rememberMe) {
-          Cookies.set('rememberMe', String(loginForm.value.rememberMe), { expires: 30 })
+          Cookies.set("rememberMe", String(loginForm.value.rememberMe), {
+            expires: 30,
+          });
         }
-      }
-      else {
+      } else {
         // 否则移除
-        Cookies.remove('username')
-        Cookies.remove('password')
-        Cookies.remove('rememberMe')
+        Cookies.remove("username");
+        Cookies.remove("password");
+        Cookies.remove("rememberMe");
       }
       // 调用action的登录方法
       userStore
         .login(loginForm.value)
         .then(() => {
-          router.push({ path: redirect.value || '/' })
+          router.push({ path: redirect.value || "/" });
         })
         .catch(() => {
-          loading.value = false
+          loading.value = false;
           // 重新获取验证码
           if (captchaEnabled.value) {
-            getCode()
+            getCode();
           }
-        })
+        });
     }
-  })
+  });
 }
 
 function getCode() {
   getCodeImg().then((res: any) => {
-    captchaEnabled.value = res.captchaEnabled === undefined ? true : res.captchaEnabled
+    captchaEnabled.value =
+      res.captchaEnabled === undefined ? true : res.captchaEnabled;
     if (captchaEnabled.value) {
-      codeUrl.value = `data:image/gif;base64,${res.img}`
-      loginForm.value.uuid = res.uuid
+      codeUrl.value = `data:image/gif;base64,${res.img}`;
+      loginForm.value.uuid = res.uuid;
     }
-  })
+  });
 }
 
 function getCookie() {
-  const username = Cookies.get('username')
-  const password = Cookies.get('password')
-  const rememberMe = Cookies.get('rememberMe')
+  const username = Cookies.get("username");
+  const password = Cookies.get("password");
+  const rememberMe = Cookies.get("rememberMe");
   loginForm.value = {
     username: username === undefined ? loginForm.value.username : username,
-    password: password === undefined ? loginForm.value.password : decrypt(password) || '',
+    password:
+      password === undefined
+        ? loginForm.value.password
+        : decrypt(password) || "",
     rememberMe: rememberMe === undefined ? false : Boolean(rememberMe),
-  }
+  };
 }
 
-getCode()
-getCookie()
+getCode();
+getCookie();
 </script>
 
 <template>
   <div class="login">
-    <el-form ref="loginRef" :model="loginForm" :rules="loginRules" class="login-form">
-      <h3 class="title">
-        若依后台管理系统
-      </h3>
+    <el-form
+      ref="loginRef"
+      :model="loginForm"
+      :rules="loginRules"
+      class="login-form"
+    >
+      <h3 class="title">若依后台管理系统</h3>
       <el-form-item prop="username">
         <el-input
           v-model="loginForm.username"
@@ -138,14 +146,20 @@ getCookie()
           @keyup.enter="handleLogin"
         >
           <template #prefix>
-            <svg-icon icon-class="validCode" class="el-input__icon input-icon" />
+            <svg-icon
+              icon-class="validCode"
+              class="el-input__icon input-icon"
+            />
           </template>
         </el-input>
         <div class="login-code">
-          <img :src="codeUrl" class="login-code-img" @click="getCode">
+          <img :src="codeUrl" class="login-code-img" @click="getCode" />
         </div>
       </el-form-item>
-      <el-checkbox v-model="loginForm.rememberMe" style="margin: 0px 0px 25px 0px">
+      <el-checkbox
+        v-model="loginForm.rememberMe"
+        style="margin: 0px 0px 25px 0px"
+      >
         记住密码
       </el-checkbox>
       <el-form-item style="width: 100%">
@@ -160,9 +174,7 @@ getCookie()
           <span v-else>登 录 中...</span>
         </el-button>
         <div v-if="register" style="float: right">
-          <router-link class="link-type" to="/register">
-            立即注册
-          </router-link>
+          <router-link class="link-type" to="/register"> 立即注册 </router-link>
         </div>
       </el-form-item>
     </el-form>
@@ -179,7 +191,7 @@ getCookie()
   justify-content: center;
   align-items: center;
   height: 100%;
-  background-image: url('../assets/images/login-background.jpg');
+  background-image: url("../assets/images/login-background.jpg");
   background-size: cover;
 }
 .title {

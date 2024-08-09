@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-import variables from '@/assets/styles/variables.module.scss'
-import logo from '@/assets/logo/logo.png'
-import useSettingsStore from '@/store/modules/settings'
+import { computed, ref } from "vue";
+import logo from "@/assets/logo/logo.png";
+import variables from "@/assets/styles/variables.module.scss";
+import useSettingsStore from "@/store/modules/settings";
 // import collapse from 'element-plus/es/components/collapse';
 
 defineProps({
@@ -10,11 +10,11 @@ defineProps({
     type: Boolean,
     required: true,
   },
-})
+});
 
-const title = ref('若依管理系统')
-const settingsStore = useSettingsStore()
-const sideTheme = computed(() => settingsStore.sideTheme)
+const title = ref("若依管理系统");
+const settingsStore = useSettingsStore();
+const sideTheme = computed(() => settingsStore.sideTheme);
 </script>
 
 <template>
@@ -23,12 +23,19 @@ const sideTheme = computed(() => settingsStore.sideTheme)
     :class="{ collapse }"
     :style="{
       backgroundColor:
-        sideTheme === 'theme-dark' ? variables.menuBackground : variables.menuLightBackground,
+        sideTheme === 'theme-dark'
+          ? variables.menuBackground
+          : variables.menuLightBackground,
     }"
   >
     <transition name="sidebarLogoFade">
-      <router-link v-if="collapse" key="collapse" class="sidebar-logo-link" to="/">
-        <img v-if="logo" :src="logo" class="sidebar-logo">
+      <router-link
+        v-if="collapse"
+        key="collapse"
+        class="sidebar-logo-link"
+        to="/"
+      >
+        <img v-if="logo" :src="logo" class="sidebar-logo" />
         <h1
           v-else
           class="sidebar-title"
@@ -43,7 +50,7 @@ const sideTheme = computed(() => settingsStore.sideTheme)
         </h1>
       </router-link>
       <router-link v-else key="expand" class="sidebar-logo-link" to="/">
-        <img v-if="logo" :src="logo" class="sidebar-logo">
+        <img v-if="logo" :src="logo" class="sidebar-logo" />
         <h1
           class="sidebar-title"
           :style="{
