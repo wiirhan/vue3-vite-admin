@@ -16,7 +16,6 @@ const props = defineProps({
   },
   check: {
     type: Function,
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
     default: () => {},
   },
 })

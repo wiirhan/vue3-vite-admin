@@ -13,6 +13,8 @@ export default function createVitePlugins(viteEnv: Record<string, string>, isBui
   vitePlugins.push(createComponents())
   vitePlugins.push(createSetupExtend())
   vitePlugins.push(createSvgIcon(isBuild))
-  isBuild && vitePlugins.push(...createCompression(viteEnv))
+  if (isBuild) {
+    vitePlugins.push(...createCompression(viteEnv))
+  }
   return vitePlugins
 }

@@ -132,7 +132,7 @@ watch(searchPool, (list) => {
 <template>
   <div :class="{ show }" class="header-search">
     <svg-icon class-name="search-icon" icon-class="search" @click.stop="click" />
-    <el-select
+    <ElSelect
       ref="headerSearchSelectRef"
       v-model="search"
       :remote-method="querySearch"
@@ -149,7 +149,7 @@ watch(searchPool, (list) => {
         :value="option.item"
         :label="option.item.title.join(' > ')"
       />
-    </el-select>
+    </ElSelect>
   </div>
 </template>
 

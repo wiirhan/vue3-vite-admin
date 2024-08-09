@@ -79,7 +79,7 @@ function handleGenTable(row: any) {
     return
   }
   if (row.genType === '1') {
-    genCode(row.tableName).then((response) => {
+    genCode(row.tableName).then(() => {
       proxy?.$modal.msgSuccess(`成功生成到自定义路径：${row.genPath}`)
     })
   }

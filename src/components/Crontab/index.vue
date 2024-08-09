@@ -21,9 +21,7 @@ const props = defineProps({
   },
 })
 const emit = defineEmits(['hide', 'fill'])
-const { proxy } = getCurrentInstance() as ComponentInternalInstance
 const tabTitles = ref(['秒', '分钟', '小时', '日', '月', '周', '年'])
-const tabActive = ref(0)
 const hideComponent = ref<string[]>([])
 const expression = ref('')
 const crontabValueObj = ref<Record<string, string>>({
@@ -81,12 +79,8 @@ function resolveExp() {
     clearCron()
   }
 }
-// tab切换值
-function tabCheck(index: number) {
-  tabActive.value = index
-}
 // 由子组件触发，更改表达式组成的字段值
-function updateCrontabValue(name: any, value: any, from: any) {
+function updateCrontabValue(name: any, value: any) {
   crontabValueObj.value[name] = value
 }
 // 表单选项的子组件校验数字格式（通过-props传递）
@@ -133,7 +127,6 @@ onMounted(() => {
     <el-tabs type="border-card">
       <el-tab-pane v-if="shouldHide('second')" label="秒">
         <CrontabSecond
-          ref="cronsecond"
           :check="checkNumber"
           :cron="crontabValueObj"
           @update="updateCrontabValue"
@@ -142,7 +135,6 @@ onMounted(() => {
 
       <el-tab-pane v-if="shouldHide('min')" label="分钟">
         <CrontabMin
-          ref="cronmin"
           :check="checkNumber"
           :cron="crontabValueObj"
           @update="updateCrontabValue"
@@ -151,7 +143,6 @@ onMounted(() => {
 
       <el-tab-pane v-if="shouldHide('hour')" label="小时">
         <CrontabHour
-          ref="cronhour"
           :check="checkNumber"
           :cron="crontabValueObj"
           @update="updateCrontabValue"
@@ -160,7 +151,6 @@ onMounted(() => {
 
       <el-tab-pane v-if="shouldHide('day')" label="日">
         <CrontabDay
-          ref="cronday"
           :check="checkNumber"
           :cron="crontabValueObj"
           @update="updateCrontabValue"
@@ -169,7 +159,6 @@ onMounted(() => {
 
       <el-tab-pane v-if="shouldHide('month')" label="月">
         <CrontabMonth
-          ref="cronmonth"
           :check="checkNumber"
           :cron="crontabValueObj"
           @update="updateCrontabValue"
@@ -178,7 +167,6 @@ onMounted(() => {
 
       <el-tab-pane v-if="shouldHide('week')" label="周">
         <CrontabWeek
-          ref="cronweek"
           :check="checkNumber"
           :cron="crontabValueObj"
           @update="updateCrontabValue"
@@ -187,7 +175,6 @@ onMounted(() => {
 
       <el-tab-pane v-if="shouldHide('year')" label="年">
         <CrontabYear
-          ref="cronyear"
           :check="checkNumber"
           :cron="crontabValueObj"
           @update="updateCrontabValue"
