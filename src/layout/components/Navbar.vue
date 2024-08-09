@@ -3,8 +3,6 @@ import { ElMessageBox } from "element-plus";
 import Breadcrumb from "@/components/Breadcrumb/index.vue";
 import Hamburger from "@/components/Hamburger/index.vue";
 import HeaderSearch from "@/components/HeaderSearch/index.vue";
-import RuoYiDoc from "@/components/RuoYi/Doc/index.vue";
-import RuoYiGit from "@/components/RuoYi/Git/index.vue";
 import Screenfull from "@/components/Screenfull/index.vue";
 import SizeSelect from "@/components/SizeSelect/index.vue";
 import TopNav from "@/components/TopNav/index.vue";
@@ -44,7 +42,6 @@ function logout() {
       location.href = "/index";
     });
   });
-  // .catch(() => {});
 }
 
 function setLayout() {
@@ -54,34 +51,14 @@ function setLayout() {
 
 <template>
   <div class="navbar">
-    <Hamburger
-      id="hamburger-container"
-      :is-active="appStore.sidebar.opened"
-      class="hamburger-container"
-      @toggle-click="toggleSideBar"
-    />
-    <Breadcrumb
-      v-if="!settingsStore.topNav"
-      id="breadcrumb-container"
-      class="breadcrumb-container"
-    />
-    <TopNav
-      v-if="settingsStore.topNav"
-      id="topmenu-container"
-      class="topmenu-container"
-    />
+    <Hamburger id="hamburger-container" :is-active="appStore.sidebar.opened" class="hamburger-container"
+      @toggle-click="toggleSideBar" />
+    <Breadcrumb v-if="!settingsStore.topNav" id="breadcrumb-container" class="breadcrumb-container" />
+    <TopNav v-if="settingsStore.topNav" id="topmenu-container" class="topmenu-container" />
 
     <div class="right-menu">
       <template v-if="appStore.device !== 'mobile'">
         <HeaderSearch id="header-search" class="right-menu-item" />
-
-        <el-tooltip content="源码地址" effect="dark" placement="bottom">
-          <RuoYiGit id="ruoyi-git" class="right-menu-item hover-effect" />
-        </el-tooltip>
-
-        <el-tooltip content="文档地址" effect="dark" placement="bottom">
-          <RuoYiDoc id="ruoyi-doc" class="right-menu-item hover-effect" />
-        </el-tooltip>
 
         <Screenfull id="screenfull" class="right-menu-item hover-effect" />
 
@@ -90,11 +67,7 @@ function setLayout() {
         </el-tooltip>
       </template>
       <div class="avatar-container">
-        <el-dropdown
-          class="right-menu-item hover-effect"
-          trigger="click"
-          @command="handleCommand"
-        >
+        <el-dropdown class="right-menu-item hover-effect" trigger="click" @command="handleCommand">
           <div class="avatar-wrapper">
             <img :src="userStore.avatar" class="user-avatar" />
             <el-icon><caret-bottom /></el-icon>
