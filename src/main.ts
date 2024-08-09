@@ -3,14 +3,11 @@ import { createApp } from 'vue'
 import Cookies from 'js-cookie'
 
 import ElementPlus from 'element-plus'
-import locale from 'element-plus/lib/locale/lang/zh-cn' // 中文语言
+import locale from 'element-plus/es/locale/lang/zh-cn' // 中文语言
 
 import '@/assets/styles/index.scss' // global css
 // element css
-import 'element-plus/es/components/message/style/css'
-import 'element-plus/es/components/message-box/style/css'
-import 'element-plus/es/components/notification/style/css'
-import 'element-plus/es/components/loading/style/css'
+import 'element-plus/dist/index.css'
 // tailwindcss
 import './index.css'
 

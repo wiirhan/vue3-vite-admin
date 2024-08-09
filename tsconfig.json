@@ -20,10 +20,5 @@
   },
   "references": [{ "path": "./tsconfig.node.json" }],
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "test.ts"],
-  "ts-node": {
-    "compilerOptions": {
-      "module": "CommonJS",
-      "esModuleInterop": true
-    }
-  }
+  "types": ["element-plus/global"]
 }
