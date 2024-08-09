@@ -6,10 +6,6 @@
   // Enable the ESlint flat config support
   "eslint.useFlatConfig": true,
 
-  // Disable the default formatter
-  "prettier.enable": false,
-  "editor.formatOnSave": false,
-
   // Auto fix
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit",
@@ -45,7 +41,5 @@
     "jsonc",
     "yaml"
   ],
-  "cSpell.words": [
-    "vueuse"
-  ]
+  "cSpell.words": ["sxzz", "unocss", "vueuse"]
 }

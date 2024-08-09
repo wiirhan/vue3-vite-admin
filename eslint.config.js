@@ -1,7 +1,14 @@
-import antfu from '@antfu/eslint-config'
+import { sxzz } from '@sxzz/eslint-config'
 
-export default antfu(
+export default sxzz(
+  [
+    /* your custom config */
+  ],
+  // Features: it'll detect installed dependency and enable necessary features automatically
   {
-    formatters: true,
+    prettier: true,
+    markdown: true,
+    vue: true, // auto detection
+    unocss: false, // auto detection
   },
 )
