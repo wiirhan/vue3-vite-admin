@@ -12,19 +12,20 @@
       "~/*": ["/*"]
     },
     "resolveJsonModule": true,
+    "allowJs": true,
     "strict": true,
-    "sourceMap": true,
+    "strictNullChecks": true,
+    "noUnusedLocals": true,
     "esModuleInterop": true,
-    "isolatedModules": true,
+    "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true
   },
-  "references": [{ "path": "./tsconfig.node.json" }],
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.d.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue",
-    "test.ts"
-  ],
-  "types": ["element-plus/global"]
+  "types": ["element-plus/global", "vite/client"],
+  "exclude": [
+    "dist",
+    "node_modules",
+    "eslint.config.js",
+    "postcss.config.cjs",
+    "tailwind.config.cjs"
+  ]
 }
