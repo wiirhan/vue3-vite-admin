@@ -1,6 +1,3 @@
-/// <reference types="vitest" />
-/// <reference types="vite/client" />
-
 import path from "node:path";
 import process from "node:process";
 import { defineConfig, loadEnv } from "vite";

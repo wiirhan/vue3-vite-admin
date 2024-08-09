@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref } from "vue";
 import { getNormalPath } from "@/utils/ruoyi";
 import { isExternal } from "@/utils/validate";
 import AppLink from "./Link.vue";

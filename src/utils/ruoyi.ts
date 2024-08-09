@@ -17,9 +17,9 @@ export function parseTime(time: any, pattern?: string) {
       time = Number.parseInt(time);
     } else if (typeof time === "string") {
       time = time
-        .replaceAll(new RegExp(/-/g), "/")
+        .replaceAll("-", "/")
         .replace("T", " ")
-        .replaceAll(new RegExp(/\.\d{3}/g), "");
+        .replaceAll(/\.\d{3}/g, "");
     }
     if (typeof time === "number" && time.toString().length === 10) {
       time = time * 1000;
@@ -87,6 +87,7 @@ export function selectDictLabel(datas: any, value: any) {
       actions.push(datas[key].label);
       return true;
     }
+    return false;
   });
   if (actions.length === 0) {
     actions.push(value);
@@ -105,9 +106,9 @@ export function selectDictLabels(datas: any, value: any, separator: any) {
   const actions: any[] = [];
   const currentSeparator = undefined === separator ? "," : separator;
   const temp = value.split(currentSeparator);
-  Object.keys(value.split(currentSeparator)).some((val) => {
+  Object.keys(value.split(currentSeparator)).forEach((val) => {
     let match = false;
-    Object.keys(datas).some((key) => {
+    Object.keys(datas).forEach((key) => {
       if (datas[key].value === `${temp[val]}`) {
         actions.push(datas[key].label + currentSeparator);
         match = true;
