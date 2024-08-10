@@ -31,7 +31,7 @@ function submitForm() {
   ).then((res) => {
     const validateResult = res.every((item) => !!item)
     if (validateResult) {
-      const genTable = Object.assign({}, info.value)
+      const genTable = Object.assign({}, info.value) as GenData['info'] & { params: { treeCode: string; treeName: string; treeParentCode: string; parentMenuId: string } }
       genTable.columns = columns.value
       genTable.params = {
         treeCode: info.value.treeCode,
@@ -179,7 +179,7 @@ onMounted(() => {
                   <span style="float: left">{{ dict.dictName }}</span>
                   <span style="float: right; color: #8492a6; font-size: 13px">{{
                     dict.dictType
-                    }}</span>
+                  }}</span>
                 </el-option>
               </el-select>
             </template>
