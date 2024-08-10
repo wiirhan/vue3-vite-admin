@@ -9,9 +9,8 @@ import {
   updateConfig,
 } from '@/api/system/config'
 import { parseTime } from '@/utils/ruoyi'
-import type { ComponentInternalInstance } from 'vue'
 
-const { proxy } = getCurrentInstance() as ComponentInternalInstance
+const { proxy } = getCurrentInstance()!
 const { sys_yes_no } = proxy!.useDict('sys_yes_no')
 
 const configList = ref<any[]>([])

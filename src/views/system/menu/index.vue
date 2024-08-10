@@ -11,9 +11,8 @@ import {
 import IconSelect from '@/components/IconSelect/index.vue'
 import SvgIcon from '@/components/SvgIcon/index.vue'
 import { parseTime } from '@/utils/ruoyi'
-import type { ComponentInternalInstance } from 'vue'
 
-const { proxy } = getCurrentInstance() as ComponentInternalInstance
+const { proxy } = getCurrentInstance()!
 
 const { sys_show_hide, sys_normal_disable } = proxy!.useDict(
   'sys_show_hide',

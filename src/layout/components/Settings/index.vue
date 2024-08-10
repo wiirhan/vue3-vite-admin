@@ -5,9 +5,8 @@ import usePermissionStore from '@/store/modules/permission'
 import useSettingsStore from '@/store/modules/settings'
 import { useDynamicTitle } from '@/utils/dynamicTitle'
 import { handleThemeStyle } from '@/utils/theme'
-import type { ComponentInternalInstance } from 'vue'
 
-const { proxy } = getCurrentInstance() as ComponentInternalInstance
+const { proxy } = getCurrentInstance()!
 const appStore = useAppStore()
 const settingsStore = useSettingsStore()
 const permissionStore = usePermissionStore()
@@ -237,10 +236,12 @@ defineExpose({
   color: rgba(0, 0, 0, 0.85);
   line-height: 22px;
   font-weight: bold;
+
   .drawer-title {
     font-size: 14px;
   }
 }
+
 .setting-drawer-block-checbox {
   display: flex;
   justify-content: flex-start;

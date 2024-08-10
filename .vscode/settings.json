@@ -6,11 +6,8 @@
   // Enable the ESlint flat config support
   "eslint.useFlatConfig": true,
 
-  // Auto fix
-  "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": "explicit",
-    "source.organizeImports": "never"
-  },
+  "editor.formatOnSave": true,
+  "eslint.runtime": null,
 
   // Silent the stylistic rules in you IDE, but still auto fix them
   "eslint.rules.customizations": [

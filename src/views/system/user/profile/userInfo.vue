@@ -2,7 +2,6 @@
 <script setup lang="ts">
 import { getCurrentInstance, ref } from 'vue'
 import { updateUserProfile } from '@/api/system/user'
-import type { ComponentInternalInstance } from 'vue'
 
 const props = defineProps({
   user: {
@@ -10,7 +9,7 @@ const props = defineProps({
   },
 })
 
-const { proxy } = getCurrentInstance() as ComponentInternalInstance
+const { proxy } = getCurrentInstance()!
 
 const rules = ref({
   nickName: [{ required: true, message: '用户昵称不能为空', trigger: 'blur' }],

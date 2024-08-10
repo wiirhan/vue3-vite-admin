@@ -3,12 +3,16 @@
 import { ref } from 'vue'
 import type { FormInstance } from 'element-plus'
 
-defineProps({
-  info: {
-    type: Object,
-    default: null,
-  },
+const info = defineModel<{
+  tableName: string
+  tableComment: string
+  className: string
+  functionAuthor: string
+  remark: string
+}>('info', {
+  required: true,
 })
+
 const basicInfoForm = ref<FormInstance>()
 defineExpose({
   basicInfoForm,

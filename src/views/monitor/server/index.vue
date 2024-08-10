@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { getCurrentInstance, ref } from 'vue'
 import { getServer } from '@/api/monitor/server'
-import type { ComponentInternalInstance } from 'vue'
 
 const server = ref<any>([])
-const { proxy } = getCurrentInstance() as ComponentInternalInstance
+const { proxy } = getCurrentInstance()!
 
 function getList() {
   proxy!.$modal.loading('正在加载服务监控数据，请稍候！')

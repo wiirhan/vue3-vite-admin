@@ -3,11 +3,10 @@ import { getCurrentInstance, reactive, ref } from 'vue'
 import { VueCropper } from 'vue-cropper'
 import { uploadAvatar } from '@/api/system/user'
 import useUserStore from '@/store/modules/user'
-import type { ComponentInternalInstance } from 'vue'
 import 'vue-cropper/dist/index.css'
 
 const userStore = useUserStore()
-const { proxy } = getCurrentInstance() as ComponentInternalInstance
+const { proxy } = getCurrentInstance()!
 
 const open = ref(false)
 const visible = ref(false)

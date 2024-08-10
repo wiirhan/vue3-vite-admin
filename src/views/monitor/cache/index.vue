@@ -2,12 +2,11 @@
 import * as echarts from 'echarts'
 import { getCurrentInstance, ref } from 'vue'
 import { getCache } from '@/api/monitor/cache'
-import type { ComponentInternalInstance } from 'vue'
 
 const cache = ref<any>([])
 const commandstats = ref(null)
 const usedmemory = ref(null)
-const { proxy } = getCurrentInstance() as ComponentInternalInstance
+const { proxy } = getCurrentInstance()!
 
 function getList() {
   proxy!.$modal.loading('正在加载缓存监控数据，请稍候！')

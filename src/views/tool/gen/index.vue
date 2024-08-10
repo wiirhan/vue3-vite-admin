@@ -1,5 +1,6 @@
 <script setup name="Gen" lang="ts">
 import { oneOf } from '@zeronejs/utils'
+import { ElForm } from 'element-plus'
 import { getCurrentInstance, onActivated, reactive, ref, toRefs } from 'vue'
 import { useRoute } from 'vue-router'
 import {
@@ -25,6 +26,7 @@ const total = ref(0)
 const tableNames = ref<any[]>([])
 const dateRange = ref<any>([])
 const uniqueId = ref('')
+const queryRef = ref<typeof ElForm | null>(null)
 
 const data = reactive<{
   queryParams: any

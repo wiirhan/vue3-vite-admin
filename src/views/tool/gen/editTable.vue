@@ -1,14 +1,13 @@
 <script setup name="GenEdit" lang="ts">
-import { getCurrentInstance, ref } from 'vue'
+import { ElTable } from 'element-plus'
 import { useRoute } from 'vue-router'
 import { optionselect as getDictOptionselect } from '@/api/system/dict/type'
 import { getGenTable, updateGenTable } from '@/api/tool/gen'
 import basicInfoForm from './basicInfoForm.vue'
 import genInfoForm from './genInfoForm.vue'
-import type { ComponentInternalInstance } from 'vue'
 
 const route = useRoute()
-const { proxy } = getCurrentInstance() as ComponentInternalInstance
+const { proxy } = getCurrentInstance()!
 
 const activeName = ref('columnInfo')
 const tableHeight = ref(`${document.documentElement.scrollHeight - 245}px`)
@@ -18,6 +17,7 @@ const dictOptions = ref<any[]>([])
 const info = ref<any>({})
 const basicInfo = ref<InstanceType<typeof basicInfoForm>>()
 const genInfo = ref<InstanceType<typeof genInfoForm>>()
+const dragTable = ref<typeof ElTable>()
 
 /** 提交按钮 */
 function submitForm() {

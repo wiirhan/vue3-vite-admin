@@ -16,10 +16,9 @@ import {
   updateRole,
 } from '@/api/system/role'
 import { parseTime } from '@/utils/ruoyi'
-import type { ComponentInternalInstance } from 'vue'
 
 const router = useRouter()
-const { proxy } = getCurrentInstance() as ComponentInternalInstance
+const { proxy } = getCurrentInstance()!
 
 const { sys_normal_disable } = proxy!.useDict('sys_normal_disable')
 

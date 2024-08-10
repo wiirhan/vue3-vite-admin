@@ -2,7 +2,6 @@
 import { getCurrentInstance, reactive, ref } from 'vue'
 import { authUserSelectAll, unallocatedUserList } from '@/api/system/role'
 import { parseTime } from '@/utils/ruoyi'
-import type { ComponentInternalInstance } from 'vue'
 
 const props = defineProps({
   roleId: {
@@ -12,7 +11,7 @@ const props = defineProps({
 
 const emit = defineEmits(['ok'])
 
-const { proxy } = getCurrentInstance() as ComponentInternalInstance
+const { proxy } = getCurrentInstance()!
 
 const { sys_normal_disable } = proxy!.useDict('sys_normal_disable')
 

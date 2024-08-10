@@ -14,10 +14,9 @@ import {
 } from '@/api/system/user'
 import { getToken } from '@/utils/auth'
 import { parseTime } from '@/utils/ruoyi'
-import type { ComponentInternalInstance } from 'vue'
 
 const router = useRouter()
-const { proxy } = getCurrentInstance() as ComponentInternalInstance
+const { proxy } = getCurrentInstance()!
 
 const { sys_normal_disable, sys_user_sex } = proxy!.useDict(
   'sys_normal_disable',

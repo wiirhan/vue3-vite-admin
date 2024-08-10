@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed, getCurrentInstance, ref, watch } from 'vue'
 import { getToken } from '@/utils/auth'
-import type { ComponentInternalInstance } from 'vue'
 
 const props = defineProps({
   modelValue: [String, Object, Array],
@@ -28,7 +27,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['update:modelValue'])
-const { proxy } = getCurrentInstance() as ComponentInternalInstance
+const { proxy } = getCurrentInstance()!
 const number = ref(0)
 const uploadList = ref<any[]>([])
 const dialogImageUrl = ref('')

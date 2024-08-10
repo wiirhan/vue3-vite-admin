@@ -8,9 +8,8 @@ import {
   updateNotice,
 } from '@/api/system/notice'
 import { parseTime } from '@/utils/ruoyi'
-import type { ComponentInternalInstance } from 'vue'
 
-const { proxy } = getCurrentInstance() as ComponentInternalInstance
+const { proxy } = getCurrentInstance()!
 
 const { sys_notice_status, sys_notice_type } = proxy!.useDict(
   'sys_notice_status',

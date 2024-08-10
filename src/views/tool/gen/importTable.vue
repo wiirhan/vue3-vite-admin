@@ -1,14 +1,15 @@
 <script setup lang="ts">
+import { ElForm } from 'element-plus'
 import { getCurrentInstance, reactive, ref } from 'vue'
 import { importTable, listDbTable } from '@/api/tool/gen'
-import type { ComponentInternalInstance } from 'vue'
 
 const emit = defineEmits(['ok'])
 const total = ref(0)
 const visible = ref(false)
 const tables = ref<any[]>([])
 const dbTableList = ref<any[]>([])
-const { proxy } = getCurrentInstance() as ComponentInternalInstance
+const { proxy } = getCurrentInstance()!
+const queryRef = ref<typeof ElForm | null>(null)
 
 const queryParams = reactive({
   pageNum: 1,

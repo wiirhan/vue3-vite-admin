@@ -13,7 +13,6 @@ import useSettingsStore from '@/store/modules/settings'
 import useTagsViewStore from '@/store/modules/tagsView'
 import { getNormalPath } from '@/utils/ruoyi'
 import ScrollPane from './ScrollPane.vue'
-import type { ComponentInternalInstance } from 'vue'
 
 const visible = ref(false)
 const top = ref(0)
@@ -22,7 +21,7 @@ const selectedTag = ref<any>({})
 const affixTags = ref<any[]>([])
 const scrollPaneRef = ref<any>(null)
 
-const { proxy } = getCurrentInstance() as ComponentInternalInstance
+const { proxy } = getCurrentInstance()!
 const route = useRoute()
 const router = useRouter()
 
@@ -278,6 +277,7 @@ function handleScroll() {
   box-shadow:
     0 1px 3px 0 rgba(0, 0, 0, 0.12),
     0 0 3px 0 rgba(0, 0, 0, 0.04);
+
   .tags-view-wrapper {
     .tags-view-item {
       display: inline-block;
@@ -292,16 +292,20 @@ function handleScroll() {
       font-size: 12px;
       margin-left: 5px;
       margin-top: 4px;
+
       &:first-of-type {
         margin-left: 15px;
       }
+
       &:last-of-type {
         margin-right: 15px;
       }
+
       &.active {
         background-color: #42b983;
         color: #fff;
         border-color: #42b983;
+
         &::before {
           content: '';
           background: #fff;
@@ -315,6 +319,7 @@ function handleScroll() {
       }
     }
   }
+
   .contextmenu {
     margin: 0;
     background: #fff;
@@ -327,10 +332,12 @@ function handleScroll() {
     font-weight: 400;
     color: #333;
     box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.3);
+
     li {
       margin: 0;
       padding: 7px 16px;
       cursor: pointer;
+
       &:hover {
         background: #eee;
       }
@@ -351,11 +358,13 @@ function handleScroll() {
       text-align: center;
       transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
       transform-origin: 100% 50%;
+
       &:before {
         transform: scale(0.6);
         display: inline-block;
         vertical-align: -3px;
       }
+
       &:hover {
         background-color: #b4bccc;
         color: #fff;

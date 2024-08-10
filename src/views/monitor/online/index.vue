@@ -2,9 +2,8 @@
 import { getCurrentInstance, ref } from 'vue'
 import { forceLogout, list as initData } from '@/api/monitor/online'
 import { parseTime } from '@/utils/ruoyi'
-import type { ComponentInternalInstance } from 'vue'
 
-const { proxy } = getCurrentInstance() as ComponentInternalInstance
+const { proxy } = getCurrentInstance()!
 
 const onlineList = ref<any[]>([])
 const loading = ref(true)

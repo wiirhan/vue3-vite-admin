@@ -7,7 +7,6 @@ import {
   ref,
   watch,
 } from 'vue'
-import type { ComponentInternalInstance } from 'vue'
 
 const props = defineProps({
   /* 配置项 */
@@ -47,7 +46,7 @@ const props = defineProps({
 
 const emit = defineEmits(['update:value'])
 
-const { proxy } = getCurrentInstance() as ComponentInternalInstance
+const { proxy } = getCurrentInstance()!
 
 const valueId = computed({
   get: () => props.value,
@@ -139,6 +138,7 @@ watch(valueId, () => {
 
 <style lang="scss" scoped>
 @import '@/assets/styles/variables.module.scss';
+
 .el-scrollbar .el-scrollbar__view .el-select-dropdown__item {
   padding: 0;
   background-color: #fff;

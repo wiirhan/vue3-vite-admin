@@ -8,10 +8,9 @@ import {
 } from '@/api/system/role'
 import { parseTime } from '@/utils/ruoyi'
 import selectUser from './selectUser.vue'
-import type { ComponentInternalInstance } from 'vue'
 
 const route = useRoute()
-const { proxy } = getCurrentInstance() as ComponentInternalInstance
+const { proxy } = getCurrentInstance()!
 const { sys_normal_disable } = proxy!.useDict('sys_normal_disable')
 
 const userList = ref<any[]>([])

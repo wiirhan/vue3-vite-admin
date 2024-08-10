@@ -8,9 +8,8 @@ import {
   listCacheKey,
   listCacheName,
 } from '@/api/monitor/cache'
-import type { ComponentInternalInstance } from 'vue'
 
-const { proxy } = getCurrentInstance() as ComponentInternalInstance
+const { proxy } = getCurrentInstance()!
 
 const cacheNames = ref<any[]>([])
 const cacheKeys = ref<any[]>([])

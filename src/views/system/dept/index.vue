@@ -9,9 +9,8 @@ import {
   updateDept,
 } from '@/api/system/dept'
 import { parseTime } from '@/utils/ruoyi'
-import type { ComponentInternalInstance } from 'vue'
 
-const { proxy } = getCurrentInstance() as ComponentInternalInstance
+const { proxy } = getCurrentInstance()!
 const { sys_normal_disable } = proxy!.useDict('sys_normal_disable')
 
 const deptList = ref<any[]>([])

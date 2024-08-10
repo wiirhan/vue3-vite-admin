@@ -3,7 +3,6 @@
 import { getCurrentInstance, ref, watch } from 'vue'
 import { listMenu } from '@/api/system/menu'
 import type { FormInstance } from 'element-plus'
-import type { ComponentInternalInstance } from 'vue'
 
 const props = defineProps({
   info: {
@@ -17,7 +16,7 @@ const props = defineProps({
 })
 const subColumns = ref<any[]>([])
 const menuOptions = ref<any[]>([])
-const { proxy } = getCurrentInstance() as ComponentInternalInstance
+const { proxy } = getCurrentInstance()!
 const genInfoForm = ref<FormInstance>()
 defineExpose({
   genInfoForm,
@@ -38,7 +37,7 @@ const rules = ref({
     { required: true, message: '请输入生成功能名', trigger: 'blur' },
   ],
 })
-function subSelectChange(value: any) {
+function subSelectChange() {
   props.info.subTableFkName = ''
 }
 function tplSelectChange(value: any) {

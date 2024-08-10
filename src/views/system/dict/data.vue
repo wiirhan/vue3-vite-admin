@@ -14,9 +14,8 @@ import {
 } from '@/api/system/dict/type'
 import useDictStore from '@/store/modules/dict'
 import { parseTime } from '@/utils/ruoyi'
-import type { ComponentInternalInstance } from 'vue'
 
-const { proxy } = getCurrentInstance() as ComponentInternalInstance
+const { proxy } = getCurrentInstance()!
 
 const { sys_normal_disable } = proxy!.useDict('sys_normal_disable')
 

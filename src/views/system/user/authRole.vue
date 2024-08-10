@@ -3,10 +3,9 @@ import { getCurrentInstance, nextTick, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { getAuthRole, updateAuthRole } from '@/api/system/user'
 import { parseTime } from '@/utils/ruoyi'
-import type { ComponentInternalInstance } from 'vue'
 
 const route = useRoute()
-const { proxy } = getCurrentInstance() as ComponentInternalInstance
+const { proxy } = getCurrentInstance()!
 
 const loading = ref(true)
 const total = ref(0)

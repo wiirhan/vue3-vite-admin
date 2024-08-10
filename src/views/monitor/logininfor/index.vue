@@ -8,9 +8,8 @@ import {
 } from '@/api/monitor/logininfor'
 import { parseTime } from '@/utils/ruoyi'
 import type { Sort } from 'element-plus'
-import type { ComponentInternalInstance } from 'vue'
 
-const { proxy } = getCurrentInstance() as ComponentInternalInstance
+const { proxy } = getCurrentInstance()!
 const { sys_common_status } = proxy!.useDict('sys_common_status')
 
 const logininforList = ref<any[]>([])

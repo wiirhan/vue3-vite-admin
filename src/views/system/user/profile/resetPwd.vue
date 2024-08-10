@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { getCurrentInstance, reactive, ref } from 'vue'
 import { updateUserPwd } from '@/api/system/user'
-import type { ComponentInternalInstance } from 'vue'
 
-const { proxy } = getCurrentInstance() as ComponentInternalInstance
+const { proxy } = getCurrentInstance()!
 
 const user = reactive({
   oldPassword: undefined,

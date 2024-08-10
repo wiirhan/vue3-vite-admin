@@ -5,9 +5,8 @@ import { useRoute } from 'vue-router'
 import { getJob } from '@/api/monitor/job'
 import { cleanJobLog, delJobLog, listJobLog } from '@/api/monitor/jobLog'
 import { parseTime } from '@/utils/ruoyi'
-import type { ComponentInternalInstance } from 'vue'
 
-const { proxy } = getCurrentInstance() as ComponentInternalInstance
+const { proxy } = getCurrentInstance()!
 const { sys_common_status, sys_job_group } = proxy!.useDict(
   'sys_common_status',
   'sys_job_group',

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed, getCurrentInstance, ref, watch } from 'vue'
 import { getToken } from '@/utils/auth'
-import type { ComponentInternalInstance } from 'vue'
 
 const props = defineProps({
   modelValue: [String, Object, Array] as any,
@@ -28,7 +27,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['update:modelValue'])
-const { proxy } = getCurrentInstance() as ComponentInternalInstance
+const { proxy } = getCurrentInstance()!
 const number = ref(0)
 const uploadList = ref<any[]>([])
 const baseUrl = import.meta.env.VITE_APP_BASE_API
@@ -220,18 +219,21 @@ function listToString(list: any, separator?: any) {
 .upload-file-uploader {
   margin-bottom: 5px;
 }
+
 .upload-file-list .el-upload-list__item {
   border: 1px solid #e4e7ed;
   line-height: 2;
   margin-bottom: 10px;
   position: relative;
 }
+
 .upload-file-list .ele-upload-list__item-content {
   display: flex;
   justify-content: space-between;
   align-items: center;
   color: inherit;
 }
+
 .ele-upload-list__item-content-action .el-link {
   margin-right: 10px;
 }
