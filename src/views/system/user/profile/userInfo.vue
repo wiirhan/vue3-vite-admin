@@ -1,17 +1,20 @@
-<!-- eslint-disable vue/no-mutating-props -->
 <script setup lang="ts">
-import { getCurrentInstance, ref } from 'vue'
-import { updateUserProfile } from '@/api/system/user'
+import { updateUserProfile } from '@/api/system/user';
+import type { FormRules } from 'element-plus';
+import { getCurrentInstance } from 'vue';
 
-const props = defineProps({
-  user: {
-    type: Object as () => any,
-  },
+const user = defineModel<{
+  nickName: string
+  phonenumber: string
+  email: string
+  sex: string
+}>('user', {
+  required: true,
 })
 
 const { proxy } = getCurrentInstance()!
 
-const rules = ref({
+const rules = reactive<FormRules<typeof user>>({
   nickName: [{ required: true, message: '用户昵称不能为空', trigger: 'blur' }],
   email: [
     { required: true, message: '邮箱地址不能为空', trigger: 'blur' },
@@ -33,9 +36,9 @@ const rules = ref({
 
 /** 提交按钮 */
 function submit() {
-  ;(proxy?.$refs.userRef as any).validate((valid: any) => {
+  ; (proxy?.$refs.userRef as any).validate((valid: any) => {
     if (valid) {
-      updateUserProfile(props.user).then((response) => {
+      updateUserProfile(user).then(() => {
         proxy!.$modal.msgSuccess('修改成功')
       })
     }
@@ -60,8 +63,8 @@ function close() {
     </el-form-item>
     <el-form-item label="性别">
       <el-radio-group v-model="user.sex">
-        <el-radio label="0"> 男 </el-radio>
-        <el-radio label="1"> 女 </el-radio>
+        <el-radio value="0"> 男 </el-radio>
+        <el-radio value="1"> 女 </el-radio>
       </el-radio-group>
     </el-form-item>
     <el-form-item>

@@ -1,4 +1,3 @@
-<!-- eslint-disable vue/no-mutating-props -->
 <script setup lang="ts">
 import { listMenu } from '@/api/system/menu';
 import type { GenData } from '@/api/tool/types';
