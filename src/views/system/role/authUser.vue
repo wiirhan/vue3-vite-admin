@@ -1,12 +1,13 @@
 <script setup name="AuthUser" lang="ts">
-import { getCurrentInstance, reactive, ref } from 'vue'
-import { useRoute } from 'vue-router'
 import {
   allocatedUserList,
   authUserCancel,
   authUserCancelAll,
 } from '@/api/system/role'
 import { parseTime } from '@/utils/ruoyi'
+import { ElForm } from 'element-plus'
+import { getCurrentInstance, reactive, ref } from 'vue'
+import { useRoute } from 'vue-router'
 import selectUser from './selectUser.vue'
 
 const route = useRoute()
@@ -19,6 +20,7 @@ const showSearch = ref(true)
 const multiple = ref(true)
 const total = ref(0)
 const userIds = ref<any[]>([])
+const queryRef = ref<typeof ElForm | null>(null)
 
 const queryParams = reactive<{
   pageNum: number
@@ -65,7 +67,7 @@ function handleSelectionChange(selection: any[]) {
 }
 /** 打开授权用户表弹窗 */
 function openSelectUser() {
-  ;(proxy?.$refs.selectRef as any).show()
+  ; (proxy?.$refs.selectRef as any).show()
 }
 /** 取消授权按钮操作 */
 function cancelAuthUser(row: any) {
@@ -83,7 +85,7 @@ function cancelAuthUser(row: any) {
     })
 }
 /** 批量取消授权按钮操作 */
-function cancelAuthUserAll(row: any) {
+function cancelAuthUserAll() {
   const roleId = queryParams.roleId
   const uIds = userIds.value.join(',')
   proxy!.$modal
@@ -105,29 +107,14 @@ getList()
 
 <template>
   <div class="app-container">
-    <el-form
-      v-show="showSearch"
-      ref="queryRef"
-      :model="queryParams"
-      :inline="true"
-    >
+    <el-form v-show="showSearch" ref="queryRef" :model="queryParams" :inline="true">
       <el-form-item label="用户名称" prop="userName">
-        <el-input
-          v-model="queryParams.userName"
-          placeholder="请输入用户名称"
-          clearable
-          style="width: 240px"
-          @keyup.enter="handleQuery"
-        />
+        <el-input v-model="queryParams.userName" placeholder="请输入用户名称" clearable style="width: 240px"
+          @keyup.enter="handleQuery" />
       </el-form-item>
       <el-form-item label="手机号码" prop="phonenumber">
-        <el-input
-          v-model="queryParams.phonenumber"
-          placeholder="请输入手机号码"
-          clearable
-          style="width: 240px"
-          @keyup.enter="handleQuery"
-        />
+        <el-input v-model="queryParams.phonenumber" placeholder="请输入手机号码" clearable style="width: 240px"
+          @keyup.enter="handleQuery" />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="Search" @click="handleQuery">
@@ -139,25 +126,13 @@ getList()
 
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
-        <el-button
-          v-hasPermi="['system:role:add']"
-          type="primary"
-          plain
-          icon="Plus"
-          @click="openSelectUser"
-        >
+        <el-button v-hasPermi="['system:role:add']" type="primary" plain icon="Plus" @click="openSelectUser">
           添加用户
         </el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button
-          v-hasPermi="['system:role:remove']"
-          type="danger"
-          plain
-          icon="CircleClose"
-          :disabled="multiple"
-          @click="cancelAuthUserAll"
-        >
+        <el-button v-hasPermi="['system:role:remove']" type="danger" plain icon="CircleClose" :disabled="multiple"
+          @click="cancelAuthUserAll">
           批量取消授权
         </el-button>
       </el-col>
@@ -169,77 +144,34 @@ getList()
       <right-toolbar v-model:showSearch="showSearch" @query-table="getList" />
     </el-row>
 
-    <el-table
-      v-loading="loading"
-      :data="userList"
-      @selection-change="handleSelectionChange"
-    >
+    <el-table v-loading="loading" :data="userList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column
-        label="用户名称"
-        prop="userName"
-        :show-overflow-tooltip="true"
-      />
-      <el-table-column
-        label="用户昵称"
-        prop="nickName"
-        :show-overflow-tooltip="true"
-      />
-      <el-table-column
-        label="邮箱"
-        prop="email"
-        :show-overflow-tooltip="true"
-      />
-      <el-table-column
-        label="手机"
-        prop="phonenumber"
-        :show-overflow-tooltip="true"
-      />
+      <el-table-column label="用户名称" prop="userName" :show-overflow-tooltip="true" />
+      <el-table-column label="用户昵称" prop="nickName" :show-overflow-tooltip="true" />
+      <el-table-column label="邮箱" prop="email" :show-overflow-tooltip="true" />
+      <el-table-column label="手机" prop="phonenumber" :show-overflow-tooltip="true" />
       <el-table-column label="状态" align="center" prop="status">
         <template #default="scope">
           <dict-tag :options="sys_normal_disable" :value="scope.row.status" />
         </template>
       </el-table-column>
-      <el-table-column
-        label="创建时间"
-        align="center"
-        prop="createTime"
-        width="180"
-      >
+      <el-table-column label="创建时间" align="center" prop="createTime" width="180">
         <template #default="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column
-        label="操作"
-        align="center"
-        class-name="small-padding fixed-width"
-      >
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template #default="scope">
-          <el-button
-            v-hasPermi="['system:role:remove']"
-            link
-            type="primary"
-            icon="CircleClose"
-            @click="cancelAuthUser(scope.row)"
-          >
+          <el-button v-hasPermi="['system:role:remove']" link type="primary" icon="CircleClose"
+            @click="cancelAuthUser(scope.row)">
             取消授权
           </el-button>
         </template>
       </el-table-column>
     </el-table>
 
-    <pagination
-      v-show="total > 0"
-      v-model:page="queryParams.pageNum"
-      v-model:limit="queryParams.pageSize"
-      :total="total"
-      @pagination="getList"
-    />
-    <select-user
-      ref="selectRef"
-      :role-id="queryParams.roleId"
-      @ok="handleQuery"
-    />
+    <pagination v-show="total > 0" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize"
+      :total="total" @pagination="getList" />
+    <select-user ref="selectRef" :role-id="queryParams.roleId" @ok="handleQuery" />
   </div>
 </template>
