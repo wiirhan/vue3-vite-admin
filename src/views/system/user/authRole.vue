@@ -1,8 +1,8 @@
 <script setup name="AuthRole" lang="ts">
-import { getCurrentInstance, nextTick, ref } from 'vue'
-import { useRoute } from 'vue-router'
-import { getAuthRole, updateAuthRole } from '@/api/system/user'
-import { parseTime } from '@/utils/ruoyi'
+import { getAuthRole, updateAuthRole } from '@/api/system/user';
+import { parseTime } from '@/utils/ruoyi';
+import { getCurrentInstance, nextTick, ref } from 'vue';
+import { useRoute } from 'vue-router';
 
 const route = useRoute()
 const { proxy } = getCurrentInstance()!
@@ -21,7 +21,7 @@ const form = ref({
 
 /** 单击选中行数据 */
 function clickRow(row: any) {
-  ;(proxy?.$refs.roleRef as any).toggleRowSelection(row)
+  ; (proxy?.$refs.roleRef as any).toggleRowSelection(row)
 }
 /** 多选框选中数据 */
 function handleSelectionChange(selection: any[]) {
@@ -40,13 +40,13 @@ function close() {
 function submitForm() {
   const userId = form.value.userId
   const rIds = roleIds.value.join(',')
-  updateAuthRole({ userId, roleIds: rIds }).then((response) => {
+  updateAuthRole({ userId, roleIds: rIds }).then(() => {
     proxy!.$modal.msgSuccess('授权成功')
     close()
   })
 }
 
-;(() => {
+; (() => {
   const userId = route.params && route.params.userId
   if (userId) {
     loading.value = true
@@ -57,7 +57,7 @@ function submitForm() {
       nextTick(() => {
         roles.value.forEach((row) => {
           if (row.flag) {
-            ;(proxy?.$refs.roleRef as any).toggleRowSelection(row)
+            ; (proxy?.$refs.roleRef as any).toggleRowSelection(row)
           }
         })
       })
@@ -86,14 +86,9 @@ function submitForm() {
     </el-form>
 
     <h4 class="form-header h4">角色信息</h4>
-    <el-table
-      ref="roleRef"
-      v-loading="loading"
-      :row-key="getRowKey"
-      :data="roles.slice((pageNum - 1) * pageSize, pageNum * pageSize)"
-      @row-click="clickRow"
-      @selection-change="handleSelectionChange"
-    >
+    <el-table ref="roleRef" v-loading="loading" :row-key="getRowKey"
+      :data="roles.slice((pageNum - 1) * pageSize, pageNum * pageSize)" @row-click="clickRow"
+      @selection-change="handleSelectionChange">
       <el-table-column label="序号" width="55" type="index" align="center">
         <template #default="scope">
           <span>{{ (pageNum - 1) * pageSize + scope.$index + 1 }}</span>
@@ -103,24 +98,14 @@ function submitForm() {
       <el-table-column label="角色编号" align="center" prop="roleId" />
       <el-table-column label="角色名称" align="center" prop="roleName" />
       <el-table-column label="权限字符" align="center" prop="roleKey" />
-      <el-table-column
-        label="创建时间"
-        align="center"
-        prop="createTime"
-        width="180"
-      >
+      <el-table-column label="创建时间" align="center" prop="createTime" width="180">
         <template #default="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
     </el-table>
 
-    <pagination
-      v-show="total > 0"
-      v-model:page="pageNum"
-      v-model:limit="pageSize"
-      :total="total"
-    />
+    <pagination v-show="total > 0" v-model:page="pageNum" v-model:limit="pageSize" :total="total" />
 
     <el-form label-width="100px">
       <div style="text-align: center; margin-left: -120px; margin-top: 30px">
