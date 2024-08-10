@@ -119,22 +119,22 @@ onMounted(() => {
 
           <el-table-column label="插入" min-width="5%">
             <template #default="scope">
-              <el-checkbox v-model="scope.row.isInsert" true-label="1" />
+              <el-checkbox v-model="scope.row.isInsert" true-value="1" />
             </template>
           </el-table-column>
           <el-table-column label="编辑" min-width="5%">
             <template #default="scope">
-              <el-checkbox v-model="scope.row.isEdit" true-label="1" />
+              <el-checkbox v-model="scope.row.isEdit" true-value="1" />
             </template>
           </el-table-column>
           <el-table-column label="列表" min-width="5%">
             <template #default="scope">
-              <el-checkbox v-model="scope.row.isList" true-label="1" />
+              <el-checkbox v-model="scope.row.isList" true-value="1" />
             </template>
           </el-table-column>
           <el-table-column label="查询" min-width="5%">
             <template #default="scope">
-              <el-checkbox v-model="scope.row.isQuery" true-label="1" />
+              <el-checkbox v-model="scope.row.isQuery" true-value="1" />
             </template>
           </el-table-column>
           <el-table-column label="查询方式" min-width="10%">
@@ -153,7 +153,7 @@ onMounted(() => {
           </el-table-column>
           <el-table-column label="必填" min-width="5%">
             <template #default="scope">
-              <el-checkbox v-model="scope.row.isRequired" true-label="1" />
+              <el-checkbox v-model="scope.row.isRequired" true-value="1" />
             </template>
           </el-table-column>
           <el-table-column label="显示类型" min-width="12%">
@@ -179,7 +179,7 @@ onMounted(() => {
                   <span style="float: left">{{ dict.dictName }}</span>
                   <span style="float: right; color: #8492a6; font-size: 13px">{{
                     dict.dictType
-                    }}</span>
+                  }}</span>
                 </el-option>
               </el-select>
             </template>
