@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import errImage from "@/assets/401_images/401.gif";
+import { ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import errImage from '@/assets/401_images/401.gif'
 
-const route = useRoute();
-const router = useRouter();
-const errGif = ref(`${errImage}?${Date.now()}`);
+const route = useRoute()
+const router = useRouter()
+const errGif = ref(`${errImage}?${Date.now()}`)
 
 function back() {
   if (route.query.noGoBack) {
-    router.push({ path: "/" });
+    router.push({ path: '/' })
   } else {
-    router.go(-1);
+    router.go(-1)
   }
 }
 </script>

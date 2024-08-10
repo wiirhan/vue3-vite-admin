@@ -1,5 +1,5 @@
 <script setup name="Config" lang="ts">
-import { getCurrentInstance, reactive, ref, toRefs } from "vue";
+import { getCurrentInstance, reactive, ref, toRefs } from 'vue'
 import {
   addConfig,
   delConfig,
@@ -7,28 +7,28 @@ import {
   listConfig,
   refreshCache,
   updateConfig,
-} from "@/api/system/config";
-import { parseTime } from "@/utils/ruoyi";
-import type { ComponentInternalInstance } from "vue";
+} from '@/api/system/config'
+import { parseTime } from '@/utils/ruoyi'
+import type { ComponentInternalInstance } from 'vue'
 
-const { proxy } = getCurrentInstance() as ComponentInternalInstance;
-const { sys_yes_no } = proxy!.useDict("sys_yes_no");
+const { proxy } = getCurrentInstance() as ComponentInternalInstance
+const { sys_yes_no } = proxy!.useDict('sys_yes_no')
 
-const configList = ref<any[]>([]);
-const open = ref(false);
-const loading = ref(true);
-const showSearch = ref(true);
-const ids = ref<number[]>([]);
-const single = ref(true);
-const multiple = ref(true);
-const total = ref(0);
-const title = ref("");
-const dateRange = ref<any>([]);
+const configList = ref<any[]>([])
+const open = ref(false)
+const loading = ref(true)
+const showSearch = ref(true)
+const ids = ref<number[]>([])
+const single = ref(true)
+const multiple = ref(true)
+const total = ref(0)
+const title = ref('')
+const dateRange = ref<any>([])
 
 const data = reactive<{
-  form: any;
-  queryParams: any;
-  rules: any;
+  form: any
+  queryParams: any
+  rules: any
 }>({
   form: {},
   queryParams: {
@@ -40,34 +40,34 @@ const data = reactive<{
   },
   rules: {
     configName: [
-      { required: true, message: "参数名称不能为空", trigger: "blur" },
+      { required: true, message: '参数名称不能为空', trigger: 'blur' },
     ],
     configKey: [
-      { required: true, message: "参数键名不能为空", trigger: "blur" },
+      { required: true, message: '参数键名不能为空', trigger: 'blur' },
     ],
     configValue: [
-      { required: true, message: "参数键值不能为空", trigger: "blur" },
+      { required: true, message: '参数键值不能为空', trigger: 'blur' },
     ],
   },
-});
+})
 
-const { queryParams, form, rules } = toRefs(data);
+const { queryParams, form, rules } = toRefs(data)
 
 /** 查询参数列表 */
 function getList() {
-  loading.value = true;
+  loading.value = true
   listConfig(proxy?.addDateRange(queryParams.value, dateRange.value)).then(
     (response: any) => {
-      configList.value = response.rows;
-      total.value = response.total;
-      loading.value = false;
+      configList.value = response.rows
+      total.value = response.total
+      loading.value = false
     },
-  );
+  )
 }
 /** 取消按钮 */
 function cancel() {
-  open.value = false;
-  reset();
+  open.value = false
+  reset()
 }
 /** 表单重置 */
 function reset() {
@@ -76,98 +76,98 @@ function reset() {
     configName: undefined,
     configKey: undefined,
     configValue: undefined,
-    configType: "Y",
+    configType: 'Y',
     remark: undefined,
-  };
-  proxy?.resetForm("configRef");
+  }
+  proxy?.resetForm('configRef')
 }
 /** 搜索按钮操作 */
 function handleQuery() {
-  queryParams.value.pageNum = 1;
-  getList();
+  queryParams.value.pageNum = 1
+  getList()
 }
 /** 重置按钮操作 */
 function resetQuery() {
-  dateRange.value = [];
-  proxy?.resetForm("queryRef");
-  handleQuery();
+  dateRange.value = []
+  proxy?.resetForm('queryRef')
+  handleQuery()
 }
 /** 多选框选中数据 */
 function handleSelectionChange(selection: any[]) {
-  ids.value = selection.map((item) => item.configId);
-  single.value = selection.length !== 1;
-  multiple.value = !selection.length;
+  ids.value = selection.map((item) => item.configId)
+  single.value = selection.length !== 1
+  multiple.value = !selection.length
 }
 /** 新增按钮操作 */
 function handleAdd() {
-  reset();
-  open.value = true;
-  title.value = "添加参数";
+  reset()
+  open.value = true
+  title.value = '添加参数'
 }
 /** 修改按钮操作 */
 function handleUpdate(row: any) {
-  reset();
-  const configId = row.configId || ids.value;
+  reset()
+  const configId = row.configId || ids.value
   getConfig(configId).then((response) => {
-    form.value = response.data;
-    open.value = true;
-    title.value = "修改参数";
-  });
+    form.value = response.data
+    open.value = true
+    title.value = '修改参数'
+  })
 }
 /** 提交按钮 */
 function submitForm() {
-  (proxy?.$refs.configRef as any).validate((valid: any) => {
+  ;(proxy?.$refs.configRef as any).validate((valid: any) => {
     if (valid) {
       if (form.value.configId) {
         updateConfig(form.value).then((response) => {
-          proxy?.$modal.msgSuccess("修改成功");
-          open.value = false;
-          getList();
-        });
+          proxy?.$modal.msgSuccess('修改成功')
+          open.value = false
+          getList()
+        })
       } else {
         addConfig(form.value).then((response) => {
-          proxy?.$modal.msgSuccess("新增成功");
-          open.value = false;
-          getList();
-        });
+          proxy?.$modal.msgSuccess('新增成功')
+          open.value = false
+          getList()
+        })
       }
     }
-  });
+  })
 }
 /** 删除按钮操作 */
 function handleDelete(row: any) {
-  const configIds = row.configId || ids.value;
+  const configIds = row.configId || ids.value
   proxy?.$modal
     .confirm(`是否确认删除参数编号为"${configIds}"的数据项？`)
     .then(() => {
-      return delConfig(configIds);
+      return delConfig(configIds)
     })
     .then(() => {
-      getList();
-      proxy!.$modal.msgSuccess("删除成功");
+      getList()
+      proxy!.$modal.msgSuccess('删除成功')
     })
     .catch((error: any) => {
-      console.log(error);
-    });
+      console.log(error)
+    })
 }
 /** 导出按钮操作 */
 function handleExport() {
   proxy?.download(
-    "system/config/export",
+    'system/config/export',
     {
       ...queryParams.value,
     },
     `config_${Date.now()}.xlsx`,
-  );
+  )
 }
 /** 刷新缓存按钮操作 */
 function handleRefreshCache() {
   refreshCache().then(() => {
-    proxy?.$modal.msgSuccess("刷新缓存成功");
-  });
+    proxy?.$modal.msgSuccess('刷新缓存成功')
+  })
 }
 
-getList();
+getList()
 </script>
 
 <template>

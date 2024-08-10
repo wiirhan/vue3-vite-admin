@@ -1,19 +1,19 @@
 <script setup lang="ts">
-import { ElMessageBox } from "element-plus";
-import { ref } from "vue";
-import { useRouter } from "vue-router";
-import { getCodeImg, register } from "@/api/login";
-import type { FormInstance } from "element-plus";
+import { ElMessageBox } from 'element-plus'
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { getCodeImg, register } from '@/api/login'
+import type { FormInstance } from 'element-plus'
 
-const router = useRouter();
+const router = useRouter()
 
 const registerForm = ref({
-  username: "",
-  password: "",
-  confirmPassword: "",
-  code: "",
-  uuid: "",
-});
+  username: '',
+  password: '',
+  confirmPassword: '',
+  code: '',
+  uuid: '',
+})
 
 function equalToPassword(
   rule: any,
@@ -21,87 +21,87 @@ function equalToPassword(
   callback: (...args: any[]) => void,
 ) {
   if (registerForm.value.password !== value) {
-    callback(new Error("两次输入的密码不一致"));
+    callback(new Error('两次输入的密码不一致'))
   } else {
-    callback();
+    callback()
   }
 }
 
 const registerRules = {
   username: [
-    { required: true, trigger: "blur", message: "请输入您的账号" },
+    { required: true, trigger: 'blur', message: '请输入您的账号' },
     {
       min: 2,
       max: 20,
-      message: "用户账号长度必须介于 2 和 20 之间",
-      trigger: "blur",
+      message: '用户账号长度必须介于 2 和 20 之间',
+      trigger: 'blur',
     },
   ],
   password: [
-    { required: true, trigger: "blur", message: "请输入您的密码" },
+    { required: true, trigger: 'blur', message: '请输入您的密码' },
     {
       min: 5,
       max: 20,
-      message: "用户密码长度必须介于 5 和 20 之间",
-      trigger: "blur",
+      message: '用户密码长度必须介于 5 和 20 之间',
+      trigger: 'blur',
     },
   ],
   confirmPassword: [
-    { required: true, trigger: "blur", message: "请再次输入您的密码" },
-    { required: true, validator: equalToPassword, trigger: "blur" },
+    { required: true, trigger: 'blur', message: '请再次输入您的密码' },
+    { required: true, validator: equalToPassword, trigger: 'blur' },
   ],
-  code: [{ required: true, trigger: "change", message: "请输入验证码" }],
-};
+  code: [{ required: true, trigger: 'change', message: '请输入验证码' }],
+}
 
-const codeUrl = ref("");
-const loading = ref(false);
-const captchaEnabled = ref(true);
-const registerRef = ref<FormInstance>();
+const codeUrl = ref('')
+const loading = ref(false)
+const captchaEnabled = ref(true)
+const registerRef = ref<FormInstance>()
 function handleRegister() {
   registerRef.value?.validate((valid) => {
     if (valid) {
-      loading.value = true;
+      loading.value = true
       register(registerForm.value)
         .then((res) => {
-          const username = registerForm.value.username;
+          const username = registerForm.value.username
           ElMessageBox.alert(
             `<font color='red'>恭喜你，您的账号 ${username} 注册成功！</font>`,
-            "系统提示",
+            '系统提示',
             {
               dangerouslyUseHTMLString: true,
-              type: "success",
+              type: 'success',
             },
           )
             .then(() => {
-              router.push("/login");
+              router.push('/login')
             })
             .catch((error: any) => {
-              loading.value = true;
-              console.log(error);
-            });
+              loading.value = true
+              console.log(error)
+            })
         })
         .catch(() => {
-          loading.value = false;
+          loading.value = false
           if (captchaEnabled.value) {
-            getCode();
+            getCode()
           }
-        });
+        })
     }
-  });
+  })
 }
 
 function getCode() {
   getCodeImg().then((res: any) => {
     captchaEnabled.value =
-      res.captchaEnabled === undefined ? true : res.captchaEnabled;
+      res.captchaEnabled === undefined ? true : res.captchaEnabled
     if (captchaEnabled.value) {
-      codeUrl.value = `data:image/gif;base64,${res.img}`;
-      registerForm.value.uuid = res.uuid;
+      codeUrl.value = `data:image/gif;base64,${res.img}`
+      registerForm.value.uuid = res.uuid
     }
-  });
+  })
 }
 
-getCode();
+getCode()
 </script>
 
 <template>
@@ -205,7 +205,7 @@ getCode();
   justify-content: center;
   align-items: center;
   height: 100%;
-  background-image: url("../assets/images/login-background.jpg");
+  background-image: url('../assets/images/login-background.jpg');
   background-size: cover;
 }
 .title {

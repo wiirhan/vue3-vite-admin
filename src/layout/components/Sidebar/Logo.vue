@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { computed, ref } from "vue";
-import logo from "@/assets/logo/logo.png";
-import variables from "@/assets/styles/variables.module.scss";
-import useSettingsStore from "@/store/modules/settings";
+import { computed, ref } from 'vue'
+import logo from '@/assets/logo/logo.png'
+import variables from '@/assets/styles/variables.module.scss'
+import useSettingsStore from '@/store/modules/settings'
 // import collapse from 'element-plus/es/components/collapse';
 
 defineProps({
@@ -10,11 +10,11 @@ defineProps({
     type: Boolean,
     required: true,
   },
-});
+})
 
-const title = ref("若依管理系统");
-const settingsStore = useSettingsStore();
-const sideTheme = computed(() => settingsStore.sideTheme);
+const title = ref('若依管理系统')
+const settingsStore = useSettingsStore()
+const sideTheme = computed(() => settingsStore.sideTheme)
 </script>
 
 <template>

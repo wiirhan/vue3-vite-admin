@@ -1,24 +1,24 @@
 <script setup lang="ts">
-import { computed, getCurrentInstance, ref } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import useAppStore from "@/store/modules/app";
-import type { ComponentInternalInstance } from "vue";
+import { computed, getCurrentInstance, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import useAppStore from '@/store/modules/app'
+import type { ComponentInternalInstance } from 'vue'
 
-const appStore = useAppStore();
-const size = computed(() => appStore.size);
-const route = useRoute();
-const router = useRouter();
-const { proxy } = getCurrentInstance() as ComponentInternalInstance;
+const appStore = useAppStore()
+const size = computed(() => appStore.size)
+const route = useRoute()
+const router = useRouter()
+const { proxy } = getCurrentInstance() as ComponentInternalInstance
 const sizeOptions = ref([
-  { label: "较大", value: "large" },
-  { label: "默认", value: "default" },
-  { label: "稍小", value: "small" },
-]);
+  { label: '较大', value: 'large' },
+  { label: '默认', value: 'default' },
+  { label: '稍小', value: 'small' },
+])
 
 function handleSetSize(size: any) {
-  proxy!.$modal.loading("正在设置布局大小，请稍候...");
-  appStore.setSize(size);
-  setTimeout("window.location.reload()", 1000);
+  proxy!.$modal.loading('正在设置布局大小，请稍候...')
+  appStore.setSize(size)
+  setTimeout('window.location.reload()', 1000)
 }
 </script>
 

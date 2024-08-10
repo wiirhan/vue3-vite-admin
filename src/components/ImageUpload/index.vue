@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { computed, getCurrentInstance, ref, watch } from "vue";
-import { getToken } from "@/utils/auth";
-import type { ComponentInternalInstance } from "vue";
+import { computed, getCurrentInstance, ref, watch } from 'vue'
+import { getToken } from '@/utils/auth'
+import type { ComponentInternalInstance } from 'vue'
 
 const props = defineProps({
   modelValue: [String, Object, Array],
@@ -18,28 +18,28 @@ const props = defineProps({
   // 文件类型, 例如['png', 'jpg', 'jpeg']
   fileType: {
     type: Array,
-    default: () => ["png", "jpg", "jpeg"],
+    default: () => ['png', 'jpg', 'jpeg'],
   },
   // 是否显示提示
   isShowTip: {
     type: Boolean,
     default: true,
   },
-});
+})
 
-const emit = defineEmits(["update:modelValue"]);
-const { proxy } = getCurrentInstance() as ComponentInternalInstance;
-const number = ref(0);
-const uploadList = ref<any[]>([]);
-const dialogImageUrl = ref("");
-const dialogVisible = ref(false);
-const baseUrl = import.meta.env.VITE_APP_BASE_API;
-const uploadImgUrl = ref(`${import.meta.env.VITE_APP_BASE_API}/common/upload`); // 上传的图片服务器地址
-const headers = ref({ Authorization: `Bearer ${getToken()}` });
-const fileList = ref<any[]>([]);
+const emit = defineEmits(['update:modelValue'])
+const { proxy } = getCurrentInstance() as ComponentInternalInstance
+const number = ref(0)
+const uploadList = ref<any[]>([])
+const dialogImageUrl = ref('')
+const dialogVisible = ref(false)
+const baseUrl = import.meta.env.VITE_APP_BASE_API
+const uploadImgUrl = ref(`${import.meta.env.VITE_APP_BASE_API}/common/upload`) // 上传的图片服务器地址
+const headers = ref({ Authorization: `Bearer ${getToken()}` })
+const fileList = ref<any[]>([])
 const showTip = computed(
   () => props.isShowTip && (props.fileType || props.fileSize),
-);
+)
 
 watch(
   () => props.modelValue,
@@ -48,85 +48,85 @@ watch(
       // 首先将值转为数组
       const list: any[] = Array.isArray(val)
         ? val
-        : (props.modelValue as any).split(",");
+        : (props.modelValue as any).split(',')
       // 然后将数组转为对象数组
       fileList.value = list.map((item) => {
-        if (typeof item === "string") {
+        if (typeof item === 'string') {
           if (!item.includes(baseUrl)) {
-            item = { name: baseUrl + item, url: baseUrl + item };
+            item = { name: baseUrl + item, url: baseUrl + item }
           } else {
-            item = { name: item, url: item };
+            item = { name: item, url: item }
           }
         }
-        return item;
-      });
+        return item
+      })
     } else {
-      fileList.value = [];
-      return [];
+      fileList.value = []
+      return []
     }
   },
   { deep: true, immediate: true },
-);
+)
 
 // 上传前loading加载
 function handleBeforeUpload(file: any) {
-  let isImg = false;
+  let isImg = false
   if (props.fileType.length) {
-    let fileExtension = "";
-    if (file.name.includes(".")) {
-      fileExtension = file.name.slice(file.name.lastIndexOf(".") + 1);
+    let fileExtension = ''
+    if (file.name.includes('.')) {
+      fileExtension = file.name.slice(file.name.lastIndexOf('.') + 1)
     }
     isImg = props.fileType.some((type: any) => {
-      if (file.type.includes(type)) return true;
-      if (fileExtension && fileExtension.includes(type)) return true;
-      return false;
-    });
+      if (file.type.includes(type)) return true
+      if (fileExtension && fileExtension.includes(type)) return true
+      return false
+    })
   } else {
-    isImg = file.type.includes("image");
+    isImg = file.type.includes('image')
   }
   if (!isImg) {
     proxy!.$modal.msgError(
-      `文件格式不正确, 请上传${props.fileType.join("/")}图片格式文件!`,
-    );
-    return false;
+      `文件格式不正确, 请上传${props.fileType.join('/')}图片格式文件!`,
+    )
+    return false
   }
   if (props.fileSize) {
-    const isLt = file.size / 1024 / 1024 < props.fileSize;
+    const isLt = file.size / 1024 / 1024 < props.fileSize
     if (!isLt) {
-      proxy!.$modal.msgError(`上传头像图片大小不能超过 ${props.fileSize} MB!`);
-      return false;
+      proxy!.$modal.msgError(`上传头像图片大小不能超过 ${props.fileSize} MB!`)
+      return false
     }
   }
-  proxy!.$modal.loading("正在上传图片，请稍候...");
-  number.value++;
+  proxy!.$modal.loading('正在上传图片，请稍候...')
+  number.value++
 }
 
 // 文件个数超出
 function handleExceed() {
-  proxy!.$modal.msgError(`上传文件数量不能超过 ${props.limit} 个!`);
+  proxy!.$modal.msgError(`上传文件数量不能超过 ${props.limit} 个!`)
 }
 
 // 上传成功回调
 function handleUploadSuccess(res: any, file: any) {
   if (res.code === 200) {
-    uploadList.value.push({ name: res.fileName, url: res.fileName });
-    uploadedSuccessfully();
+    uploadList.value.push({ name: res.fileName, url: res.fileName })
+    uploadedSuccessfully()
   } else {
-    number.value--;
-    proxy!.$modal.closeLoading();
-    proxy!.$modal.msgError(res.msg);
-    (proxy!.$refs.imageUpload as any).handleRemove(file);
-    uploadedSuccessfully();
+    number.value--
+    proxy!.$modal.closeLoading()
+    proxy!.$modal.msgError(res.msg)
+    ;(proxy!.$refs.imageUpload as any).handleRemove(file)
+    uploadedSuccessfully()
   }
 }
 
 // 删除图片
 function handleDelete(file: any) {
-  const findex = fileList.value.map((f) => f.name).indexOf(file.name);
+  const findex = fileList.value.map((f) => f.name).indexOf(file.name)
   if (findex > -1 && uploadList.value.length === number.value) {
-    fileList.value.splice(findex, 1);
-    emit("update:modelValue", listToString(fileList.value));
-    return false;
+    fileList.value.splice(findex, 1)
+    emit('update:modelValue', listToString(fileList.value))
+    return false
   }
 }
 
@@ -135,36 +135,36 @@ function uploadedSuccessfully() {
   if (number.value > 0 && uploadList.value.length === number.value) {
     fileList.value = fileList.value
       .filter((f) => f.url !== undefined)
-      .concat(uploadList.value);
-    uploadList.value = [];
-    number.value = 0;
-    emit("update:modelValue", listToString(fileList.value));
-    proxy!.$modal.closeLoading();
+      .concat(uploadList.value)
+    uploadList.value = []
+    number.value = 0
+    emit('update:modelValue', listToString(fileList.value))
+    proxy!.$modal.closeLoading()
   }
 }
 
 // 上传失败
 function handleUploadError() {
-  proxy!.$modal.msgError("上传图片失败");
-  proxy!.$modal.closeLoading();
+  proxy!.$modal.msgError('上传图片失败')
+  proxy!.$modal.closeLoading()
 }
 
 // 预览
 function handlePictureCardPreview(file: any) {
-  dialogImageUrl.value = file.url;
-  dialogVisible.value = true;
+  dialogImageUrl.value = file.url
+  dialogVisible.value = true
 }
 
 // 对象转成指定字符串分隔
 function listToString(list: any, separator?: any) {
-  let strs = "";
-  separator = separator || ",";
+  let strs = ''
+  separator = separator || ','
   for (const i in list) {
-    if (undefined !== list[i].url && list[i].url.indexOf("blob:") !== 0) {
-      strs += list[i].url.replace(baseUrl, "") + separator;
+    if (undefined !== list[i].url && list[i].url.indexOf('blob:') !== 0) {
+      strs += list[i].url.replace(baseUrl, '') + separator
     }
   }
-  return strs !== "" ? strs.slice(0, Math.max(0, strs.length - 1)) : "";
+  return strs !== '' ? strs.slice(0, Math.max(0, strs.length - 1)) : ''
 }
 </script>
 
@@ -198,7 +198,7 @@ function listToString(list: any, separator?: any) {
         大小不超过 <b style="color: #f56c6c">{{ fileSize }}MB</b>
       </template>
       <template v-if="fileType">
-        格式为 <b style="color: #f56c6c">{{ fileType.join("/") }}</b>
+        格式为 <b style="color: #f56c6c">{{ fileType.join('/') }}</b>
       </template>
       的文件
     </div>

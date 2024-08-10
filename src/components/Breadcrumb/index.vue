@@ -1,51 +1,51 @@
 <script setup lang="ts">
-import { ref, watchEffect } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { ref, watchEffect } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 
-const route = useRoute();
-const router = useRouter();
-const levelList = ref<any[]>([]);
+const route = useRoute()
+const router = useRouter()
+const levelList = ref<any[]>([])
 
 function getBreadcrumb() {
   // only show routes with meta.title
   let matched: any = route.matched.filter(
     (item) => item.meta && item.meta.title,
-  );
-  const first = matched[0];
+  )
+  const first = matched[0]
   // 判断是否为首页
   if (!isDashboard(first)) {
-    matched = [{ path: "/index", meta: { title: "首页" } }].concat(matched);
+    matched = [{ path: '/index', meta: { title: '首页' } }].concat(matched)
   }
 
   levelList.value = matched.filter(
     (item: any) =>
       item.meta && item.meta.title && item.meta.breadcrumb !== false,
-  );
+  )
 }
 function isDashboard(route: any) {
-  const name = route && route.name;
+  const name = route && route.name
   if (!name) {
-    return false;
+    return false
   }
-  return name.trim() === "Index";
+  return name.trim() === 'Index'
 }
 function handleLink(item: any) {
-  const { redirect, path } = item;
+  const { redirect, path } = item
   if (redirect) {
-    router.push(redirect);
-    return;
+    router.push(redirect)
+    return
   }
-  router.push(path);
+  router.push(path)
 }
 
 watchEffect(() => {
   // if you go to the redirect page, do not update the breadcrumbs
-  if (route.path.startsWith("/redirect/")) {
-    return;
+  if (route.path.startsWith('/redirect/')) {
+    return
   }
-  getBreadcrumb();
-});
-getBreadcrumb();
+  getBreadcrumb()
+})
+getBreadcrumb()
 </script>
 
 <template>

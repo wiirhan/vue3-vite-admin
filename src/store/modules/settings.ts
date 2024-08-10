@@ -1,6 +1,6 @@
-import { defineStore } from "pinia";
-import defaultSettings from "@/settings";
-import { useDynamicTitle } from "@/utils/dynamicTitle";
+import { defineStore } from 'pinia'
+import defaultSettings from '@/settings'
+import { useDynamicTitle } from '@/utils/dynamicTitle'
 
 const {
   sideTheme,
@@ -10,15 +10,15 @@ const {
   fixedHeader,
   sidebarLogo,
   dynamicTitle,
-} = defaultSettings;
+} = defaultSettings
 
 const storageSetting =
-  JSON.parse(localStorage.getItem("layout-setting") ?? "{}") || "";
+  JSON.parse(localStorage.getItem('layout-setting') ?? '{}') || ''
 
-const useSettingsStore = defineStore("settings", {
+const useSettingsStore = defineStore('settings', {
   state: () => ({
-    title: "",
-    theme: storageSetting.theme || "#409EFF",
+    title: '',
+    theme: storageSetting.theme || '#409EFF',
     sideTheme: storageSetting.sideTheme || sideTheme,
     showSettings,
     topNav:
@@ -43,18 +43,18 @@ const useSettingsStore = defineStore("settings", {
   actions: {
     // 修改布局设置
     changeSetting(data: any) {
-      const { key, value } = data;
+      const { key, value } = data
       if (this.hasOwnProperty(key)) {
-        Reflect.set(this, key, value);
+        Reflect.set(this, key, value)
         // this[key] = value;
       }
     },
     // 设置网页标题
     setTitle(title: string) {
-      this.title = title;
-      useDynamicTitle();
+      this.title = title
+      useDynamicTitle()
     },
   },
-});
+})
 
-export default useSettingsStore;
+export default useSettingsStore

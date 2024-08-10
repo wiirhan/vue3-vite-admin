@@ -1,36 +1,36 @@
 <script setup name="Notice" lang="ts">
-import { getCurrentInstance, reactive, ref, toRefs } from "vue";
+import { getCurrentInstance, reactive, ref, toRefs } from 'vue'
 import {
   addNotice,
   delNotice,
   getNotice,
   listNotice,
   updateNotice,
-} from "@/api/system/notice";
-import { parseTime } from "@/utils/ruoyi";
-import type { ComponentInternalInstance } from "vue";
+} from '@/api/system/notice'
+import { parseTime } from '@/utils/ruoyi'
+import type { ComponentInternalInstance } from 'vue'
 
-const { proxy } = getCurrentInstance() as ComponentInternalInstance;
+const { proxy } = getCurrentInstance() as ComponentInternalInstance
 
 const { sys_notice_status, sys_notice_type } = proxy!.useDict(
-  "sys_notice_status",
-  "sys_notice_type",
-);
+  'sys_notice_status',
+  'sys_notice_type',
+)
 
-const noticeList = ref<any[]>([]);
-const open = ref(false);
-const loading = ref(true);
-const showSearch = ref(true);
-const ids = ref<number[]>([]);
-const single = ref(true);
-const multiple = ref(true);
-const total = ref(0);
-const title = ref("");
+const noticeList = ref<any[]>([])
+const open = ref(false)
+const loading = ref(true)
+const showSearch = ref(true)
+const ids = ref<number[]>([])
+const single = ref(true)
+const multiple = ref(true)
+const total = ref(0)
+const title = ref('')
 
 const data = reactive<{
-  form: any;
-  queryParams: any;
-  rules: any;
+  form: any
+  queryParams: any
+  rules: any
 }>({
   form: {},
   queryParams: {
@@ -42,29 +42,29 @@ const data = reactive<{
   },
   rules: {
     noticeTitle: [
-      { required: true, message: "公告标题不能为空", trigger: "blur" },
+      { required: true, message: '公告标题不能为空', trigger: 'blur' },
     ],
     noticeType: [
-      { required: true, message: "公告类型不能为空", trigger: "change" },
+      { required: true, message: '公告类型不能为空', trigger: 'change' },
     ],
   },
-});
+})
 
-const { queryParams, form, rules } = toRefs(data);
+const { queryParams, form, rules } = toRefs(data)
 
 /** 查询公告列表 */
 function getList() {
-  loading.value = true;
+  loading.value = true
   listNotice(queryParams.value).then((response: any) => {
-    noticeList.value = response.rows;
-    total.value = response.total;
-    loading.value = false;
-  });
+    noticeList.value = response.rows
+    total.value = response.total
+    loading.value = false
+  })
 }
 /** 取消按钮 */
 function cancel() {
-  open.value = false;
-  reset();
+  open.value = false
+  reset()
 }
 /** 表单重置 */
 function reset() {
@@ -73,80 +73,80 @@ function reset() {
     noticeTitle: undefined,
     noticeType: undefined,
     noticeContent: undefined,
-    status: "0",
-  };
-  proxy!.resetForm("noticeRef");
+    status: '0',
+  }
+  proxy!.resetForm('noticeRef')
 }
 /** 搜索按钮操作 */
 function handleQuery() {
-  queryParams.value.pageNum = 1;
-  getList();
+  queryParams.value.pageNum = 1
+  getList()
 }
 /** 重置按钮操作 */
 function resetQuery() {
-  proxy!.resetForm("queryRef");
-  handleQuery();
+  proxy!.resetForm('queryRef')
+  handleQuery()
 }
 /** 多选框选中数据 */
 function handleSelectionChange(selection: any[]) {
-  ids.value = selection.map((item) => item.noticeId);
-  single.value = selection.length !== 1;
-  multiple.value = !selection.length;
+  ids.value = selection.map((item) => item.noticeId)
+  single.value = selection.length !== 1
+  multiple.value = !selection.length
 }
 /** 新增按钮操作 */
 function handleAdd() {
-  reset();
-  open.value = true;
-  title.value = "添加公告";
+  reset()
+  open.value = true
+  title.value = '添加公告'
 }
 /** 修改按钮操作 */
 function handleUpdate(row: any) {
-  reset();
-  const noticeId = row.noticeId || ids.value;
+  reset()
+  const noticeId = row.noticeId || ids.value
   getNotice(noticeId).then((response) => {
-    form.value = response.data;
-    open.value = true;
-    title.value = "修改公告";
-  });
+    form.value = response.data
+    open.value = true
+    title.value = '修改公告'
+  })
 }
 /** 提交按钮 */
 function submitForm() {
-  (proxy?.$refs.noticeRef as any).validate((valid: any) => {
+  ;(proxy?.$refs.noticeRef as any).validate((valid: any) => {
     if (valid) {
       if (form.value.noticeId !== undefined) {
         updateNotice(form.value).then((response) => {
-          proxy!.$modal.msgSuccess("修改成功");
-          open.value = false;
-          getList();
-        });
+          proxy!.$modal.msgSuccess('修改成功')
+          open.value = false
+          getList()
+        })
       } else {
         addNotice(form.value).then((response) => {
-          proxy!.$modal.msgSuccess("新增成功");
-          open.value = false;
-          getList();
-        });
+          proxy!.$modal.msgSuccess('新增成功')
+          open.value = false
+          getList()
+        })
       }
     }
-  });
+  })
 }
 /** 删除按钮操作 */
 function handleDelete(row: any) {
-  const noticeIds = row.noticeId || ids.value;
+  const noticeIds = row.noticeId || ids.value
   proxy!.$modal
     .confirm(`是否确认删除公告编号为"${noticeIds}"的数据项？`)
     .then(() => {
-      return delNotice(noticeIds);
+      return delNotice(noticeIds)
     })
     .then(() => {
-      getList();
-      proxy!.$modal.msgSuccess("删除成功");
+      getList()
+      proxy!.$modal.msgSuccess('删除成功')
     })
     .catch((error: any) => {
-      console.log(error);
-    });
+      console.log(error)
+    })
 }
 
-getList();
+getList()
 </script>
 
 <template>
@@ -283,7 +283,7 @@ getList();
         width="100"
       >
         <template #default="scope">
-          <span>{{ parseTime(scope.row.createTime, "{y}-{m}-{d}") }}</span>
+          <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
       <el-table-column

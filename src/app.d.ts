@@ -1,6 +1,6 @@
-declare module "*.vue" {
-  import type { defineComponent } from "vue";
+declare module '*.vue' {
+  import type { defineComponent } from 'vue'
 
-  const Component: ReturnType<typeof defineComponent>;
-  export default Component;
+  const Component: ReturnType<typeof defineComponent>
+  export default Component
 }

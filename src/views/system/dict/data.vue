@@ -1,51 +1,51 @@
 <script setup name="Data" lang="ts">
-import { getCurrentInstance, reactive, ref, toRefs } from "vue";
-import { useRoute } from "vue-router";
+import { getCurrentInstance, reactive, ref, toRefs } from 'vue'
+import { useRoute } from 'vue-router'
 import {
   addData,
   delData,
   getData,
   listData,
   updateData,
-} from "@/api/system/dict/data";
+} from '@/api/system/dict/data'
 import {
   optionselect as getDictOptionselect,
   getType,
-} from "@/api/system/dict/type";
-import useDictStore from "@/store/modules/dict";
-import { parseTime } from "@/utils/ruoyi";
-import type { ComponentInternalInstance } from "vue";
+} from '@/api/system/dict/type'
+import useDictStore from '@/store/modules/dict'
+import { parseTime } from '@/utils/ruoyi'
+import type { ComponentInternalInstance } from 'vue'
 
-const { proxy } = getCurrentInstance() as ComponentInternalInstance;
+const { proxy } = getCurrentInstance() as ComponentInternalInstance
 
-const { sys_normal_disable } = proxy!.useDict("sys_normal_disable");
+const { sys_normal_disable } = proxy!.useDict('sys_normal_disable')
 
-const dataList = ref<any[]>([]);
-const open = ref(false);
-const loading = ref(true);
-const showSearch = ref(true);
-const ids = ref<number[]>([]);
-const single = ref(true);
-const multiple = ref(true);
-const total = ref(0);
-const title = ref("");
-const defaultDictType = ref("");
-const typeOptions = ref<any[]>([]);
-const route = useRoute();
+const dataList = ref<any[]>([])
+const open = ref(false)
+const loading = ref(true)
+const showSearch = ref(true)
+const ids = ref<number[]>([])
+const single = ref(true)
+const multiple = ref(true)
+const total = ref(0)
+const title = ref('')
+const defaultDictType = ref('')
+const typeOptions = ref<any[]>([])
+const route = useRoute()
 // 数据标签回显样式
 const listClassOptions = ref([
-  { value: "default", label: "默认" },
-  { value: "primary", label: "主要" },
-  { value: "success", label: "成功" },
-  { value: "info", label: "信息" },
-  { value: "warning", label: "警告" },
-  { value: "danger", label: "危险" },
-]);
+  { value: 'default', label: '默认' },
+  { value: 'primary', label: '主要' },
+  { value: 'success', label: '成功' },
+  { value: 'info', label: '信息' },
+  { value: 'warning', label: '警告' },
+  { value: 'danger', label: '危险' },
+])
 
 const data = reactive<{
-  form: any;
-  queryParams: any;
-  rules: any;
+  form: any
+  queryParams: any
+  rules: any
 }>({
   form: {},
   queryParams: {
@@ -57,47 +57,47 @@ const data = reactive<{
   },
   rules: {
     dictLabel: [
-      { required: true, message: "数据标签不能为空", trigger: "blur" },
+      { required: true, message: '数据标签不能为空', trigger: 'blur' },
     ],
     dictValue: [
-      { required: true, message: "数据键值不能为空", trigger: "blur" },
+      { required: true, message: '数据键值不能为空', trigger: 'blur' },
     ],
     dictSort: [
-      { required: true, message: "数据顺序不能为空", trigger: "blur" },
+      { required: true, message: '数据顺序不能为空', trigger: 'blur' },
     ],
   },
-});
+})
 
-const { queryParams, form, rules } = toRefs(data);
+const { queryParams, form, rules } = toRefs(data)
 
 /** 查询字典类型详细 */
 function getTypes(dictId: any) {
   getType(dictId).then((response) => {
-    queryParams.value.dictType = response.data.dictType;
-    defaultDictType.value = response.data.dictType;
-    getList();
-  });
+    queryParams.value.dictType = response.data.dictType
+    defaultDictType.value = response.data.dictType
+    getList()
+  })
 }
 
 /** 查询字典类型列表 */
 function getTypeList() {
   getDictOptionselect().then((response) => {
-    typeOptions.value = response.data;
-  });
+    typeOptions.value = response.data
+  })
 }
 /** 查询字典数据列表 */
 function getList() {
-  loading.value = true;
+  loading.value = true
   listData(queryParams.value).then((response: any) => {
-    dataList.value = response.rows;
-    total.value = response.total;
-    loading.value = false;
-  });
+    dataList.value = response.rows
+    total.value = response.total
+    loading.value = false
+  })
 }
 /** 取消按钮 */
 function cancel() {
-  open.value = false;
-  reset();
+  open.value = false
+  reset()
 }
 /** 表单重置 */
 function reset() {
@@ -106,104 +106,104 @@ function reset() {
     dictLabel: undefined,
     dictValue: undefined,
     cssClass: undefined,
-    listClass: "default",
+    listClass: 'default',
     dictSort: 0,
-    status: "0",
+    status: '0',
     remark: undefined,
-  };
-  proxy!.resetForm("dataRef");
+  }
+  proxy!.resetForm('dataRef')
 }
 /** 搜索按钮操作 */
 function handleQuery() {
-  queryParams.value.pageNum = 1;
-  getList();
+  queryParams.value.pageNum = 1
+  getList()
 }
 /** 返回按钮操作 */
 function handleClose() {
-  const obj = { path: "/system/dict" };
-  proxy!.$tab.closeOpenPage(obj);
+  const obj = { path: '/system/dict' }
+  proxy!.$tab.closeOpenPage(obj)
 }
 /** 重置按钮操作 */
 function resetQuery() {
-  proxy!.resetForm("queryRef");
-  queryParams.value.dictType = defaultDictType;
-  handleQuery();
+  proxy!.resetForm('queryRef')
+  queryParams.value.dictType = defaultDictType
+  handleQuery()
 }
 /** 新增按钮操作 */
 function handleAdd() {
-  reset();
-  open.value = true;
-  title.value = "添加字典数据";
-  form.value.dictType = queryParams.value.dictType;
+  reset()
+  open.value = true
+  title.value = '添加字典数据'
+  form.value.dictType = queryParams.value.dictType
 }
 /** 多选框选中数据 */
 function handleSelectionChange(selection: any[]) {
-  ids.value = selection.map((item) => item.dictCode);
-  single.value = selection.length !== 1;
-  multiple.value = !selection.length;
+  ids.value = selection.map((item) => item.dictCode)
+  single.value = selection.length !== 1
+  multiple.value = !selection.length
 }
 /** 修改按钮操作 */
 function handleUpdate(row: any) {
-  reset();
-  const dictCode = row.dictCode || ids.value;
+  reset()
+  const dictCode = row.dictCode || ids.value
   getData(dictCode).then((response) => {
-    form.value = response.data;
-    open.value = true;
-    title.value = "修改字典数据";
-  });
+    form.value = response.data
+    open.value = true
+    title.value = '修改字典数据'
+  })
 }
 /** 提交按钮 */
 function submitForm() {
-  (proxy?.$refs.dataRef as any).validate((valid: any) => {
+  ;(proxy?.$refs.dataRef as any).validate((valid: any) => {
     if (valid) {
       if (form.value.dictCode !== undefined) {
         updateData(form.value).then((response) => {
-          useDictStore().removeDict(queryParams.value.dictType);
-          proxy!.$modal.msgSuccess("修改成功");
-          open.value = false;
-          getList();
-        });
+          useDictStore().removeDict(queryParams.value.dictType)
+          proxy!.$modal.msgSuccess('修改成功')
+          open.value = false
+          getList()
+        })
       } else {
         addData(form.value).then((response) => {
-          useDictStore().removeDict(queryParams.value.dictType);
-          proxy!.$modal.msgSuccess("新增成功");
-          open.value = false;
-          getList();
-        });
+          useDictStore().removeDict(queryParams.value.dictType)
+          proxy!.$modal.msgSuccess('新增成功')
+          open.value = false
+          getList()
+        })
       }
     }
-  });
+  })
 }
 /** 删除按钮操作 */
 function handleDelete(row: any) {
-  const dictCodes = row.dictCode || ids.value;
+  const dictCodes = row.dictCode || ids.value
   proxy!.$modal
     .confirm(`是否确认删除字典编码为"${dictCodes}"的数据项？`)
     .then(() => {
-      return delData(dictCodes);
+      return delData(dictCodes)
     })
     .then(() => {
-      getList();
-      proxy!.$modal.msgSuccess("删除成功");
-      useDictStore().removeDict(queryParams.value.dictType);
+      getList()
+      proxy!.$modal.msgSuccess('删除成功')
+      useDictStore().removeDict(queryParams.value.dictType)
     })
     .catch((error: any) => {
-      console.log(error);
-    });
+      console.log(error)
+    })
 }
 /** 导出按钮操作 */
 function handleExport() {
   proxy!.download(
-    "system/dict/data/export",
+    'system/dict/data/export',
     {
       ...queryParams.value,
     },
     `dict_data_${Date.now()}.xlsx`,
-  );
+  )
 }
 
-getTypes(route.params && route.params.dictId);
-getTypeList();
+getTypes(route.params && route.params.dictId)
+getTypeList()
 </script>
 
 <template>

@@ -1,55 +1,55 @@
 <script setup lang="ts">
-import { computed } from "vue";
-import { isExternal } from "@/utils/validate";
+import { computed } from 'vue'
+import { isExternal } from '@/utils/validate'
 
 const props = defineProps({
   src: {
     type: String,
-    default: "",
+    default: '',
   },
   width: {
     type: [Number, String],
-    default: "",
+    default: '',
   },
   height: {
     type: [Number, String],
-    default: "",
+    default: '',
   },
-});
+})
 
 const realSrc = computed(() => {
   if (!props.src) {
-    return;
+    return
   }
-  const real_src = props.src.split(",")[0];
+  const real_src = props.src.split(',')[0]
   if (isExternal(real_src)) {
-    return real_src;
+    return real_src
   }
-  return import.meta.env.VITE_APP_BASE_API + real_src;
-});
+  return import.meta.env.VITE_APP_BASE_API + real_src
+})
 
 const realSrcList = computed(() => {
   if (!props.src) {
-    return;
+    return
   }
-  const real_src_list = props.src.split(",");
-  const srcList: any[] = [];
+  const real_src_list = props.src.split(',')
+  const srcList: any[] = []
   real_src_list.forEach((item) => {
     if (isExternal(item)) {
-      return srcList.push(item);
+      return srcList.push(item)
     }
-    return srcList.push(import.meta.env.VITE_APP_BASE_API + item);
-  });
-  return srcList;
-});
+    return srcList.push(import.meta.env.VITE_APP_BASE_API + item)
+  })
+  return srcList
+})
 
 const realWidth = computed(() =>
-  typeof props.width === "string" ? props.width : `${props.width}px`,
-);
+  typeof props.width === 'string' ? props.width : `${props.width}px`,
+)
 
 const realHeight = computed(() =>
-  typeof props.height === "string" ? props.height : `${props.height}px`,
-);
+  typeof props.height === 'string' ? props.height : `${props.height}px`,
+)
 </script>
 
 <template>

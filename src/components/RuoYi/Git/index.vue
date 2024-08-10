@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref } from 'vue'
 
-const url = ref("https://gitee.com/y_project/RuoYi-Vue");
+const url = ref('https://gitee.com/y_project/RuoYi-Vue')
 
 function goto() {
-  window.open(url.value);
+  window.open(url.value)
 }
 </script>
 

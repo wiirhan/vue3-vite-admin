@@ -1,60 +1,72 @@
 <script setup lang="ts">
-import { ElMessageBox } from "element-plus";
-import Breadcrumb from "@/components/Breadcrumb/index.vue";
-import Hamburger from "@/components/Hamburger/index.vue";
-import HeaderSearch from "@/components/HeaderSearch/index.vue";
-import Screenfull from "@/components/Screenfull/index.vue";
-import SizeSelect from "@/components/SizeSelect/index.vue";
-import TopNav from "@/components/TopNav/index.vue";
-import useAppStore from "@/store/modules/app";
-import useSettingsStore from "@/store/modules/settings";
-import useUserStore from "@/store/modules/user";
+import { ElMessageBox } from 'element-plus'
+import Breadcrumb from '@/components/Breadcrumb/index.vue'
+import Hamburger from '@/components/Hamburger/index.vue'
+import HeaderSearch from '@/components/HeaderSearch/index.vue'
+import Screenfull from '@/components/Screenfull/index.vue'
+import SizeSelect from '@/components/SizeSelect/index.vue'
+import TopNav from '@/components/TopNav/index.vue'
+import useAppStore from '@/store/modules/app'
+import useSettingsStore from '@/store/modules/settings'
+import useUserStore from '@/store/modules/user'
 
-const emits = defineEmits(["setLayout"]);
-const appStore = useAppStore();
-const userStore = useUserStore();
-const settingsStore = useSettingsStore();
+const emits = defineEmits(['setLayout'])
+const appStore = useAppStore()
+const userStore = useUserStore()
+const settingsStore = useSettingsStore()
 
 function toggleSideBar() {
-  appStore.toggleSideBar();
+  appStore.toggleSideBar()
 }
 
 function handleCommand(command: any) {
   switch (command) {
-    case "setLayout":
-      setLayout();
-      break;
-    case "logout":
-      logout();
-      break;
+    case 'setLayout':
+      setLayout()
+      break
+    case 'logout':
+      logout()
+      break
     default:
-      break;
+      break
   }
 }
 
 function logout() {
-  ElMessageBox.confirm("确定注销并退出系统吗？", "提示", {
-    confirmButtonText: "确定",
-    cancelButtonText: "取消",
-    type: "warning",
+  ElMessageBox.confirm('确定注销并退出系统吗？', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
   }).then(() => {
     userStore.logOut().then(() => {
-      location.href = "/index";
-    });
-  });
+      location.href = '/index'
+    })
+  })
 }
 
 function setLayout() {
-  emits("setLayout");
+  emits('setLayout')
 }
 </script>
 
 <template>
   <div class="navbar">
-    <Hamburger id="hamburger-container" :is-active="appStore.sidebar.opened" class="hamburger-container"
-      @toggle-click="toggleSideBar" />
-    <Breadcrumb v-if="!settingsStore.topNav" id="breadcrumb-container" class="breadcrumb-container" />
-    <TopNav v-if="settingsStore.topNav" id="topmenu-container" class="topmenu-container" />
+    <Hamburger
+      id="hamburger-container"
+      :is-active="appStore.sidebar.opened"
+      class="hamburger-container"
+      @toggle-click="toggleSideBar"
+    />
+    <Breadcrumb
+      v-if="!settingsStore.topNav"
+      id="breadcrumb-container"
+      class="breadcrumb-container"
+    />
+    <TopNav
+      v-if="settingsStore.topNav"
+      id="topmenu-container"
+      class="topmenu-container"
+    />
 
     <div class="right-menu">
       <template v-if="appStore.device !== 'mobile'">
@@ -67,7 +79,11 @@ function setLayout() {
         </el-tooltip>
       </template>
       <div class="avatar-container">
-        <el-dropdown class="right-menu-item hover-effect" trigger="click" @command="handleCommand">
+        <el-dropdown
+          class="right-menu-item hover-effect"
+          trigger="click"
+          @command="handleCommand"
+        >
           <div class="avatar-wrapper">
             <img :src="userStore.avatar" class="user-avatar" />
             <el-icon><caret-bottom /></el-icon>

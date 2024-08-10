@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from "vue";
-import CrontabDay from "./day.vue";
-import CrontabHour from "./hour.vue";
-import CrontabMin from "./min.vue";
-import CrontabMonth from "./month.vue";
-import CrontabResult from "./result.vue";
-import CrontabSecond from "./second.vue";
-import CrontabWeek from "./week.vue";
-import CrontabYear from "./year.vue";
+import { computed, onMounted, ref, watch } from 'vue'
+import CrontabDay from './day.vue'
+import CrontabHour from './hour.vue'
+import CrontabMin from './min.vue'
+import CrontabMonth from './month.vue'
+import CrontabResult from './result.vue'
+import CrontabSecond from './second.vue'
+import CrontabWeek from './week.vue'
+import CrontabYear from './year.vue'
 
 const props = defineProps({
   hideComponent: {
@@ -16,36 +16,36 @@ const props = defineProps({
   },
   expression: {
     type: String,
-    default: "",
+    default: '',
   },
-});
-const emit = defineEmits(["hide", "fill"]);
-const tabTitles = ref(["秒", "分钟", "小时", "日", "月", "周", "年"]);
-const hideComponent = ref<string[]>([]);
-const expression = ref("");
+})
+const emit = defineEmits(['hide', 'fill'])
+const tabTitles = ref(['秒', '分钟', '小时', '日', '月', '周', '年'])
+const hideComponent = ref<string[]>([])
+const expression = ref('')
 const crontabValueObj = ref<Record<string, string>>({
-  second: "*",
-  min: "*",
-  hour: "*",
-  day: "*",
-  month: "*",
-  week: "?",
-  year: "",
-});
+  second: '*',
+  min: '*',
+  hour: '*',
+  day: '*',
+  month: '*',
+  week: '?',
+  year: '',
+})
 const crontabValueString = computed(() => {
-  const obj = crontabValueObj.value;
+  const obj = crontabValueObj.value
   return `${obj.second} ${obj.min} ${obj.hour} ${obj.day} ${obj.month} ${
     obj.week
-  }${obj.year === "" ? "" : ` ${obj.year}`}`;
-});
-watch(expression, () => resolveExp());
+  }${obj.year === '' ? '' : ` ${obj.year}`}`
+})
+watch(expression, () => resolveExp())
 function shouldHide(key: string) {
-  return !(hideComponent.value && hideComponent.value.includes(key));
+  return !(hideComponent.value && hideComponent.value.includes(key))
 }
 function resolveExp() {
   // 反解析 表达式
   if (expression.value) {
-    const arr = expression.value.split(/\s+/);
+    const arr = expression.value.split(/\s+/)
     if (arr.length >= 6) {
       // 6 位以上是合法表达式
       const obj: Record<string, any> = {
@@ -55,57 +55,57 @@ function resolveExp() {
         day: arr[3],
         month: arr[4],
         week: arr[5],
-        year: arr[6] ? arr[6] : "",
-      };
+        year: arr[6] ? arr[6] : '',
+      }
       crontabValueObj.value = {
         ...obj,
-      };
+      }
     }
   } else {
     // 没有传入的表达式 则还原
-    clearCron();
+    clearCron()
   }
 }
 // 由子组件触发，更改表达式组成的字段值
 function updateCrontabValue(name: any, value: any) {
-  crontabValueObj.value[name] = value;
+  crontabValueObj.value[name] = value
 }
 // 表单选项的子组件校验数字格式（通过-props传递）
 function checkNumber(value: any, minLimit: any, maxLimit: any) {
   // 检查必须为整数
-  value = Math.floor(value);
+  value = Math.floor(value)
   if (value < minLimit) {
-    value = minLimit;
+    value = minLimit
   } else if (value > maxLimit) {
-    value = maxLimit;
+    value = maxLimit
   }
-  return value;
+  return value
 }
 // 隐藏弹窗
 function hidePopup() {
-  emit("hide");
+  emit('hide')
 }
 // 填充表达式
 function submitFill() {
-  emit("fill", crontabValueString.value);
-  hidePopup();
+  emit('fill', crontabValueString.value)
+  hidePopup()
 }
 function clearCron() {
   // 还原选择项
   crontabValueObj.value = {
-    second: "*",
-    min: "*",
-    hour: "*",
-    day: "*",
-    month: "*",
-    week: "?",
-    year: "",
-  };
+    second: '*',
+    min: '*',
+    hour: '*',
+    day: '*',
+    month: '*',
+    week: '?',
+    year: '',
+  }
 }
 onMounted(() => {
-  expression.value = props.expression;
-  hideComponent.value = props.hideComponent;
-});
+  expression.value = props.expression
+  hideComponent.value = props.hideComponent
+})
 </script>
 
 <template>

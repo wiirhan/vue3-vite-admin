@@ -1,31 +1,31 @@
 <script setup name="JobLog" lang="ts">
-import { oneOf } from "@zeronejs/utils";
-import { getCurrentInstance, reactive, ref, toRefs } from "vue";
-import { useRoute } from "vue-router";
-import { getJob } from "@/api/monitor/job";
-import { cleanJobLog, delJobLog, listJobLog } from "@/api/monitor/jobLog";
-import { parseTime } from "@/utils/ruoyi";
-import type { ComponentInternalInstance } from "vue";
+import { oneOf } from '@zeronejs/utils'
+import { getCurrentInstance, reactive, ref, toRefs } from 'vue'
+import { useRoute } from 'vue-router'
+import { getJob } from '@/api/monitor/job'
+import { cleanJobLog, delJobLog, listJobLog } from '@/api/monitor/jobLog'
+import { parseTime } from '@/utils/ruoyi'
+import type { ComponentInternalInstance } from 'vue'
 
-const { proxy } = getCurrentInstance() as ComponentInternalInstance;
+const { proxy } = getCurrentInstance() as ComponentInternalInstance
 const { sys_common_status, sys_job_group } = proxy!.useDict(
-  "sys_common_status",
-  "sys_job_group",
-);
+  'sys_common_status',
+  'sys_job_group',
+)
 
-const jobLogList = ref<any[]>([]);
-const open = ref(false);
-const loading = ref(true);
-const showSearch = ref(true);
-const ids = ref<number[]>([]);
-const multiple = ref(true);
-const total = ref(0);
-const dateRange = ref<any>([]);
-const route = useRoute();
+const jobLogList = ref<any[]>([])
+const open = ref(false)
+const loading = ref(true)
+const showSearch = ref(true)
+const ids = ref<number[]>([])
+const multiple = ref(true)
+const total = ref(0)
+const dateRange = ref<any>([])
+const route = useRoute()
 
 const data = reactive<{
-  form: any;
-  queryParams: any;
+  form: any
+  queryParams: any
 }>({
   form: {},
   queryParams: {
@@ -35,98 +35,98 @@ const data = reactive<{
     dictType: undefined,
     status: undefined,
   },
-});
+})
 
-const { queryParams, form } = toRefs(data);
+const { queryParams, form } = toRefs(data)
 
 /** 查询调度日志列表 */
 function getList() {
-  loading.value = true;
+  loading.value = true
   listJobLog(proxy!.addDateRange(queryParams.value, dateRange.value)).then(
     (response: any) => {
-      jobLogList.value = response.rows;
-      total.value = response.total;
-      loading.value = false;
+      jobLogList.value = response.rows
+      total.value = response.total
+      loading.value = false
     },
-  );
+  )
 }
 // 返回按钮
 function handleClose() {
-  const obj = { path: "/monitor/job" };
-  proxy!.$tab.closeOpenPage(obj);
+  const obj = { path: '/monitor/job' }
+  proxy!.$tab.closeOpenPage(obj)
 }
 /** 搜索按钮操作 */
 function handleQuery() {
-  queryParams.value.pageNum = 1;
-  getList();
+  queryParams.value.pageNum = 1
+  getList()
 }
 /** 重置按钮操作 */
 function resetQuery() {
-  dateRange.value = [];
-  proxy!.resetForm("queryRef");
-  handleQuery();
+  dateRange.value = []
+  proxy!.resetForm('queryRef')
+  handleQuery()
 }
 // 多选框选中数据
 function handleSelectionChange(selection: any[]) {
-  ids.value = selection.map((item) => item.jobLogId);
-  multiple.value = !selection.length;
+  ids.value = selection.map((item) => item.jobLogId)
+  multiple.value = !selection.length
 }
 /** 详细按钮操作 */
 function handleView(row: any) {
-  open.value = true;
-  form.value = row;
+  open.value = true
+  form.value = row
 }
 /** 删除按钮操作 */
 function handleDelete(row: any) {
   proxy!.$modal
     .confirm(`是否确认删除调度日志编号为"${ids.value}"的数据项?`)
     .then(() => {
-      return delJobLog(ids.value);
+      return delJobLog(ids.value)
     })
     .then(() => {
-      getList();
-      proxy!.$modal.msgSuccess("删除成功");
-    });
+      getList()
+      proxy!.$modal.msgSuccess('删除成功')
+    })
   //   .catch(() => {});
 }
 /** 清空按钮操作 */
 function handleClean() {
   proxy!.$modal
-    .confirm("是否确认清空所有调度日志数据项?")
+    .confirm('是否确认清空所有调度日志数据项?')
     .then(() => {
-      return cleanJobLog();
+      return cleanJobLog()
     })
     .then(() => {
-      getList();
-      proxy!.$modal.msgSuccess("清空成功");
-    });
+      getList()
+      proxy!.$modal.msgSuccess('清空成功')
+    })
   //   .catch(() => {});
 }
 /** 导出按钮操作 */
 function handleExport() {
   proxy!.download(
-    "monitor/jobLog/export",
+    'monitor/jobLog/export',
     {
       ...queryParams.value,
     },
     `job_log_${Date.now()}.xlsx`,
-  );
+  )
 }
 
-(() => {
-  const jobId = oneOf(route.params.jobId);
-  if (jobId !== undefined && jobId !== "0") {
+;(() => {
+  const jobId = oneOf(route.params.jobId)
+  if (jobId !== undefined && jobId !== '0') {
     getJob(jobId).then((response) => {
-      queryParams.value.jobName = response.data.jobName;
-      queryParams.value.jobGroup = response.data.jobGroup;
-      getList();
-    });
+      queryParams.value.jobName = response.data.jobName
+      queryParams.value.jobGroup = response.data.jobGroup
+      getList()
+    })
   } else {
-    getList();
+    getList()
   }
-})();
+})()
 
-getList();
+getList()
 </script>
 
 <template>

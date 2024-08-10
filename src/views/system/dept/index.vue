@@ -1,5 +1,5 @@
 <script setup name="Dept" lang="ts">
-import { getCurrentInstance, nextTick, reactive, ref, toRefs } from "vue";
+import { getCurrentInstance, nextTick, reactive, ref, toRefs } from 'vue'
 import {
   addDept,
   delDept,
@@ -7,26 +7,26 @@ import {
   listDept,
   listDeptExcludeChild,
   updateDept,
-} from "@/api/system/dept";
-import { parseTime } from "@/utils/ruoyi";
-import type { ComponentInternalInstance } from "vue";
+} from '@/api/system/dept'
+import { parseTime } from '@/utils/ruoyi'
+import type { ComponentInternalInstance } from 'vue'
 
-const { proxy } = getCurrentInstance() as ComponentInternalInstance;
-const { sys_normal_disable } = proxy!.useDict("sys_normal_disable");
+const { proxy } = getCurrentInstance() as ComponentInternalInstance
+const { sys_normal_disable } = proxy!.useDict('sys_normal_disable')
 
-const deptList = ref<any[]>([]);
-const open = ref(false);
-const loading = ref(true);
-const showSearch = ref(true);
-const title = ref("");
-const deptOptions = ref<any[]>([]);
-const isExpandAll = ref(true);
-const refreshTable = ref(true);
+const deptList = ref<any[]>([])
+const open = ref(false)
+const loading = ref(true)
+const showSearch = ref(true)
+const title = ref('')
+const deptOptions = ref<any[]>([])
+const isExpandAll = ref(true)
+const refreshTable = ref(true)
 
 const data = reactive<{
-  form: any;
-  queryParams: any;
-  rules: any;
+  form: any
+  queryParams: any
+  rules: any
 }>({
   form: {},
   queryParams: {
@@ -35,45 +35,45 @@ const data = reactive<{
   },
   rules: {
     parentId: [
-      { required: true, message: "上级部门不能为空", trigger: "blur" },
+      { required: true, message: '上级部门不能为空', trigger: 'blur' },
     ],
     deptName: [
-      { required: true, message: "部门名称不能为空", trigger: "blur" },
+      { required: true, message: '部门名称不能为空', trigger: 'blur' },
     ],
     orderNum: [
-      { required: true, message: "显示排序不能为空", trigger: "blur" },
+      { required: true, message: '显示排序不能为空', trigger: 'blur' },
     ],
     email: [
       {
-        type: "email",
-        message: "请输入正确的邮箱地址",
-        trigger: ["blur", "change"],
+        type: 'email',
+        message: '请输入正确的邮箱地址',
+        trigger: ['blur', 'change'],
       },
     ],
     phone: [
       {
         pattern: /^1[3-9|]\d{9}$/,
-        message: "请输入正确的手机号码",
-        trigger: "blur",
+        message: '请输入正确的手机号码',
+        trigger: 'blur',
       },
     ],
   },
-});
+})
 
-const { queryParams, form, rules } = toRefs(data);
+const { queryParams, form, rules } = toRefs(data)
 
 /** 查询部门列表 */
 function getList() {
-  loading.value = true;
+  loading.value = true
   listDept(queryParams.value).then((response) => {
-    deptList.value = proxy!.handleTree(response.data, "deptId");
-    loading.value = false;
-  });
+    deptList.value = proxy!.handleTree(response.data, 'deptId')
+    loading.value = false
+  })
 }
 /** 取消按钮 */
 function cancel() {
-  open.value = false;
-  reset();
+  open.value = false
+  reset()
 }
 /** 表单重置 */
 function reset() {
@@ -85,88 +85,88 @@ function reset() {
     leader: undefined,
     phone: undefined,
     email: undefined,
-    status: "0",
-  };
-  proxy!.resetForm("deptRef");
+    status: '0',
+  }
+  proxy!.resetForm('deptRef')
 }
 /** 搜索按钮操作 */
 function handleQuery() {
-  getList();
+  getList()
 }
 /** 重置按钮操作 */
 function resetQuery() {
-  proxy!.resetForm("queryRef");
-  handleQuery();
+  proxy!.resetForm('queryRef')
+  handleQuery()
 }
 /** 新增按钮操作 */
 function handleAdd(row: any) {
-  reset();
+  reset()
   listDept().then((response) => {
-    deptOptions.value = proxy!.handleTree(response.data, "deptId");
-  });
+    deptOptions.value = proxy!.handleTree(response.data, 'deptId')
+  })
   if (row !== undefined) {
-    form.value.parentId = row.deptId;
+    form.value.parentId = row.deptId
   }
-  open.value = true;
-  title.value = "添加部门";
+  open.value = true
+  title.value = '添加部门'
 }
 /** 展开/折叠操作 */
 function toggleExpandAll() {
-  refreshTable.value = false;
-  isExpandAll.value = !isExpandAll.value;
+  refreshTable.value = false
+  isExpandAll.value = !isExpandAll.value
   nextTick(() => {
-    refreshTable.value = true;
-  });
+    refreshTable.value = true
+  })
 }
 /** 修改按钮操作 */
 function handleUpdate(row: any) {
-  reset();
+  reset()
   listDeptExcludeChild(row.deptId).then((response) => {
-    deptOptions.value = proxy!.handleTree(response.data, "deptId");
-  });
+    deptOptions.value = proxy!.handleTree(response.data, 'deptId')
+  })
   getDept(row.deptId).then((response) => {
-    form.value = response.data;
-    open.value = true;
-    title.value = "修改部门";
-  });
+    form.value = response.data
+    open.value = true
+    title.value = '修改部门'
+  })
 }
 /** 提交按钮 */
 function submitForm() {
-  (proxy?.$refs.deptRef as any).validate((valid: any) => {
+  ;(proxy?.$refs.deptRef as any).validate((valid: any) => {
     if (valid) {
       if (form.value.deptId !== undefined) {
         updateDept(form.value).then((response) => {
-          proxy!.$modal.msgSuccess("修改成功");
-          open.value = false;
-          getList();
-        });
+          proxy!.$modal.msgSuccess('修改成功')
+          open.value = false
+          getList()
+        })
       } else {
         addDept(form.value).then((response) => {
-          proxy!.$modal.msgSuccess("新增成功");
-          open.value = false;
-          getList();
-        });
+          proxy!.$modal.msgSuccess('新增成功')
+          open.value = false
+          getList()
+        })
       }
     }
-  });
+  })
 }
 /** 删除按钮操作 */
 function handleDelete(row: any) {
   proxy!.$modal
     .confirm(`是否确认删除名称为"${row.deptName}"的数据项?`)
     .then(() => {
-      return delDept(row.deptId);
+      return delDept(row.deptId)
     })
     .then(() => {
-      getList();
-      proxy!.$modal.msgSuccess("删除成功");
+      getList()
+      proxy!.$modal.msgSuccess('删除成功')
     })
     .catch((error: any) => {
-      console.log(error);
-    });
+      console.log(error)
+    })
 }
 
-getList();
+getList()
 </script>
 
 <template>

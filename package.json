@@ -7,8 +7,9 @@
     "build:prod": "vite build",
     "build:stage": "vite build --mode staging",
     "preview": "vite preview",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
+    "lint": "eslint --cache .",
+    "lint:fix": "pnpm run lint --fix",
+    "format": "prettier --cache --write .",
     "test": "vitest",
     "up": "taze major -I"
   },
@@ -32,6 +33,7 @@
   },
   "devDependencies": {
     "@sxzz/eslint-config": "^3.17.0",
+    "@sxzz/prettier-config": "^2.0.2",
     "@types/file-saver": "^2.0.7",
     "@types/js-cookie": "^3.0.6",
     "@types/node": "^22.1.0",

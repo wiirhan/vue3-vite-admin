@@ -1,49 +1,49 @@
 <script setup name="Cache" lang="ts">
-import * as echarts from "echarts";
-import { getCurrentInstance, ref } from "vue";
-import { getCache } from "@/api/monitor/cache";
-import type { ComponentInternalInstance } from "vue";
+import * as echarts from 'echarts'
+import { getCurrentInstance, ref } from 'vue'
+import { getCache } from '@/api/monitor/cache'
+import type { ComponentInternalInstance } from 'vue'
 
-const cache = ref<any>([]);
-const commandstats = ref(null);
-const usedmemory = ref(null);
-const { proxy } = getCurrentInstance() as ComponentInternalInstance;
+const cache = ref<any>([])
+const commandstats = ref(null)
+const usedmemory = ref(null)
+const { proxy } = getCurrentInstance() as ComponentInternalInstance
 
 function getList() {
-  proxy!.$modal.loading("正在加载缓存监控数据，请稍候！");
+  proxy!.$modal.loading('正在加载缓存监控数据，请稍候！')
   getCache().then((response) => {
-    proxy!.$modal.closeLoading();
-    cache.value = response.data;
+    proxy!.$modal.closeLoading()
+    cache.value = response.data
 
-    const commandstatsIntance = echarts.init(commandstats.value!, "macarons");
+    const commandstatsIntance = echarts.init(commandstats.value!, 'macarons')
     commandstatsIntance.setOption({
       tooltip: {
-        trigger: "item",
-        formatter: "{a} <br/>{b} : {c} ({d}%)",
+        trigger: 'item',
+        formatter: '{a} <br/>{b} : {c} ({d}%)',
       },
       series: [
         {
-          name: "命令",
-          type: "pie",
-          roseType: "radius",
+          name: '命令',
+          type: 'pie',
+          roseType: 'radius',
           radius: [15, 95],
-          center: ["50%", "38%"],
+          center: ['50%', '38%'],
           data: response.data.commandStats,
-          animationEasing: "cubicInOut",
+          animationEasing: 'cubicInOut',
           animationDuration: 1000,
         },
       ],
-    });
+    })
 
-    const usedmemoryInstance = echarts.init(usedmemory.value!, "macarons");
+    const usedmemoryInstance = echarts.init(usedmemory.value!, 'macarons')
     usedmemoryInstance.setOption({
       tooltip: {
         formatter: `{b} <br/>{a} : ${cache.value.info.used_memory_human}`,
       },
       series: [
         {
-          name: "峰值",
-          type: "gauge",
+          name: '峰值',
+          type: 'gauge',
           min: 0,
           max: 1000,
           detail: {
@@ -52,16 +52,16 @@ function getList() {
           data: [
             {
               value: Number.parseFloat(cache.value.info.used_memory_human),
-              name: "内存消耗",
+              name: '内存消耗',
             },
           ],
         },
       ],
-    });
-  });
+    })
+  })
 }
 
-getList();
+getList()
 </script>
 
 <template>
@@ -91,7 +91,7 @@ getList();
                   <td class="el-table__cell is-leaf">
                     <div v-if="cache.info" class="cell">
                       {{
-                        cache.info.redis_mode == "standalone" ? "单机" : "集群"
+                        cache.info.redis_mode == 'standalone' ? '单机' : '集群'
                       }}
                     </div>
                   </td>
@@ -154,7 +154,7 @@ getList();
                   </td>
                   <td class="el-table__cell is-leaf">
                     <div v-if="cache.info" class="cell">
-                      {{ cache.info.aof_enabled == "0" ? "否" : "是" }}
+                      {{ cache.info.aof_enabled == '0' ? '否' : '是' }}
                     </div>
                   </td>
                   <td class="el-table__cell is-leaf">

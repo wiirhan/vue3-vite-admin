@@ -1,91 +1,91 @@
 <script setup name="SelectUser" lang="ts">
-import { getCurrentInstance, reactive, ref } from "vue";
-import { authUserSelectAll, unallocatedUserList } from "@/api/system/role";
-import { parseTime } from "@/utils/ruoyi";
-import type { ComponentInternalInstance } from "vue";
+import { getCurrentInstance, reactive, ref } from 'vue'
+import { authUserSelectAll, unallocatedUserList } from '@/api/system/role'
+import { parseTime } from '@/utils/ruoyi'
+import type { ComponentInternalInstance } from 'vue'
 
 const props = defineProps({
   roleId: {
     type: [Number, String],
   },
-});
+})
 
-const emit = defineEmits(["ok"]);
+const emit = defineEmits(['ok'])
 
-const { proxy } = getCurrentInstance() as ComponentInternalInstance;
+const { proxy } = getCurrentInstance() as ComponentInternalInstance
 
-const { sys_normal_disable } = proxy!.useDict("sys_normal_disable");
+const { sys_normal_disable } = proxy!.useDict('sys_normal_disable')
 
-const userList = ref<any[]>([]);
-const visible = ref(false);
-const total = ref(0);
-const userIds = ref<any[]>([]);
+const userList = ref<any[]>([])
+const visible = ref(false)
+const total = ref(0)
+const userIds = ref<any[]>([])
 
 const queryParams = reactive<{
-  pageNum: number;
-  pageSize: number;
-  roleId?: any;
-  userName: any;
-  phonenumber: any;
+  pageNum: number
+  pageSize: number
+  roleId?: any
+  userName: any
+  phonenumber: any
 }>({
   pageNum: 1,
   pageSize: 10,
   roleId: undefined,
   userName: undefined,
   phonenumber: undefined,
-});
+})
 
 // 显示弹框
 function show() {
-  queryParams.roleId = props.roleId;
-  getList();
-  visible.value = true;
+  queryParams.roleId = props.roleId
+  getList()
+  visible.value = true
 }
 /** 选择行 */
 function clickRow(row: any) {
-  (proxy?.$refs.refTable as any).toggleRowSelection(row);
+  ;(proxy?.$refs.refTable as any).toggleRowSelection(row)
 }
 // 多选框选中数据
 function handleSelectionChange(selection: any[]) {
-  userIds.value = selection.map((item) => item.userId);
+  userIds.value = selection.map((item) => item.userId)
 }
 // 查询表数据
 function getList() {
   unallocatedUserList(queryParams).then((res: any) => {
-    userList.value = res.rows;
-    total.value = res.total;
-  });
+    userList.value = res.rows
+    total.value = res.total
+  })
 }
 /** 搜索按钮操作 */
 function handleQuery() {
-  queryParams.pageNum = 1;
-  getList();
+  queryParams.pageNum = 1
+  getList()
 }
 /** 重置按钮操作 */
 function resetQuery() {
-  proxy!.resetForm("queryRef");
-  handleQuery();
+  proxy!.resetForm('queryRef')
+  handleQuery()
 }
 /** 选择授权用户操作 */
 function handleSelectUser() {
-  const roleId = queryParams.roleId;
-  const uIds = userIds.value.join(",");
-  if (uIds === "") {
-    proxy!.$modal.msgError("请选择要分配的用户");
-    return;
+  const roleId = queryParams.roleId
+  const uIds = userIds.value.join(',')
+  if (uIds === '') {
+    proxy!.$modal.msgError('请选择要分配的用户')
+    return
   }
   authUserSelectAll({ roleId, userIds: uIds }).then((res: any) => {
-    proxy!.$modal.msgSuccess(res.msg);
+    proxy!.$modal.msgSuccess(res.msg)
     if (res.code === 200) {
-      visible.value = false;
-      emit("ok");
+      visible.value = false
+      emit('ok')
     }
-  });
+  })
 }
 
 defineExpose({
   show,
-});
+})
 </script>
 
 <template>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed } from 'vue'
 
 const props = defineProps({
   // 数据
@@ -9,15 +9,15 @@ const props = defineProps({
   },
   // 当前的值
   value: [Number, String, Array],
-});
+})
 
 const values = computed(() => {
-  if (props.value !== null && typeof props.value !== "undefined") {
-    return Array.isArray(props.value) ? props.value : [String(props.value)];
+  if (props.value !== null && typeof props.value !== 'undefined') {
+    return Array.isArray(props.value) ? props.value : [String(props.value)]
   } else {
-    return [];
+    return []
   }
-});
+})
 </script>
 
 <template>

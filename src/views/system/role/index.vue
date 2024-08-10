@@ -1,10 +1,10 @@
 <script setup name="Role" lang="ts">
-import { getCurrentInstance, nextTick, reactive, ref, toRefs } from "vue";
-import { useRouter } from "vue-router";
+import { getCurrentInstance, nextTick, reactive, ref, toRefs } from 'vue'
+import { useRouter } from 'vue-router'
 import {
   treeselect as menuTreeselect,
   roleMenuTreeselect,
-} from "@/api/system/menu";
+} from '@/api/system/menu'
 import {
   addRole,
   changeRoleStatus,
@@ -14,48 +14,48 @@ import {
   getRole,
   listRole,
   updateRole,
-} from "@/api/system/role";
-import { parseTime } from "@/utils/ruoyi";
-import type { ComponentInternalInstance } from "vue";
+} from '@/api/system/role'
+import { parseTime } from '@/utils/ruoyi'
+import type { ComponentInternalInstance } from 'vue'
 
-const router = useRouter();
-const { proxy } = getCurrentInstance() as ComponentInternalInstance;
+const router = useRouter()
+const { proxy } = getCurrentInstance() as ComponentInternalInstance
 
-const { sys_normal_disable } = proxy!.useDict("sys_normal_disable");
+const { sys_normal_disable } = proxy!.useDict('sys_normal_disable')
 
-const roleList = ref<any[]>([]);
-const open = ref(false);
-const loading = ref(true);
-const showSearch = ref(true);
-const ids = ref<number[]>([]);
-const single = ref(true);
-const multiple = ref(true);
-const total = ref(0);
-const title = ref("");
-const dateRange = ref<any>([]);
-const menuOptions = ref<any[]>([]);
-const menuExpand = ref(false);
-const menuNodeAll = ref(false);
-const deptExpand = ref(true);
-const deptNodeAll = ref(false);
-const deptOptions = ref<any[]>([]);
-const openDataScope = ref(false);
-const menuRef = ref<any>(null);
-const deptRef = ref<any>(null);
+const roleList = ref<any[]>([])
+const open = ref(false)
+const loading = ref(true)
+const showSearch = ref(true)
+const ids = ref<number[]>([])
+const single = ref(true)
+const multiple = ref(true)
+const total = ref(0)
+const title = ref('')
+const dateRange = ref<any>([])
+const menuOptions = ref<any[]>([])
+const menuExpand = ref(false)
+const menuNodeAll = ref(false)
+const deptExpand = ref(true)
+const deptNodeAll = ref(false)
+const deptOptions = ref<any[]>([])
+const openDataScope = ref(false)
+const menuRef = ref<any>(null)
+const deptRef = ref<any>(null)
 
 /** 数据范围选项 */
 const dataScopeOptions = ref([
-  { value: "1", label: "全部数据权限" },
-  { value: "2", label: "自定数据权限" },
-  { value: "3", label: "本部门数据权限" },
-  { value: "4", label: "本部门及以下数据权限" },
-  { value: "5", label: "仅本人数据权限" },
-]);
+  { value: '1', label: '全部数据权限' },
+  { value: '2', label: '自定数据权限' },
+  { value: '3', label: '本部门数据权限' },
+  { value: '4', label: '本部门及以下数据权限' },
+  { value: '5', label: '仅本人数据权限' },
+])
 
 const data = reactive<{
-  form: any;
-  queryParams: any;
-  rules: any;
+  form: any
+  queryParams: any
+  rules: any
 }>({
   form: {},
   queryParams: {
@@ -67,293 +67,293 @@ const data = reactive<{
   },
   rules: {
     roleName: [
-      { required: true, message: "角色名称不能为空", trigger: "blur" },
+      { required: true, message: '角色名称不能为空', trigger: 'blur' },
     ],
-    roleKey: [{ required: true, message: "权限字符不能为空", trigger: "blur" }],
+    roleKey: [{ required: true, message: '权限字符不能为空', trigger: 'blur' }],
     roleSort: [
-      { required: true, message: "角色顺序不能为空", trigger: "blur" },
+      { required: true, message: '角色顺序不能为空', trigger: 'blur' },
     ],
   },
-});
+})
 
-const { queryParams, form, rules } = toRefs(data);
+const { queryParams, form, rules } = toRefs(data)
 
 /** 查询角色列表 */
 function getList() {
-  loading.value = true;
+  loading.value = true
   listRole(proxy!.addDateRange(queryParams.value, dateRange.value)).then(
     (response: any) => {
-      roleList.value = response.rows;
-      total.value = response.total;
-      loading.value = false;
+      roleList.value = response.rows
+      total.value = response.total
+      loading.value = false
     },
-  );
+  )
 }
 /** 搜索按钮操作 */
 function handleQuery() {
-  queryParams.value.pageNum = 1;
-  getList();
+  queryParams.value.pageNum = 1
+  getList()
 }
 /** 重置按钮操作 */
 function resetQuery() {
-  dateRange.value = [];
-  proxy!.resetForm("queryRef");
-  handleQuery();
+  dateRange.value = []
+  proxy!.resetForm('queryRef')
+  handleQuery()
 }
 /** 删除按钮操作 */
 function handleDelete(row: any) {
-  const roleIds = row.roleId || ids.value;
+  const roleIds = row.roleId || ids.value
   proxy!.$modal
     .confirm(`是否确认删除角色编号为"${roleIds}"的数据项?`)
     .then(() => {
-      return delRole(roleIds);
+      return delRole(roleIds)
     })
     .then(() => {
-      getList();
-      proxy!.$modal.msgSuccess("删除成功");
+      getList()
+      proxy!.$modal.msgSuccess('删除成功')
     })
     .catch((error: any) => {
-      console.log(error);
-    });
+      console.log(error)
+    })
 }
 /** 导出按钮操作 */
 function handleExport() {
   proxy!.download(
-    "system/role/export",
+    'system/role/export',
     {
       ...queryParams.value,
     },
     `role_${Date.now()}.xlsx`,
-  );
+  )
 }
 /** 多选框选中数据 */
 function handleSelectionChange(selection: any[]) {
-  ids.value = selection.map((item) => item.roleId);
-  single.value = selection.length !== 1;
-  multiple.value = !selection.length;
+  ids.value = selection.map((item) => item.roleId)
+  single.value = selection.length !== 1
+  multiple.value = !selection.length
 }
 /** 角色状态修改 */
 function handleStatusChange(row: any) {
-  const text = row.status === "0" ? "启用" : "停用";
+  const text = row.status === '0' ? '启用' : '停用'
   proxy!.$modal
     .confirm(`确认要"${text}""${row.roleName}"角色吗?`)
     .then(() => {
-      return changeRoleStatus(row.roleId, row.status);
+      return changeRoleStatus(row.roleId, row.status)
     })
     .then(() => {
-      proxy!.$modal.msgSuccess(`${text}成功`);
+      proxy!.$modal.msgSuccess(`${text}成功`)
     })
     .catch(() => {
-      row.status = row.status === "0" ? "1" : "0";
-    });
+      row.status = row.status === '0' ? '1' : '0'
+    })
 }
 /** 更多操作 */
 function handleCommand(command: any, row: any) {
   switch (command) {
-    case "handleDataScope":
-      handleDataScope(row);
-      break;
-    case "handleAuthUser":
-      handleAuthUser(row);
-      break;
+    case 'handleDataScope':
+      handleDataScope(row)
+      break
+    case 'handleAuthUser':
+      handleAuthUser(row)
+      break
     default:
-      break;
+      break
   }
 }
 /** 分配用户 */
 function handleAuthUser(row: any) {
-  router.push(`/system/role-auth/user/${row.roleId}`);
+  router.push(`/system/role-auth/user/${row.roleId}`)
 }
 /** 查询菜单树结构 */
 function getMenuTreeselect() {
   menuTreeselect().then((response) => {
-    menuOptions.value = response.data;
-  });
+    menuOptions.value = response.data
+  })
 }
 /** 所有部门节点数据 */
 function getDeptAllCheckedKeys() {
   // 目前被选中的部门节点
-  const checkedKeys = deptRef.value.getCheckedKeys();
+  const checkedKeys = deptRef.value.getCheckedKeys()
   // 半选中的部门节点
-  const halfCheckedKeys = deptRef.value.getHalfCheckedKeys();
-  checkedKeys.unshift.apply(checkedKeys, halfCheckedKeys);
-  return checkedKeys;
+  const halfCheckedKeys = deptRef.value.getHalfCheckedKeys()
+  checkedKeys.unshift.apply(checkedKeys, halfCheckedKeys)
+  return checkedKeys
 }
 /** 重置新增的表单以及其他数据  */
 function reset() {
   if (menuRef.value) {
-    menuRef.value.setCheckedKeys([]);
+    menuRef.value.setCheckedKeys([])
   }
-  menuExpand.value = false;
-  menuNodeAll.value = false;
-  deptExpand.value = true;
-  deptNodeAll.value = false;
+  menuExpand.value = false
+  menuNodeAll.value = false
+  deptExpand.value = true
+  deptNodeAll.value = false
   form.value = {
     roleId: undefined,
     roleName: undefined,
     roleKey: undefined,
     roleSort: 0,
-    status: "0",
+    status: '0',
     menuIds: [],
     deptIds: [],
     menuCheckStrictly: true,
     deptCheckStrictly: true,
     remark: undefined,
-  };
-  proxy!.resetForm("roleRef");
+  }
+  proxy!.resetForm('roleRef')
 }
 /** 添加角色 */
 function handleAdd() {
-  reset();
-  getMenuTreeselect();
-  open.value = true;
-  title.value = "添加角色";
+  reset()
+  getMenuTreeselect()
+  open.value = true
+  title.value = '添加角色'
 }
 /** 修改角色 */
 function handleUpdate(row: any) {
-  reset();
-  const roleId = row.roleId || ids.value;
-  const roleMenu = getRoleMenuTreeselect(roleId);
+  reset()
+  const roleId = row.roleId || ids.value
+  const roleMenu = getRoleMenuTreeselect(roleId)
   getRole(roleId).then((response) => {
-    form.value = response.data;
-    form.value.roleSort = Number(form.value.roleSort);
-    open.value = true;
+    form.value = response.data
+    form.value.roleSort = Number(form.value.roleSort)
+    open.value = true
     nextTick(() => {
       roleMenu.then((res: any) => {
-        const checkedKeys = res.checkedKeys;
+        const checkedKeys = res.checkedKeys
         checkedKeys.forEach((v: any) => {
           nextTick(() => {
-            menuRef.value.setChecked(v, true, false);
-          });
-        });
-      });
-    });
-    title.value = "修改角色";
-  });
+            menuRef.value.setChecked(v, true, false)
+          })
+        })
+      })
+    })
+    title.value = '修改角色'
+  })
 }
 /** 根据角色ID查询菜单树结构 */
 function getRoleMenuTreeselect(roleId: any) {
   return roleMenuTreeselect(roleId).then((response: any) => {
-    menuOptions.value = response.menus;
-    return response;
-  });
+    menuOptions.value = response.menus
+    return response
+  })
 }
 /** 根据角色ID查询部门树结构 */
 function getDeptTree(roleId: any) {
   return deptTreeSelect(roleId).then((response: any) => {
-    deptOptions.value = response.depts;
-    return response;
-  });
+    deptOptions.value = response.depts
+    return response
+  })
 }
 /** 树权限（展开/折叠） */
 function handleCheckedTreeExpand(value: any, type: any) {
-  if (type === "menu") {
-    const treeList = menuOptions.value;
+  if (type === 'menu') {
+    const treeList = menuOptions.value
     for (const element of treeList) {
-      menuRef.value.store.nodesMap[element.id].expanded = value;
+      menuRef.value.store.nodesMap[element.id].expanded = value
     }
-  } else if (type === "dept") {
-    const treeList = deptOptions.value;
+  } else if (type === 'dept') {
+    const treeList = deptOptions.value
     for (const element of treeList) {
-      deptRef.value.store.nodesMap[element.id].expanded = value;
+      deptRef.value.store.nodesMap[element.id].expanded = value
     }
   }
 }
 /** 树权限（全选/全不选） */
 function handleCheckedTreeNodeAll(value: any, type: string) {
-  if (type === "menu") {
-    menuRef.value.setCheckedNodes(value ? menuOptions.value : []);
-  } else if (type === "dept") {
-    deptRef.value.setCheckedNodes(value ? deptOptions.value : []);
+  if (type === 'menu') {
+    menuRef.value.setCheckedNodes(value ? menuOptions.value : [])
+  } else if (type === 'dept') {
+    deptRef.value.setCheckedNodes(value ? deptOptions.value : [])
   }
 }
 /** 树权限（父子联动） */
 function handleCheckedTreeConnect(value: any, type: string) {
-  if (type === "menu") {
-    form.value.menuCheckStrictly = !!value;
-  } else if (type === "dept") {
-    form.value.deptCheckStrictly = !!value;
+  if (type === 'menu') {
+    form.value.menuCheckStrictly = !!value
+  } else if (type === 'dept') {
+    form.value.deptCheckStrictly = !!value
   }
 }
 /** 所有菜单节点数据 */
 function getMenuAllCheckedKeys() {
   // 目前被选中的菜单节点
-  const checkedKeys = menuRef.value.getCheckedKeys();
+  const checkedKeys = menuRef.value.getCheckedKeys()
   // 半选中的菜单节点
-  const halfCheckedKeys = menuRef.value.getHalfCheckedKeys();
-  checkedKeys.unshift.apply(checkedKeys, halfCheckedKeys);
-  return checkedKeys;
+  const halfCheckedKeys = menuRef.value.getHalfCheckedKeys()
+  checkedKeys.unshift.apply(checkedKeys, halfCheckedKeys)
+  return checkedKeys
 }
 /** 提交按钮 */
 function submitForm() {
-  (proxy?.$refs.roleRef as any).validate((valid: any) => {
+  ;(proxy?.$refs.roleRef as any).validate((valid: any) => {
     if (valid) {
       if (form.value.roleId !== undefined) {
-        form.value.menuIds = getMenuAllCheckedKeys();
+        form.value.menuIds = getMenuAllCheckedKeys()
         updateRole(form.value).then((response) => {
-          proxy!.$modal.msgSuccess("修改成功");
-          open.value = false;
-          getList();
-        });
+          proxy!.$modal.msgSuccess('修改成功')
+          open.value = false
+          getList()
+        })
       } else {
-        form.value.menuIds = getMenuAllCheckedKeys();
+        form.value.menuIds = getMenuAllCheckedKeys()
         addRole(form.value).then((response) => {
-          proxy!.$modal.msgSuccess("新增成功");
-          open.value = false;
-          getList();
-        });
+          proxy!.$modal.msgSuccess('新增成功')
+          open.value = false
+          getList()
+        })
       }
     }
-  });
+  })
 }
 /** 取消按钮 */
 function cancel() {
-  open.value = false;
-  reset();
+  open.value = false
+  reset()
 }
 /** 选择角色权限范围触发 */
 function dataScopeSelectChange(value: any) {
-  if (value !== "2") {
-    deptRef.value.setCheckedKeys([]);
+  if (value !== '2') {
+    deptRef.value.setCheckedKeys([])
   }
 }
 /** 分配数据权限操作 */
 function handleDataScope(row: any) {
-  reset();
-  const deptTreeSelect = getDeptTree(row.roleId);
+  reset()
+  const deptTreeSelect = getDeptTree(row.roleId)
   getRole(row.roleId).then((response) => {
-    form.value = response.data;
-    openDataScope.value = true;
+    form.value = response.data
+    openDataScope.value = true
     nextTick(() => {
       deptTreeSelect.then((res) => {
         nextTick(() => {
           if (deptRef.value) {
-            deptRef.value.setCheckedKeys(res.checkedKeys);
+            deptRef.value.setCheckedKeys(res.checkedKeys)
           }
-        });
-      });
-    });
-    title.value = "分配数据权限";
-  });
+        })
+      })
+    })
+    title.value = '分配数据权限'
+  })
 }
 /** 提交按钮（数据权限） */
 function submitDataScope() {
   if (form.value.roleId) {
-    form.value.deptIds = getDeptAllCheckedKeys();
+    form.value.deptIds = getDeptAllCheckedKeys()
     dataScope(form.value).then((response) => {
-      proxy!.$modal.msgSuccess("修改成功");
-      openDataScope.value = false;
-      getList();
-    });
+      proxy!.$modal.msgSuccess('修改成功')
+      openDataScope.value = false
+      getList()
+    })
   }
 }
 /** 取消按钮（数据权限） */
 function cancelDataScope() {
-  openDataScope.value = false;
-  reset();
+  openDataScope.value = false
+  reset()
 }
 
-getList();
+getList()
 </script>
 
 <template>

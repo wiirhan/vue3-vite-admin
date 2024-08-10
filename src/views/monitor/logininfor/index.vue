@@ -1,28 +1,28 @@
 <script setup name="Logininfor" lang="ts">
-import { getCurrentInstance, ref } from "vue";
+import { getCurrentInstance, ref } from 'vue'
 import {
   cleanLogininfor,
   delLogininfor,
   list,
   unlockLogininfor,
-} from "@/api/monitor/logininfor";
-import { parseTime } from "@/utils/ruoyi";
-import type { Sort } from "element-plus";
-import type { ComponentInternalInstance } from "vue";
+} from '@/api/monitor/logininfor'
+import { parseTime } from '@/utils/ruoyi'
+import type { Sort } from 'element-plus'
+import type { ComponentInternalInstance } from 'vue'
 
-const { proxy } = getCurrentInstance() as ComponentInternalInstance;
-const { sys_common_status } = proxy!.useDict("sys_common_status");
+const { proxy } = getCurrentInstance() as ComponentInternalInstance
+const { sys_common_status } = proxy!.useDict('sys_common_status')
 
-const logininforList = ref<any[]>([]);
-const loading = ref(true);
-const showSearch = ref(true);
-const ids = ref<number[]>([]);
-const single = ref(true);
-const multiple = ref(true);
-const selectName = ref<any>("");
-const total = ref(0);
-const dateRange = ref<any>([]);
-const defaultSort = ref<Sort>({ prop: "loginTime", order: "descending" });
+const logininforList = ref<any[]>([])
+const loading = ref(true)
+const showSearch = ref(true)
+const ids = ref<number[]>([])
+const single = ref(true)
+const multiple = ref(true)
+const selectName = ref<any>('')
+const total = ref(0)
+const dateRange = ref<any>([])
+const defaultSort = ref<Sort>({ prop: 'loginTime', order: 'descending' })
 
 // 查询参数
 const queryParams = ref({
@@ -33,99 +33,99 @@ const queryParams = ref({
   status: undefined,
   orderByColumn: undefined,
   isAsc: undefined,
-});
+})
 
 /** 查询登录日志列表 */
 function getList() {
-  loading.value = true;
+  loading.value = true
   list(proxy!.addDateRange(queryParams.value, dateRange.value)).then(
     (response: any) => {
-      logininforList.value = response.rows;
-      total.value = response.total;
-      loading.value = false;
+      logininforList.value = response.rows
+      total.value = response.total
+      loading.value = false
     },
-  );
+  )
 }
 /** 搜索按钮操作 */
 function handleQuery() {
-  queryParams.value.pageNum = 1;
-  getList();
+  queryParams.value.pageNum = 1
+  getList()
 }
 /** 重置按钮操作 */
 function resetQuery() {
-  dateRange.value = [];
-  proxy!.resetForm("queryRef");
-  queryParams.value.pageNum = 1;
-  (proxy!.$refs.logininforRef as any).sort(
+  dateRange.value = []
+  proxy!.resetForm('queryRef')
+  queryParams.value.pageNum = 1
+  ;(proxy!.$refs.logininforRef as any).sort(
     defaultSort.value.prop,
     defaultSort.value.order,
-  );
+  )
 }
 /** 多选框选中数据 */
 function handleSelectionChange(selection: any[]) {
-  ids.value = selection.map((item) => item.infoId);
-  multiple.value = !selection.length;
-  single.value = selection.length !== 1;
-  selectName.value = selection.map((item) => item.userName);
+  ids.value = selection.map((item) => item.infoId)
+  multiple.value = !selection.length
+  single.value = selection.length !== 1
+  selectName.value = selection.map((item) => item.userName)
 }
 /** 排序触发事件 */
 function handleSortChange(column: any, prop: any, order: any) {
-  queryParams.value.orderByColumn = column.prop;
-  queryParams.value.isAsc = column.order;
-  getList();
+  queryParams.value.orderByColumn = column.prop
+  queryParams.value.isAsc = column.order
+  getList()
 }
 /** 删除按钮操作 */
 function handleDelete(row: any) {
-  const infoIds = row.infoId || ids.value;
+  const infoIds = row.infoId || ids.value
   proxy!.$modal
     .confirm(`是否确认删除访问编号为"${infoIds}"的数据项?`)
     .then(() => {
-      return delLogininfor(infoIds);
+      return delLogininfor(infoIds)
     })
     .then(() => {
-      getList();
-      proxy!.$modal.msgSuccess("删除成功");
-    });
+      getList()
+      proxy!.$modal.msgSuccess('删除成功')
+    })
   //   .catch(() => {});
 }
 /** 清空按钮操作 */
 function handleClean() {
   proxy!.$modal
-    .confirm("是否确认清空所有登录日志数据项?")
+    .confirm('是否确认清空所有登录日志数据项?')
     .then(() => {
-      return cleanLogininfor();
+      return cleanLogininfor()
     })
     .then(() => {
-      getList();
-      proxy!.$modal.msgSuccess("清空成功");
-    });
+      getList()
+      proxy!.$modal.msgSuccess('清空成功')
+    })
   //   .catch(() => {});
 }
 /** 解锁按钮操作 */
 function handleUnlock() {
-  const username = selectName.value;
+  const username = selectName.value
   proxy!.$modal
     .confirm(`是否确认解锁用户"${username}"数据项?`)
     .then(() => {
-      return unlockLogininfor(username);
+      return unlockLogininfor(username)
     })
     .then(() => {
-      proxy!.$modal.msgSuccess(`用户${username}解锁成功`);
-    });
+      proxy!.$modal.msgSuccess(`用户${username}解锁成功`)
+    })
   //   .catch(() => {});
 }
 /** 导出按钮操作 */
 function handleExport() {
   proxy!.download(
-    "monitor/logininfor/export",
+    'monitor/logininfor/export',
     {
       ...queryParams.value,
     },
     `config_${Date.now()}.xlsx`,
-  );
+  )
 }
 
-getList();
+getList()
 </script>
 
 <template>

@@ -1,39 +1,39 @@
 <script setup name="Gen" lang="ts">
-import { oneOf } from "@zeronejs/utils";
-import { getCurrentInstance, onActivated, reactive, ref, toRefs } from "vue";
-import { useRoute } from "vue-router";
+import { oneOf } from '@zeronejs/utils'
+import { getCurrentInstance, onActivated, reactive, ref, toRefs } from 'vue'
+import { useRoute } from 'vue-router'
 import {
   delTable,
   genCode,
   listTable,
   previewTable,
   synchDb,
-} from "@/api/tool/gen";
-import router from "@/router";
-import importTable from "./importTable.vue";
+} from '@/api/tool/gen'
+import router from '@/router'
+import importTable from './importTable.vue'
 
-const route = useRoute();
-const { proxy } = getCurrentInstance()!;
+const route = useRoute()
+const { proxy } = getCurrentInstance()!
 
-const tableList = ref<any[]>([]);
-const loading = ref(true);
-const showSearch = ref(true);
-const ids = ref<number[]>([]);
-const single = ref(true);
-const multiple = ref(true);
-const total = ref(0);
-const tableNames = ref<any[]>([]);
-const dateRange = ref<any>([]);
-const uniqueId = ref("");
+const tableList = ref<any[]>([])
+const loading = ref(true)
+const showSearch = ref(true)
+const ids = ref<number[]>([])
+const single = ref(true)
+const multiple = ref(true)
+const total = ref(0)
+const tableNames = ref<any[]>([])
+const dateRange = ref<any>([])
+const uniqueId = ref('')
 
 const data = reactive<{
-  queryParams: any;
+  queryParams: any
   preview: {
-    open: boolean;
-    title: string;
-    data: Record<string, any>;
-    activeName: string;
-  };
+    open: boolean
+    title: string
+    data: Record<string, any>
+    activeName: string
+  }
 }>({
   queryParams: {
     pageNum: 1,
@@ -43,129 +43,129 @@ const data = reactive<{
   },
   preview: {
     open: false,
-    title: "代码预览",
+    title: '代码预览',
     data: {},
-    activeName: "domain.java",
+    activeName: 'domain.java',
   },
-});
+})
 
-const { queryParams, preview } = toRefs(data);
+const { queryParams, preview } = toRefs(data)
 
 onActivated(() => {
-  const time = oneOf(route.query.t);
+  const time = oneOf(route.query.t)
   if (time && time !== uniqueId.value) {
-    uniqueId.value = time;
-    queryParams.value.pageNum = Number(route.query.pageNum);
-    dateRange.value = [];
-    proxy?.resetForm("queryForm");
-    getList();
+    uniqueId.value = time
+    queryParams.value.pageNum = Number(route.query.pageNum)
+    dateRange.value = []
+    proxy?.resetForm('queryForm')
+    getList()
   }
-});
+})
 
 /** 查询表集合 */
 function getList() {
-  loading.value = true;
+  loading.value = true
   listTable(proxy?.addDateRange(queryParams.value, dateRange.value)).then(
     (response: any) => {
-      tableList.value = response.rows;
-      total.value = response.total;
-      loading.value = false;
+      tableList.value = response.rows
+      total.value = response.total
+      loading.value = false
     },
-  );
+  )
 }
 /** 搜索按钮操作 */
 function handleQuery() {
-  queryParams.value.pageNum = 1;
-  getList();
+  queryParams.value.pageNum = 1
+  getList()
 }
 /** 生成代码操作 */
 function handleGenTable(row: any) {
-  const tbNames = row.tableName || tableNames.value;
-  if (tbNames === "") {
-    proxy?.$modal.msgError("请选择要生成的数据");
-    return;
+  const tbNames = row.tableName || tableNames.value
+  if (tbNames === '') {
+    proxy?.$modal.msgError('请选择要生成的数据')
+    return
   }
-  if (row.genType === "1") {
+  if (row.genType === '1') {
     genCode(row.tableName).then(() => {
-      proxy?.$modal.msgSuccess(`成功生成到自定义路径：${row.genPath}`);
-    });
+      proxy?.$modal.msgSuccess(`成功生成到自定义路径：${row.genPath}`)
+    })
   } else {
     proxy?.$download.zip(
       `/tool/gen/batchGenCode?tables=${tbNames}`,
-      "ruoyi.zip",
-    );
+      'ruoyi.zip',
+    )
   }
 }
 /** 同步数据库操作 */
 function handleSynchDb(row: any) {
-  const tableName = row.tableName;
+  const tableName = row.tableName
   proxy?.$modal
     .confirm(`确认要强制同步"${tableName}"表结构吗？`)
     .then(() => {
-      return synchDb(tableName);
+      return synchDb(tableName)
     })
     .then(() => {
-      proxy!.$modal.msgSuccess("同步成功");
+      proxy!.$modal.msgSuccess('同步成功')
     })
     .catch(() => {
-      proxy!.$modal.msgError("同步失败");
-    });
+      proxy!.$modal.msgError('同步失败')
+    })
 }
 /** 打开导入表弹窗 */
 function openImportTable() {
-  (proxy?.$refs.importRef as any).show();
+  ;(proxy?.$refs.importRef as any).show()
 }
 /** 重置按钮操作 */
 function resetQuery() {
-  dateRange.value = [];
-  proxy?.resetForm("queryRef");
-  handleQuery();
+  dateRange.value = []
+  proxy?.resetForm('queryRef')
+  handleQuery()
 }
 /** 预览按钮 */
 function handlePreview(row: any) {
   previewTable(row.tableId).then((response) => {
-    preview.value.data = response.data;
-    preview.value.open = true;
-    preview.value.activeName = "domain.java";
-  });
+    preview.value.data = response.data
+    preview.value.open = true
+    preview.value.activeName = 'domain.java'
+  })
 }
 /** 复制代码成功 */
 function copyTextSuccess() {
-  proxy?.$modal.msgSuccess("复制成功");
+  proxy?.$modal.msgSuccess('复制成功')
 }
 // 多选框选中数据
 function handleSelectionChange(selection: any[]) {
-  ids.value = selection.map((item) => item.tableId);
-  tableNames.value = selection.map((item) => item.tableName);
-  single.value = selection.length !== 1;
-  multiple.value = !selection.length;
+  ids.value = selection.map((item) => item.tableId)
+  tableNames.value = selection.map((item) => item.tableName)
+  single.value = selection.length !== 1
+  multiple.value = !selection.length
 }
 /** 修改按钮操作 */
 function handleEditTable(row: any) {
-  const tableId = row.tableId || ids.value[0];
+  const tableId = row.tableId || ids.value[0]
   router.push({
     path: `/tool/gen-edit/index/${tableId}`,
     query: { pageNum: queryParams.value.pageNum },
-  });
+  })
 }
 /** 删除按钮操作 */
 function handleDelete(row: any) {
-  const tableIds = row.tableId || ids.value;
+  const tableIds = row.tableId || ids.value
   proxy?.$modal
     .confirm(`是否确认删除表编号为"${tableIds}"的数据项？`)
     .then(() => {
-      return delTable(tableIds);
+      return delTable(tableIds)
     })
     .then(() => {
-      getList();
-      proxy!.$modal.msgSuccess("删除成功");
+      getList()
+      proxy!.$modal.msgSuccess('删除成功')
     })
     .catch(() => {
-      proxy!.$modal.msgError("删除失败");
-    });
+      proxy!.$modal.msgError('删除失败')
+    })
 }
 
-getList();
+getList()
 </script>
 
 <template>

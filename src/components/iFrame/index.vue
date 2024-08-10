@@ -1,25 +1,25 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref } from 'vue'
 
 const props = defineProps({
   src: {
     type: String,
     required: true,
   },
-});
+})
 
-const height = ref(`${document.documentElement.clientHeight - 94.5}px;`);
-const loading = ref(true);
-const url = computed(() => props.src);
+const height = ref(`${document.documentElement.clientHeight - 94.5}px;`)
+const loading = ref(true)
+const url = computed(() => props.src)
 
 onMounted(() => {
   setTimeout(() => {
-    loading.value = false;
-  }, 300);
-  window.addEventListener("resize", function temp() {
-    height.value = `${document.documentElement.clientHeight - 94.5}px;`;
-  });
-});
+    loading.value = false
+  }, 300)
+  window.addEventListener('resize', function temp() {
+    height.value = `${document.documentElement.clientHeight - 94.5}px;`
+  })
+})
 </script>
 
 <template>

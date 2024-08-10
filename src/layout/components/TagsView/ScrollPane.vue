@@ -5,94 +5,94 @@ import {
   onBeforeUnmount,
   onMounted,
   ref,
-} from "vue";
-import useTagsViewStore from "@/store/modules/tagsView";
-import type { ComponentInternalInstance } from "vue";
+} from 'vue'
+import useTagsViewStore from '@/store/modules/tagsView'
+import type { ComponentInternalInstance } from 'vue'
 
-const emits = defineEmits(["scroll"]);
-const tagAndTagSpacing = ref(4);
-const { proxy } = getCurrentInstance() as ComponentInternalInstance;
+const emits = defineEmits(['scroll'])
+const tagAndTagSpacing = ref(4)
+const { proxy } = getCurrentInstance() as ComponentInternalInstance
 
 const scrollWrapper = computed(
   () => (proxy!.$refs.scrollContainer as any).$refs.wrapRef,
-);
+)
 
 onMounted(() => {
-  scrollWrapper.value.addEventListener("scroll", emitScroll, true);
-});
+  scrollWrapper.value.addEventListener('scroll', emitScroll, true)
+})
 onBeforeUnmount(() => {
-  scrollWrapper.value.removeEventListener("scroll", emitScroll);
-});
+  scrollWrapper.value.removeEventListener('scroll', emitScroll)
+})
 
 function handleScroll(e: any) {
-  const eventDelta = e.wheelDelta || -e.deltaY * 40;
-  const $scrollWrapper = scrollWrapper.value;
-  $scrollWrapper.scrollLeft = $scrollWrapper.scrollLeft + eventDelta / 4;
+  const eventDelta = e.wheelDelta || -e.deltaY * 40
+  const $scrollWrapper = scrollWrapper.value
+  $scrollWrapper.scrollLeft = $scrollWrapper.scrollLeft + eventDelta / 4
 }
 function emitScroll() {
-  emits("scroll");
+  emits('scroll')
 }
 
-const tagsViewStore = useTagsViewStore();
-const visitedViews = computed(() => tagsViewStore.visitedViews);
+const tagsViewStore = useTagsViewStore()
+const visitedViews = computed(() => tagsViewStore.visitedViews)
 
 function moveToTarget(currentTag: any) {
-  const $container = (proxy!.$refs.scrollContainer as any).$el;
-  const $containerWidth = $container.offsetWidth;
-  const $scrollWrapper = scrollWrapper.value;
+  const $container = (proxy!.$refs.scrollContainer as any).$el
+  const $containerWidth = $container.offsetWidth
+  const $scrollWrapper = scrollWrapper.value
 
-  let firstTag = null;
-  let lastTag = null;
+  let firstTag = null
+  let lastTag = null
 
   // find first tag and last tag
   if (visitedViews.value.length > 0) {
-    firstTag = visitedViews.value[0];
-    lastTag = visitedViews.value.at(-1);
+    firstTag = visitedViews.value[0]
+    lastTag = visitedViews.value.at(-1)
   }
 
   if (firstTag === currentTag) {
-    $scrollWrapper.scrollLeft = 0;
+    $scrollWrapper.scrollLeft = 0
   } else if (lastTag === currentTag) {
-    $scrollWrapper.scrollLeft = $scrollWrapper.scrollWidth - $containerWidth;
+    $scrollWrapper.scrollLeft = $scrollWrapper.scrollWidth - $containerWidth
   } else {
-    const tagListDom = document.querySelectorAll(".tags-view-item");
-    const currentIndex = visitedViews.value.indexOf(currentTag);
-    let prevTag: any = null;
-    let nextTag: any = null;
+    const tagListDom = document.querySelectorAll('.tags-view-item')
+    const currentIndex = visitedViews.value.indexOf(currentTag)
+    let prevTag: any = null
+    let nextTag: any = null
     for (const k in tagListDom) {
-      if (k !== "length" && Object.hasOwnProperty.call(tagListDom, k)) {
+      if (k !== 'length' && Object.hasOwnProperty.call(tagListDom, k)) {
         if (
           (tagListDom[k] as any).dataset.path ===
           visitedViews.value[currentIndex - 1].path
         ) {
-          prevTag = tagListDom[k];
+          prevTag = tagListDom[k]
         }
         if (
           (tagListDom[k] as any).dataset.path ===
           visitedViews.value[currentIndex + 1].path
         ) {
-          nextTag = tagListDom[k];
+          nextTag = tagListDom[k]
         }
       }
     }
 
     // the tag's offsetLeft after of nextTag
     const afterNextTagOffsetLeft =
-      nextTag.offsetLeft + nextTag.offsetWidth + tagAndTagSpacing.value;
+      nextTag.offsetLeft + nextTag.offsetWidth + tagAndTagSpacing.value
 
     // the tag's offsetLeft before of prevTag
-    const beforePrevTagOffsetLeft = prevTag.offsetLeft - tagAndTagSpacing.value;
+    const beforePrevTagOffsetLeft = prevTag.offsetLeft - tagAndTagSpacing.value
     if (afterNextTagOffsetLeft > $scrollWrapper.scrollLeft + $containerWidth) {
-      $scrollWrapper.scrollLeft = afterNextTagOffsetLeft - $containerWidth;
+      $scrollWrapper.scrollLeft = afterNextTagOffsetLeft - $containerWidth
     } else if (beforePrevTagOffsetLeft < $scrollWrapper.scrollLeft) {
-      $scrollWrapper.scrollLeft = beforePrevTagOffsetLeft;
+      $scrollWrapper.scrollLeft = beforePrevTagOffsetLeft
     }
   }
 }
 
 defineExpose({
   moveToTarget,
-});
+})
 </script>
 
 <template>

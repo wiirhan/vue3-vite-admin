@@ -1,100 +1,100 @@
 <script setup lang="ts">
-import { getCurrentInstance, reactive, ref } from "vue";
-import { VueCropper } from "vue-cropper";
-import { uploadAvatar } from "@/api/system/user";
-import useUserStore from "@/store/modules/user";
-import type { ComponentInternalInstance } from "vue";
-import "vue-cropper/dist/index.css";
+import { getCurrentInstance, reactive, ref } from 'vue'
+import { VueCropper } from 'vue-cropper'
+import { uploadAvatar } from '@/api/system/user'
+import useUserStore from '@/store/modules/user'
+import type { ComponentInternalInstance } from 'vue'
+import 'vue-cropper/dist/index.css'
 
-const userStore = useUserStore();
-const { proxy } = getCurrentInstance() as ComponentInternalInstance;
+const userStore = useUserStore()
+const { proxy } = getCurrentInstance() as ComponentInternalInstance
 
-const open = ref(false);
-const visible = ref(false);
-const title = ref("修改头像");
+const open = ref(false)
+const visible = ref(false)
+const title = ref('修改头像')
 
 // 图片裁剪数据
 const options = reactive<{
-  img: any; // 裁剪图片的地址
-  autoCrop: boolean; // 是否默认生成截图框
-  autoCropWidth: number; // 默认生成截图框宽度
-  autoCropHeight: number; // 默认生成截图框高度
-  fixedBox: boolean; // 固定截图框大小 不允许改变
-  outputType: string; // 默认生成截图为PNG格式
-  previews: any; // 预览数据
-  visible: boolean;
+  img: any // 裁剪图片的地址
+  autoCrop: boolean // 是否默认生成截图框
+  autoCropWidth: number // 默认生成截图框宽度
+  autoCropHeight: number // 默认生成截图框高度
+  fixedBox: boolean // 固定截图框大小 不允许改变
+  outputType: string // 默认生成截图为PNG格式
+  previews: any // 预览数据
+  visible: boolean
 }>({
   img: userStore.avatar, // 裁剪图片的地址
   autoCrop: true, // 是否默认生成截图框
   autoCropWidth: 200, // 默认生成截图框宽度
   autoCropHeight: 200, // 默认生成截图框高度
   fixedBox: true, // 固定截图框大小 不允许改变
-  outputType: "png", // 默认生成截图为PNG格式
+  outputType: 'png', // 默认生成截图为PNG格式
   previews: {}, // 预览数据
   visible: false,
-});
+})
 
 /** 编辑头像 */
 function editCropper() {
-  open.value = true;
+  open.value = true
 }
 /** 打开弹出层结束时的回调 */
 function modalOpened() {
-  visible.value = true;
+  visible.value = true
 }
 /** 覆盖默认上传行为 */
 function requestUpload() {
-  console.log("覆盖默认上传行为");
+  console.log('覆盖默认上传行为')
 }
 /** 向左旋转 */
 function rotateLeft() {
-  (proxy?.$refs.cropper as any).rotateLeft();
+  ;(proxy?.$refs.cropper as any).rotateLeft()
 }
 /** 向右旋转 */
 function rotateRight() {
-  (proxy?.$refs.cropper as any).rotateRight();
+  ;(proxy?.$refs.cropper as any).rotateRight()
 }
 /** 图片缩放 */
 function changeScale(num: number) {
-  num = num || 1;
-  (proxy?.$refs.cropper as any).changeScale(num);
+  num = num || 1
+  ;(proxy?.$refs.cropper as any).changeScale(num)
 }
 /** 上传预处理 */
 function beforeUpload(file: any) {
-  if (!file.type.includes("image/")) {
+  if (!file.type.includes('image/')) {
     proxy!.$modal.msgError(
-      "文件格式错误，请上传图片类型,如：JPG，PNG后缀的文件。",
-    );
+      '文件格式错误，请上传图片类型,如：JPG，PNG后缀的文件。',
+    )
   } else {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.addEventListener("load", () => {
-      options.img = reader.result;
-    });
+    const reader = new FileReader()
+    reader.readAsDataURL(file)
+    reader.addEventListener('load', () => {
+      options.img = reader.result
+    })
   }
 }
 /** 上传图片 */
 function uploadImg() {
-  (proxy?.$refs.cropper as any).getCropBlob((data: any) => {
-    const formData = new FormData();
-    formData.append("avatarfile", data);
+  ;(proxy?.$refs.cropper as any).getCropBlob((data: any) => {
+    const formData = new FormData()
+    formData.append('avatarfile', data)
     uploadAvatar(formData).then((response: any) => {
-      open.value = false;
-      options.img = import.meta.env.VITE_APP_BASE_API + response.imgUrl;
-      userStore.avatar = options.img;
-      proxy!.$modal.msgSuccess("修改成功");
-      visible.value = false;
-    });
-  });
+      open.value = false
+      options.img = import.meta.env.VITE_APP_BASE_API + response.imgUrl
+      userStore.avatar = options.img
+      proxy!.$modal.msgSuccess('修改成功')
+      visible.value = false
+    })
+  })
 }
 /** 实时预览 */
 function realTime(data: any) {
-  options.previews = data;
+  options.previews = data
 }
 /** 关闭窗口 */
 function closeDialog() {
-  options.img = userStore.avatar;
-  options.visible = false;
+  options.img = userStore.avatar
+  options.visible = false
 }
 </script>
 
@@ -177,7 +177,7 @@ function closeDialog() {
 }
 
 .user-info-head:hover:after {
-  content: "+";
+  content: '+';
   position: absolute;
   left: 0;
   right: 0;

@@ -1,31 +1,31 @@
 <script setup name="Operlog" lang="ts">
-import { getCurrentInstance, reactive, ref, toRefs } from "vue";
-import { cleanOperlog, delOperlog, list } from "@/api/monitor/operlog";
-import { parseTime } from "@/utils/ruoyi";
-import type { Sort } from "element-plus";
-import type { ComponentInternalInstance } from "vue";
+import { getCurrentInstance, reactive, ref, toRefs } from 'vue'
+import { cleanOperlog, delOperlog, list } from '@/api/monitor/operlog'
+import { parseTime } from '@/utils/ruoyi'
+import type { Sort } from 'element-plus'
+import type { ComponentInternalInstance } from 'vue'
 
-const { proxy } = getCurrentInstance() as ComponentInternalInstance;
+const { proxy } = getCurrentInstance() as ComponentInternalInstance
 const { sys_oper_type, sys_common_status } = proxy!.useDict(
-  "sys_oper_type",
-  "sys_common_status",
-);
+  'sys_oper_type',
+  'sys_common_status',
+)
 
-const operlogList = ref<any[]>([]);
-const open = ref(false);
-const loading = ref(true);
-const showSearch = ref(true);
-const ids = ref<number[]>([]);
-const single = ref(true);
-const multiple = ref(true);
-const total = ref(0);
-const title = ref("");
-const dateRange = ref<any>([]);
-const defaultSort = ref<Sort>({ prop: "operTime", order: "descending" });
+const operlogList = ref<any[]>([])
+const open = ref(false)
+const loading = ref(true)
+const showSearch = ref(true)
+const ids = ref<number[]>([])
+const single = ref(true)
+const multiple = ref(true)
+const total = ref(0)
+const title = ref('')
+const dateRange = ref<any>([])
+const defaultSort = ref<Sort>({ prop: 'operTime', order: 'descending' })
 
 const data = reactive<{
-  form: any;
-  queryParams: any;
+  form: any
+  queryParams: any
 }>({
   form: {},
   queryParams: {
@@ -36,95 +36,95 @@ const data = reactive<{
     businessType: undefined,
     status: undefined,
   },
-});
+})
 
-const { queryParams, form } = toRefs(data);
+const { queryParams, form } = toRefs(data)
 
 /** 查询登录日志 */
 function getList() {
-  loading.value = true;
+  loading.value = true
   list(proxy!.addDateRange(queryParams.value, dateRange.value)).then(
     (response: any) => {
-      operlogList.value = response.rows;
-      total.value = response.total;
-      loading.value = false;
+      operlogList.value = response.rows
+      total.value = response.total
+      loading.value = false
     },
-  );
+  )
 }
 /** 操作日志类型字典翻译 */
 function typeFormat(row: any, column?: any) {
-  return proxy!.selectDictLabel(sys_oper_type.value, row.businessType);
+  return proxy!.selectDictLabel(sys_oper_type.value, row.businessType)
 }
 /** 搜索按钮操作 */
 function handleQuery() {
-  queryParams.value.pageNum = 1;
-  getList();
+  queryParams.value.pageNum = 1
+  getList()
 }
 /** 重置按钮操作 */
 function resetQuery() {
-  dateRange.value = [];
-  proxy!.resetForm("queryRef");
-  queryParams.value.pageNum = 1;
-  (proxy!.$refs.operlogRef as any).sort(
+  dateRange.value = []
+  proxy!.resetForm('queryRef')
+  queryParams.value.pageNum = 1
+  ;(proxy!.$refs.operlogRef as any).sort(
     defaultSort.value.prop,
     defaultSort.value.order,
-  );
+  )
 }
 /** 多选框选中数据 */
 function handleSelectionChange(selection: any[]) {
-  ids.value = selection.map((item) => item.operId);
-  multiple.value = !selection.length;
+  ids.value = selection.map((item) => item.operId)
+  multiple.value = !selection.length
 }
 /** 排序触发事件 */
 function handleSortChange(column: any, prop?: any, order?: any) {
-  queryParams.value.orderByColumn = column.prop;
-  queryParams.value.isAsc = column.order;
-  getList();
+  queryParams.value.orderByColumn = column.prop
+  queryParams.value.isAsc = column.order
+  getList()
 }
 /** 详细按钮操作 */
 function handleView(row: any, index?: any) {
-  open.value = true;
-  form.value = row;
+  open.value = true
+  form.value = row
 }
 /** 删除按钮操作 */
 function handleDelete(row: any) {
-  const operIds = row.operId || ids.value;
+  const operIds = row.operId || ids.value
   proxy!.$modal
     .confirm(`是否确认删除日志编号为"${operIds}"的数据项?`)
     .then(() => {
-      return delOperlog(operIds);
+      return delOperlog(operIds)
     })
     .then(() => {
-      getList();
-      proxy!.$modal.msgSuccess("删除成功");
-    });
+      getList()
+      proxy!.$modal.msgSuccess('删除成功')
+    })
   //   .catch(() => {});
 }
 /** 清空按钮操作 */
 function handleClean() {
   proxy!.$modal
-    .confirm("是否确认清空所有操作日志数据项?")
+    .confirm('是否确认清空所有操作日志数据项?')
     .then(() => {
-      return cleanOperlog();
+      return cleanOperlog()
     })
     .then(() => {
-      getList();
-      proxy!.$modal.msgSuccess("清空成功");
-    });
+      getList()
+      proxy!.$modal.msgSuccess('清空成功')
+    })
   //   .catch(() => {});
 }
 /** 导出按钮操作 */
 function handleExport() {
   proxy!.download(
-    "monitor/operlog/export",
+    'monitor/operlog/export',
     {
       ...queryParams.value,
     },
     `config_${Date.now()}.xlsx`,
-  );
+  )
 }
 
-getList();
+getList()
 </script>
 
 <template>

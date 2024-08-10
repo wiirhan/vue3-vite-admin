@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import useTagsViewStore from "@/store/modules/tagsView";
-import iframeToggle from "./IframeToggle/index.vue";
+import useTagsViewStore from '@/store/modules/tagsView'
+import iframeToggle from './IframeToggle/index.vue'
 
-const tagsViewStore = useTagsViewStore();
+const tagsViewStore = useTagsViewStore()
 </script>
 
 <template>
