@@ -1,19 +1,17 @@
 <!-- eslint-disable vue/no-mutating-props -->
 <script setup lang="ts">
 import { listMenu } from '@/api/system/menu';
+import type { GenData } from '@/api/tool/types';
 import type { FormInstance } from 'element-plus';
-import { getCurrentInstance, ref, watch } from 'vue';
 
-const props = defineProps({
-  info: {
-    type: Object as () => any,
-    default: null,
-  },
-  tables: {
-    type: Array as () => Array<any>,
-    default: null,
-  },
+defineProps<{
+  tables: GenData['tables'],
+}>()
+
+const info = defineModel<GenData['info']>('info', {
+  required: true,
 })
+
 const subColumns = ref<any[]>([])
 const menuOptions = ref<any[]>([])
 const { proxy } = getCurrentInstance()!
@@ -38,23 +36,15 @@ const rules = ref({
   ],
 })
 function subSelectChange() {
-  props.info.subTableFkName = ''
+  info.value.subTableFkName = ''
 }
 function tplSelectChange(value: any) {
   if (value !== 'sub') {
-    props.info.subTableName = ''
-    props.info.subTableFkName = ''
+    info.value.subTableName = ''
+    info.value.subTableFkName = ''
   }
 }
-function setSubTableColumns(value: string) {
-  for (const item in props.tables) {
-    const name = props.tables[item].tableName
-    if (value === name) {
-      subColumns.value = props.tables[item].columns
-      break
-    }
-  }
-}
+
 /** 查询菜单下拉树结构 */
 function getMenuTreeselect() {
   listMenu().then((response) => {
@@ -62,17 +52,10 @@ function getMenuTreeselect() {
   })
 }
 
-watch(
-  () => props.info.subTableName,
-  (val) => {
-    setSubTableColumns(val)
-  },
-)
 
 getMenuTreeselect()
 </script>
 
-<!-- eslint-disable vue/no-mutating-props -->
 <template>
   <el-form ref="genInfoForm" :model="info" :rules="rules" label-width="150px">
     <el-row>

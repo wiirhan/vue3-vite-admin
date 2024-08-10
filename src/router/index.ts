@@ -1,7 +1,6 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 /* Layout */
 import Layout from '@/layout/index.vue'
-import type { RouteRecordRaw } from 'vue-router'
 
 /**
  * Note: 路由配置项
