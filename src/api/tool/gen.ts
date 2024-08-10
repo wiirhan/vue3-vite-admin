@@ -1,4 +1,6 @@
 import request from '@/utils/request'
+import type { Result } from '../types'
+import type { GenData } from './types'
 
 // 查询生成表数据
 export function listTable(query: any) {
@@ -18,7 +20,7 @@ export function listDbTable(query: any) {
 }
 
 // 查询表详细信息
-export function getGenTable(tableId: any) {
+export function getGenTable(tableId: string): Promise<Result<GenData>> {
   return request({
     url: `/tool/gen/${tableId}`,
     method: 'get',

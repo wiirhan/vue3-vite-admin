@@ -1,0 +1,183 @@
+export interface GenData {
+  tables: Table[]
+  rows: Row[]
+  info: Info
+}
+
+export interface Table {
+  createBy: any
+  createTime: any
+  updateBy: any
+  updateTime: any
+  remark: any
+  tableId: number
+  tableName: string
+  tableComment: string
+  subTableName: any
+  subTableFkName: any
+  className: string
+  tplCategory: string
+  tplWebType: string
+  packageName: string
+  moduleName: string
+  businessName: string
+  functionName: string
+  functionAuthor: string
+  genType: any
+  genPath: any
+  pkColumn: any
+  subTable: any
+  columns: Column[]
+  options?: string
+  treeCode: any
+  treeParentCode: any
+  treeName: any
+  parentMenuId: any
+  parentMenuName: any
+  sub: boolean
+  tree: boolean
+  crud: boolean
+}
+
+export interface Column {
+  createBy: any
+  createTime: any
+  updateBy: any
+  updateTime: any
+  remark: any
+  columnId: number
+  tableId: number
+  columnName: string
+  columnComment: string
+  columnType: string
+  javaType: string
+  javaField: string
+  isPk: string
+  isIncrement: string
+  isRequired: string
+  isInsert: string
+  isEdit?: string
+  isList?: string
+  isQuery?: string
+  queryType: string
+  htmlType: string
+  dictType: string
+  sort: number
+  list: boolean
+  pk: boolean
+  insert: boolean
+  edit: boolean
+  usableColumn: boolean
+  superColumn: boolean
+  required: boolean
+  query: boolean
+  capJavaField: string
+  increment: boolean
+}
+
+export interface Row {
+  createBy: string
+  createTime: string
+  updateBy: string
+  updateTime: string
+  remark: any
+  columnId: number
+  tableId: number
+  columnName: string
+  columnComment: string
+  columnType: string
+  javaType: string
+  javaField: string
+  isPk: string
+  isIncrement: string
+  isRequired: string
+  isInsert: string
+  isEdit?: string
+  isList?: string
+  isQuery?: string
+  queryType: string
+  htmlType: string
+  dictType: string
+  sort: number
+  list: boolean
+  pk: boolean
+  insert: boolean
+  edit: boolean
+  usableColumn: boolean
+  superColumn: boolean
+  required: boolean
+  query: boolean
+  capJavaField: string
+  increment: boolean
+}
+
+export interface Info {
+  createBy: any
+  createTime: any
+  updateBy: any
+  updateTime: any
+  remark: any
+  tableId: number
+  tableName: string
+  tableComment: string
+  subTableName: any
+  subTableFkName: any
+  className: string
+  tplCategory: string
+  tplWebType: string
+  packageName: string
+  moduleName: string
+  businessName: string
+  functionName: string
+  functionAuthor: string
+  genType: string
+  genPath: string
+  pkColumn: any
+  subTable: any
+  columns: Column2[]
+  options: string
+  treeCode: any
+  treeParentCode: any
+  treeName: any
+  parentMenuId: any
+  parentMenuName: any
+  sub: boolean
+  tree: boolean
+  crud: boolean
+}
+
+export interface Column2 {
+  createBy: any
+  createTime: any
+  updateBy: any
+  updateTime: any
+  remark: any
+  columnId: number
+  tableId: number
+  columnName: string
+  columnComment: string
+  columnType: string
+  javaType: string
+  javaField: string
+  isPk: string
+  isIncrement: string
+  isRequired: string
+  isInsert: string
+  isEdit?: string
+  isList?: string
+  isQuery?: string
+  queryType: string
+  htmlType: string
+  dictType: string
+  sort: number
+  list: boolean
+  pk: boolean
+  insert: boolean
+  edit: boolean
+  usableColumn: boolean
+  superColumn: boolean
+  required: boolean
+  query: boolean
+  capJavaField: string
+  increment: boolean
+}
