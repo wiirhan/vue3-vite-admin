@@ -15,6 +15,7 @@ export default sxzz(
             },
           },
         ],
+        'import/no-default-export': ['warn'],
       },
     },
   ],

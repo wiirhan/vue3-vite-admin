@@ -17,8 +17,8 @@ import './index.css'
 import 'element-plus/dist/index.css' // directive
 
 // 注册指令
-import plugins from './plugins' // plugins
 import SvgIcon from '@/components/SvgIcon/index.vue'
+import plugins from './plugins' // plugins
 
 import elementIcons from '@/components/SvgIcon/svgicon'
 import { download } from '@/utils/request'
@@ -88,7 +88,7 @@ directive(app)
 app.use(ElementPlus, {
   locale,
   // 支持 large、default、small
-  size: Cookies.get('size') || 'default',
+  size: (Cookies.get('size') as 'large' | 'default' | 'small') || 'default',
 })
 
 app.mount('#app')
