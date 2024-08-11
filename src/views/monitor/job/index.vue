@@ -1,6 +1,4 @@
 <script setup name="Job" lang="ts">
-import { getCurrentInstance, reactive, ref, toRefs } from 'vue'
-import { useRouter } from 'vue-router'
 import {
   addJob,
   changeJobStatus,
@@ -12,6 +10,9 @@ import {
 } from '@/api/monitor/job'
 import Crontab from '@/components/Crontab/index.vue'
 import { parseTime } from '@/utils/ruoyi'
+import { ElForm } from 'element-plus'
+import { getCurrentInstance, reactive, ref, toRefs } from 'vue'
+import { useRouter } from 'vue-router'
 
 const router = useRouter()
 const { proxy } = getCurrentInstance()!
@@ -32,6 +33,8 @@ const title = ref('')
 const openView = ref(false)
 const openCron = ref(false)
 const expression = ref('')
+const queryRef = ref<typeof ElForm>()
+const crontabRef = ref<typeof Crontab>()
 
 const data = reactive<{
   form: any
@@ -69,7 +72,7 @@ function getList() {
   })
 }
 /** 任务组名字典翻译 */
-function jobGroupFormat(row: any, column?: any) {
+function jobGroupFormat(row: any) {
   return proxy!.selectDictLabel(sys_job_group.value, row.jobGroup)
 }
 /** 取消按钮 */
@@ -106,22 +109,6 @@ function handleSelectionChange(selection: any[]) {
   ids.value = selection.map((item) => item.jobId)
   single.value = selection.length !== 1
   multiple.value = !selection.length
-}
-// 更多操作触发
-function handleCommand(command: any, row: any) {
-  switch (command) {
-    case 'handleRun':
-      handleRun(row)
-      break
-    case 'handleView':
-      handleView(row)
-      break
-    case 'handleJobLog':
-      handleJobLog(row)
-      break
-    default:
-      break
-  }
 }
 // 任务状态修改
 function handleStatusChange(row: any) {
@@ -192,13 +179,13 @@ function submitForm() {
   ;(proxy!.$refs.jobRef as any).validate((valid: any) => {
     if (valid) {
       if (form.value.jobId !== undefined) {
-        updateJob(form.value).then((response) => {
+        updateJob(form.value).then(() => {
           proxy!.$modal.msgSuccess('修改成功')
           open.value = false
           getList()
         })
       } else {
-        addJob(form.value).then((response) => {
+        addJob(form.value).then(() => {
           proxy!.$modal.msgSuccess('新增成功')
           open.value = false
           getList()
@@ -608,22 +595,22 @@ getList()
           </el-col>
           <el-col :span="12">
             <el-form-item label="任务状态：">
-              <div v-if="form.status == 0">正常</div>
-              <div v-else-if="form.status == 1">失败</div>
+              <div v-if="form.status === 0">正常</div>
+              <div v-else-if="form.status === 1">失败</div>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="是否并发：">
-              <div v-if="form.concurrent == 0">允许</div>
-              <div v-else-if="form.concurrent == 1">禁止</div>
+              <div v-if="form.concurrent === 0">允许</div>
+              <div v-else-if="form.concurrent === 1">禁止</div>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="执行策略：">
-              <div v-if="form.misfirePolicy == 0">默认策略</div>
-              <div v-else-if="form.misfirePolicy == 1">立即执行</div>
-              <div v-else-if="form.misfirePolicy == 2">执行一次</div>
-              <div v-else-if="form.misfirePolicy == 3">放弃执行</div>
+              <div v-if="form.misfirePolicy === 0">默认策略</div>
+              <div v-else-if="form.misfirePolicy === 1">立即执行</div>
+              <div v-else-if="form.misfirePolicy === 2">执行一次</div>
+              <div v-else-if="form.misfirePolicy === 3">放弃执行</div>
             </el-form-item>
           </el-col>
         </el-row>
