@@ -1,8 +1,8 @@
 <script setup name="SelectUser" lang="ts">
-import { authUserSelectAll, unallocatedUserList } from '@/api/system/role';
-import { parseTime } from '@/utils/ruoyi';
-import { ElForm } from 'element-plus';
-import { getCurrentInstance, reactive, ref } from 'vue';
+import { ElForm } from 'element-plus'
+import { getCurrentInstance, reactive, ref } from 'vue'
+import { authUserSelectAll, unallocatedUserList } from '@/api/system/role'
+import { parseTime } from '@/utils/ruoyi'
 
 const props = defineProps({
   roleId: {
@@ -44,7 +44,7 @@ function show() {
 }
 /** 选择行 */
 function clickRow(row: any) {
-  ; (proxy?.$refs.refTable as any).toggleRowSelection(row)
+  ;(proxy?.$refs.refTable as any).toggleRowSelection(row)
 }
 // 多选框选中数据
 function handleSelectionChange(selection: any[]) {
@@ -91,15 +91,31 @@ defineExpose({
 
 <template>
   <!-- 授权用户 -->
-  <el-dialog v-model="visible" title="选择用户" width="800px" top="5vh" append-to-body>
+  <el-dialog
+    v-model="visible"
+    title="选择用户"
+    width="800px"
+    top="5vh"
+    append-to-body
+  >
     <el-form ref="queryRef" :model="queryParams" :inline="true">
       <el-form-item label="用户名称" prop="userName">
-        <el-input v-model="queryParams.userName" placeholder="请输入用户名称" clearable style="width: 200px"
-          @keyup.enter="handleQuery" />
+        <el-input
+          v-model="queryParams.userName"
+          placeholder="请输入用户名称"
+          clearable
+          style="width: 200px"
+          @keyup.enter="handleQuery"
+        />
       </el-form-item>
       <el-form-item label="手机号码" prop="phonenumber">
-        <el-input v-model="queryParams.phonenumber" placeholder="请输入手机号码" clearable style="width: 200px"
-          @keyup.enter="handleQuery" />
+        <el-input
+          v-model="queryParams.phonenumber"
+          placeholder="请输入手机号码"
+          clearable
+          style="width: 200px"
+          @keyup.enter="handleQuery"
+        />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="Search" @click="handleQuery">
@@ -109,26 +125,57 @@ defineExpose({
       </el-form-item>
     </el-form>
     <el-row>
-      <el-table ref="refTable" :data="userList" height="260px" @row-click="clickRow"
-        @selection-change="handleSelectionChange">
+      <el-table
+        ref="refTable"
+        :data="userList"
+        height="260px"
+        @row-click="clickRow"
+        @selection-change="handleSelectionChange"
+      >
         <el-table-column type="selection" width="55" />
-        <el-table-column label="用户名称" prop="userName" :show-overflow-tooltip="true" />
-        <el-table-column label="用户昵称" prop="nickName" :show-overflow-tooltip="true" />
-        <el-table-column label="邮箱" prop="email" :show-overflow-tooltip="true" />
-        <el-table-column label="手机" prop="phonenumber" :show-overflow-tooltip="true" />
+        <el-table-column
+          label="用户名称"
+          prop="userName"
+          :show-overflow-tooltip="true"
+        />
+        <el-table-column
+          label="用户昵称"
+          prop="nickName"
+          :show-overflow-tooltip="true"
+        />
+        <el-table-column
+          label="邮箱"
+          prop="email"
+          :show-overflow-tooltip="true"
+        />
+        <el-table-column
+          label="手机"
+          prop="phonenumber"
+          :show-overflow-tooltip="true"
+        />
         <el-table-column label="状态" align="center" prop="status">
           <template #default="scope">
             <dict-tag :options="sys_normal_disable" :value="scope.row.status" />
           </template>
         </el-table-column>
-        <el-table-column label="创建时间" align="center" prop="createTime" width="180">
+        <el-table-column
+          label="创建时间"
+          align="center"
+          prop="createTime"
+          width="180"
+        >
           <template #default="scope">
             <span>{{ parseTime(scope.row.createTime) }}</span>
           </template>
         </el-table-column>
       </el-table>
-      <pagination v-show="total > 0" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize"
-        :total="total" @pagination="getList" />
+      <pagination
+        v-show="total > 0"
+        v-model:page="queryParams.pageNum"
+        v-model:limit="queryParams.pageSize"
+        :total="total"
+        @pagination="getList"
+      />
     </el-row>
     <template #footer>
       <div class="dialog-footer">

@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { listMenu } from '@/api/system/menu';
-import type { GenData } from '@/api/tool/types';
-import type { FormInstance } from 'element-plus';
+import { listMenu } from '@/api/system/menu'
+import type { GenData } from '@/api/tool/types'
+import type { FormInstance } from 'element-plus'
 
 defineProps<{
-  tables: GenData['tables'],
+  tables: GenData['tables']
 }>()
 
 const info = defineModel<GenData['info']>('info', {
@@ -51,7 +51,6 @@ function getMenuTreeselect() {
   })
 }
 
-
 getMenuTreeselect()
 </script>
 
@@ -73,7 +72,10 @@ getMenuTreeselect()
         <el-form-item prop="packageName">
           <template #label>
             生成包路径
-            <el-tooltip content="生成在哪个java包下，例如 com.ruoyi.system" placement="top">
+            <el-tooltip
+              content="生成在哪个java包下，例如 com.ruoyi.system"
+              placement="top"
+            >
               <el-icon><question-filled /></el-icon>
             </el-tooltip>
           </template>
@@ -121,15 +123,24 @@ getMenuTreeselect()
         <el-form-item>
           <template #label>
             上级菜单
-            <el-tooltip content="分配到指定菜单下，例如 系统管理" placement="top">
+            <el-tooltip
+              content="分配到指定菜单下，例如 系统管理"
+              placement="top"
+            >
               <el-icon><question-filled /></el-icon>
             </el-tooltip>
           </template>
-          <tree-select class="w-full" v-model:value="info.parentMenuId" :options="menuOptions" :obj-map="{
-            value: 'menuId',
-            label: 'menuName',
-            children: 'children',
-          }" placeholder="请选择系统菜单" />
+          <tree-select
+            v-model:value="info.parentMenuId"
+            class="w-full"
+            :options="menuOptions"
+            :obj-map="{
+              value: 'menuId',
+              label: 'menuName',
+              children: 'children',
+            }"
+            placeholder="请选择系统菜单"
+          />
         </el-form-item>
       </el-col>
 
@@ -137,7 +148,10 @@ getMenuTreeselect()
         <el-form-item prop="genType">
           <template #label>
             生成代码方式
-            <el-tooltip content="默认为zip压缩包下载，也可以自定义生成路径" placement="top">
+            <el-tooltip
+              content="默认为zip压缩包下载，也可以自定义生成路径"
+              placement="top"
+            >
               <el-icon><question-filled /></el-icon>
             </el-tooltip>
           </template>
@@ -150,7 +164,10 @@ getMenuTreeselect()
         <el-form-item prop="genPath">
           <template #label>
             自定义路径
-            <el-tooltip content="填写磁盘绝对路径，若不填写，则生成到当前Web项目下" placement="top">
+            <el-tooltip
+              content="填写磁盘绝对路径，若不填写，则生成到当前Web项目下"
+              placement="top"
+            >
               <el-icon><question-filled /></el-icon>
             </el-tooltip>
           </template>
@@ -182,13 +199,20 @@ getMenuTreeselect()
           <el-form-item>
             <template #label>
               树编码字段
-              <el-tooltip content="树显示的编码字段名， 如：dept_id" placement="top">
+              <el-tooltip
+                content="树显示的编码字段名， 如：dept_id"
+                placement="top"
+              >
                 <el-icon><question-filled /></el-icon>
               </el-tooltip>
             </template>
             <el-select v-model="info.treeCode" placeholder="请选择">
-              <el-option v-for="(column, index) in info.columns" :key="index"
-                :label="`${column.columnName}：${column.columnComment}`" :value="column.columnName" />
+              <el-option
+                v-for="(column, index) in info.columns"
+                :key="index"
+                :label="`${column.columnName}：${column.columnComment}`"
+                :value="column.columnName"
+              />
             </el-select>
           </el-form-item>
         </el-col>
@@ -196,13 +220,20 @@ getMenuTreeselect()
           <el-form-item>
             <template #label>
               树父编码字段
-              <el-tooltip content="树显示的父编码字段名， 如：parent_Id" placement="top">
+              <el-tooltip
+                content="树显示的父编码字段名， 如：parent_Id"
+                placement="top"
+              >
                 <el-icon><question-filled /></el-icon>
               </el-tooltip>
             </template>
             <el-select v-model="info.treeParentCode" placeholder="请选择">
-              <el-option v-for="(column, index) in info.columns" :key="index"
-                :label="`${column.columnName}：${column.columnComment}`" :value="column.columnName" />
+              <el-option
+                v-for="(column, index) in info.columns"
+                :key="index"
+                :label="`${column.columnName}：${column.columnComment}`"
+                :value="column.columnName"
+              />
             </el-select>
           </el-form-item>
         </el-col>
@@ -210,13 +241,20 @@ getMenuTreeselect()
           <el-form-item>
             <template #label>
               树名称字段
-              <el-tooltip content="树节点的显示名称字段名， 如：dept_name" placement="top">
+              <el-tooltip
+                content="树节点的显示名称字段名， 如：dept_name"
+                placement="top"
+              >
                 <el-icon><question-filled /></el-icon>
               </el-tooltip>
             </template>
             <el-select v-model="info.treeName" placeholder="请选择">
-              <el-option v-for="(column, index) in info.columns" :key="index"
-                :label="`${column.columnName}：${column.columnComment}`" :value="column.columnName" />
+              <el-option
+                v-for="(column, index) in info.columns"
+                :key="index"
+                :label="`${column.columnName}：${column.columnComment}`"
+                :value="column.columnName"
+              />
             </el-select>
           </el-form-item>
         </el-col>
@@ -230,13 +268,24 @@ getMenuTreeselect()
           <el-form-item>
             <template #label>
               关联子表的表名
-              <el-tooltip content="关联子表的表名， 如：sys_user" placement="top">
+              <el-tooltip
+                content="关联子表的表名， 如：sys_user"
+                placement="top"
+              >
                 <el-icon><question-filled /></el-icon>
               </el-tooltip>
             </template>
-            <el-select v-model="info.subTableName" placeholder="请选择" @change="subSelectChange">
-              <el-option v-for="(table, index) in tables" :key="index"
-                :label="`${table.tableName}：${table.tableComment}`" :value="table.tableName" />
+            <el-select
+              v-model="info.subTableName"
+              placeholder="请选择"
+              @change="subSelectChange"
+            >
+              <el-option
+                v-for="(table, index) in tables"
+                :key="index"
+                :label="`${table.tableName}：${table.tableComment}`"
+                :value="table.tableName"
+              />
             </el-select>
           </el-form-item>
         </el-col>
@@ -244,13 +293,20 @@ getMenuTreeselect()
           <el-form-item>
             <template #label>
               子表关联的外键名
-              <el-tooltip content="子表关联的外键名， 如：user_id" placement="top">
+              <el-tooltip
+                content="子表关联的外键名， 如：user_id"
+                placement="top"
+              >
                 <el-icon><question-filled /></el-icon>
               </el-tooltip>
             </template>
             <el-select v-model="info.subTableFkName" placeholder="请选择">
-              <el-option v-for="(column, index) in subColumns" :key="index"
-                :label="`${column.columnName}：${column.columnComment}`" :value="column.columnName" />
+              <el-option
+                v-for="(column, index) in subColumns"
+                :key="index"
+                :label="`${column.columnName}：${column.columnComment}`"
+                :value="column.columnName"
+              />
             </el-select>
           </el-form-item>
         </el-col>

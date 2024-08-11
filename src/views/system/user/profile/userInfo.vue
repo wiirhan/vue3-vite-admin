@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { updateUserProfile } from '@/api/system/user';
-import type { FormRules } from 'element-plus';
-import { getCurrentInstance } from 'vue';
+import { getCurrentInstance } from 'vue'
+import { updateUserProfile } from '@/api/system/user'
+import type { FormRules } from 'element-plus'
 
 const user = defineModel<{
   nickName: string
@@ -36,7 +36,7 @@ const rules = reactive<FormRules<typeof user>>({
 
 /** 提交按钮 */
 function submit() {
-  ; (proxy?.$refs.userRef as any).validate((valid: any) => {
+  ;(proxy?.$refs.userRef as any).validate((valid: any) => {
     if (valid) {
       updateUserProfile(user).then(() => {
         proxy!.$modal.msgSuccess('修改成功')
