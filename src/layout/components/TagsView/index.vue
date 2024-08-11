@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import { usePermissionStore } from '@/store/modules/permission'
+import useSettingsStore from '@/store/modules/settings'
+import useTagsViewStore from '@/store/modules/tagsView'
+import { getNormalPath } from '@/utils/ruoyi'
 import {
   computed,
   getCurrentInstance,
@@ -8,10 +12,6 @@ import {
   watch,
 } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import usePermissionStore from '@/store/modules/permission'
-import useSettingsStore from '@/store/modules/settings'
-import useTagsViewStore from '@/store/modules/tagsView'
-import { getNormalPath } from '@/utils/ruoyi'
 import ScrollPane from './ScrollPane.vue'
 
 const visible = ref(false)

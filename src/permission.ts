@@ -1,13 +1,13 @@
-import { ElMessage } from 'element-plus'
-import NProgress from 'nprogress'
-import usePermissionStore from '@/store/modules/permission'
+import { usePermissionStore } from '@/store/modules/permission'
 import useSettingsStore from '@/store/modules/settings'
 import useUserStore from '@/store/modules/user'
 import { getToken } from '@/utils/auth'
 import { isRelogin } from '@/utils/request'
 import { isHttp } from '@/utils/validate'
-import router from './router'
+import { ElMessage } from 'element-plus'
+import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
+import router from './router'
 
 NProgress.configure({ showSpinner: false })
 
@@ -51,15 +51,13 @@ router.beforeEach((to, from, next) => {
     } else {
       next()
     }
-  } else {
+  } else if (whiteList.includes(to.path)) {
     // 没有token
-    if (whiteList.includes(to.path)) {
-      // 在免登录白名单，直接进入
-      next()
-    } else {
-      next(`/login?redirect=${to.fullPath}`) // 否则全部重定向到登录页
-      NProgress.done()
-    }
+    // 在免登录白名单，直接进入
+    next()
+  } else {
+    next(`/login?redirect=${to.fullPath}`) // 否则全部重定向到登录页
+    NProgress.done()
   }
 })
 

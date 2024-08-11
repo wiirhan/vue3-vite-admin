@@ -1,10 +1,10 @@
 <script setup lang="ts">
+import { usePermissionStore } from '@/store/modules/permission'
+import { getNormalPath } from '@/utils/ruoyi'
+import { isHttp } from '@/utils/validate'
 import Fuse from 'fuse.js'
 import { computed, nextTick, onMounted, ref, watch, watchEffect } from 'vue'
 import { useRouter } from 'vue-router'
-import usePermissionStore from '@/store/modules/permission'
-import { getNormalPath } from '@/utils/ruoyi'
-import { isHttp } from '@/utils/validate'
 
 const search = ref('')
 const options = ref<any[]>([])

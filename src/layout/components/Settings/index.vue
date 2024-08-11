@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { computed, getCurrentInstance, ref } from 'vue'
 import useAppStore from '@/store/modules/app'
-import usePermissionStore from '@/store/modules/permission'
+import { usePermissionStore } from '@/store/modules/permission'
 import useSettingsStore from '@/store/modules/settings'
 import { useDynamicTitle } from '@/utils/dynamicTitle'
 import { handleThemeStyle } from '@/utils/theme'
+import { computed, getCurrentInstance, ref } from 'vue'
 
 const { proxy } = getCurrentInstance()!
 const appStore = useAppStore()

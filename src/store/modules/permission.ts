@@ -1,10 +1,12 @@
-import { defineStore } from 'pinia'
 import { getRouters } from '@/api/menu'
+import type { Routers } from '@/api/types'
 import ParentView from '@/components/ParentView/index.vue'
 import InnerLink from '@/layout/components/InnerLink/index.vue'
 import Layout from '@/layout/index.vue'
 import auth from '@/plugins/auth'
 import router, { constantRoutes, dynamicRoutes } from '@/router'
+import { cloneDeep } from 'es-toolkit/object'
+import { defineStore } from 'pinia'
 import type { RouteRecordRaw } from 'vue-router'
 
 // 匹配views里面所有的.vue文件
@@ -38,15 +40,15 @@ const usePermissionStore = defineStore('permission', {
     setSidebarRouters(routes: RouteRecordRaw[]) {
       this.sidebarRouters = routes
     },
-    generateRoutes(routes?: RouteRecordRaw[]) {
-      return new Promise<any[]>((resolve) => {
+    generateRoutes() {
+      return new Promise<RouteRecordRaw[]>((resolve) => {
         // 向后端请求路由数据
         getRouters().then((res) => {
-          const sdata = JSON.parse(JSON.stringify(res.data))
-          const rdata = JSON.parse(JSON.stringify(res.data))
-          const defaultData = JSON.parse(JSON.stringify(res.data))
+          const sdata = cloneDeep(res.data)
+          const rdata = cloneDeep(res.data)
+          const defaultData = cloneDeep(res.data)
           const sidebarRoutes = filterAsyncRouter(sdata)
-          const rewriteRoutes = filterAsyncRouter(rdata, false, true)
+          const rewriteRoutes = filterAsyncRouter(rdata, true)
           const defaultRoutes = filterAsyncRouter(defaultData)
           const asyncRoutes = filterDynamicRoutes(dynamicRoutes)
           asyncRoutes.forEach((route) => {
@@ -65,11 +67,10 @@ const usePermissionStore = defineStore('permission', {
 
 // 遍历后台传来的路由字符串，转换为组件对象
 function filterAsyncRouter(
-  asyncRouterMap: any[],
-  lastRouter = false,
+  asyncRouterMap: Routers[],
   type = false,
-) {
-  return asyncRouterMap.filter((route) => {
+): RouteRecordRaw[] {
+  return asyncRouterMap.map((route) => {
     if (type && route.children) {
       route.children = filterChildren(route.children)
     }
@@ -82,22 +83,22 @@ function filterAsyncRouter(
       } else if (route.component === 'InnerLink') {
         route.component = InnerLink
       } else {
-        route.component = loadView(route.component)
+        route.component = loadView(route.component as string)
       }
     }
     if (route.children != null && route.children && route.children.length) {
-      route.children = filterAsyncRouter(route.children, route, type)
+      route.children = filterAsyncRouter(route.children, type)
     } else {
       delete route.children
       delete route.redirect
     }
-    return true
+    return route as RouteRecordRaw
   })
 }
 
 function filterChildren(childrenMap: any[], lastRouter: any = false) {
   let children: any[] = []
-  childrenMap.forEach((el, index) => {
+  childrenMap.forEach((el) => {
     if (
       el.children &&
       el.children.length &&
@@ -137,15 +138,14 @@ export function filterDynamicRoutes(routes: any[]) {
   return res
 }
 
-export function loadView(view: any) {
-  let res
-  for (const path in modules) {
+export function loadView(view: string) {
+  const path = Object.keys(modules).find((path) => {
     const dir = path.split('views/')[1].split('.vue')[0]
-    if (dir === view) {
-      res = () => modules[path]()
-    }
+    return dir === view
+  })
+  if (path) {
+    return () => modules[path]()
   }
-  return res
 }
 
-export default usePermissionStore
+export { usePermissionStore }

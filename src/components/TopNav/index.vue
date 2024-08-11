@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
 import { constantRoutes } from '@/router'
 import useAppStore from '@/store/modules/app'
-import usePermissionStore from '@/store/modules/permission'
+import { usePermissionStore } from '@/store/modules/permission'
 import useSettingsStore from '@/store/modules/settings'
 import { isHttp } from '@/utils/validate'
-import type { RouteRecordRaw } from 'vue-router'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { type RouteRecordRaw, useRoute, useRouter } from 'vue-router'
 
 // 顶部栏初始数
 const visibleNumber = ref<number | null>(null)
@@ -29,7 +28,7 @@ const routers = computed(() => permissionStore.topbarRouters)
 // 顶部显示菜单
 const topMenus = computed(() => {
   const topMenus: RouteRecordRaw[] = []
-  routers.value.map((menu) => {
+  routers.value.forEach((menu) => {
     if (menu.hidden !== true) {
       // 兼容顶部栏一级菜单内部跳转
       if (menu.path === '/') {
