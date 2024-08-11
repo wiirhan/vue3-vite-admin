@@ -1,8 +1,8 @@
 <script setup name="Operlog" lang="ts">
-import { getCurrentInstance, reactive, ref, toRefs } from 'vue'
 import { cleanOperlog, delOperlog, list } from '@/api/monitor/operlog'
 import { parseTime } from '@/utils/ruoyi'
-import type { Sort } from 'element-plus'
+import type { ElForm, Sort } from 'element-plus'
+import { getCurrentInstance, reactive, ref, toRefs } from 'vue'
 
 const { proxy } = getCurrentInstance()!
 const { sys_oper_type, sys_common_status } = proxy!.useDict(
@@ -15,12 +15,11 @@ const open = ref(false)
 const loading = ref(true)
 const showSearch = ref(true)
 const ids = ref<number[]>([])
-const single = ref(true)
 const multiple = ref(true)
 const total = ref(0)
-const title = ref('')
 const dateRange = ref<any>([])
 const defaultSort = ref<Sort>({ prop: 'operTime', order: 'descending' })
+const queryRef = ref<typeof ElForm>()
 
 const data = reactive<{
   form: any
@@ -51,7 +50,7 @@ function getList() {
   )
 }
 /** 操作日志类型字典翻译 */
-function typeFormat(row: any, column?: any) {
+function typeFormat(row: any) {
   return proxy!.selectDictLabel(sys_oper_type.value, row.businessType)
 }
 /** 搜索按钮操作 */
@@ -75,13 +74,13 @@ function handleSelectionChange(selection: any[]) {
   multiple.value = !selection.length
 }
 /** 排序触发事件 */
-function handleSortChange(column: any, prop?: any, order?: any) {
+function handleSortChange(column: any) {
   queryParams.value.orderByColumn = column.prop
   queryParams.value.isAsc = column.order
   getList()
 }
 /** 详细按钮操作 */
-function handleView(row: any, index?: any) {
+function handleView(row: any) {
   open.value = true
   form.value = row
 }
@@ -321,7 +320,7 @@ getList()
             link
             type="primary"
             icon="View"
-            @click="handleView(scope.row, scope.index)"
+            @click="handleView(scope.row)"
           >
             详细
           </el-button>

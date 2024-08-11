@@ -1,7 +1,8 @@
 <script setup name="Online" lang="ts">
-import { getCurrentInstance, ref } from 'vue'
-import { forceLogout, list as initData } from '@/api/monitor/online'
-import { parseTime } from '@/utils/ruoyi'
+import { forceLogout, list as initData } from '@/api/monitor/online';
+import { parseTime } from '@/utils/ruoyi';
+import { ElForm } from 'element-plus';
+import { getCurrentInstance, ref } from 'vue';
 
 const { proxy } = getCurrentInstance()!
 
@@ -10,6 +11,7 @@ const loading = ref(true)
 const total = ref(0)
 const pageNum = ref(1)
 const pageSize = ref(10)
+const queryRef = ref<typeof ElForm>()
 
 const queryParams = ref({
   ipaddr: undefined,

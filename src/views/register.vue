@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import { ElMessageBox } from 'element-plus'
+import { getCodeImg, register } from '@/api/login'
+import { ElMessageBox, type FormInstance } from 'element-plus'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { getCodeImg, register } from '@/api/login'
-import type { FormInstance } from 'element-plus'
 
 const router = useRouter()
 
@@ -62,7 +61,7 @@ function handleRegister() {
     if (valid) {
       loading.value = true
       register(registerForm.value)
-        .then((res) => {
+        .then(() => {
           const username = registerForm.value.username
           ElMessageBox.alert(
             `<font color='red'>恭喜你，您的账号 ${username} 注册成功！</font>`,

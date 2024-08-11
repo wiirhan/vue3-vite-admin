@@ -1,10 +1,11 @@
 <script setup name="JobLog" lang="ts">
-import { oneOf } from '@zeronejs/utils'
-import { getCurrentInstance, reactive, ref, toRefs } from 'vue'
-import { useRoute } from 'vue-router'
 import { getJob } from '@/api/monitor/job'
 import { cleanJobLog, delJobLog, listJobLog } from '@/api/monitor/jobLog'
 import { parseTime } from '@/utils/ruoyi'
+import { oneOf } from '@zeronejs/utils'
+import { ElForm } from 'element-plus'
+import { getCurrentInstance, reactive, ref, toRefs } from 'vue'
+import { useRoute } from 'vue-router'
 
 const { proxy } = getCurrentInstance()!
 const { sys_common_status, sys_job_group } = proxy!.useDict(
@@ -21,6 +22,7 @@ const multiple = ref(true)
 const total = ref(0)
 const dateRange = ref<any>([])
 const route = useRoute()
+const queryRef = ref<typeof ElForm>()
 
 const data = reactive<{
   form: any
@@ -76,7 +78,7 @@ function handleView(row: any) {
   form.value = row
 }
 /** 删除按钮操作 */
-function handleDelete(row: any) {
+function handleDelete() {
   proxy!.$modal
     .confirm(`是否确认删除调度日志编号为"${ids.value}"的数据项?`)
     .then(() => {
@@ -351,12 +353,12 @@ getList()
           </el-col>
           <el-col :span="24">
             <el-form-item label="执行状态：">
-              <div v-if="form.status == 0">正常</div>
-              <div v-else-if="form.status == 1">失败</div>
+              <div v-if="form.status === 0">正常</div>
+              <div v-else-if="form.status === 1">失败</div>
             </el-form-item>
           </el-col>
           <el-col :span="24">
-            <el-form-item v-if="form.status == 1" label="异常信息：">
+            <el-form-item v-if="form.status === 1" label="异常信息：">
               {{ form.exceptionInfo }}
             </el-form-item>
           </el-col>

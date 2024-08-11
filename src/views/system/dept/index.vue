@@ -1,5 +1,4 @@
 <script setup name="Dept" lang="ts">
-import { getCurrentInstance, nextTick, reactive, ref, toRefs } from 'vue'
 import {
   addDept,
   delDept,
@@ -9,6 +8,8 @@ import {
   updateDept,
 } from '@/api/system/dept'
 import { parseTime } from '@/utils/ruoyi'
+import { ElForm } from 'element-plus'
+import { getCurrentInstance, nextTick, reactive, ref, toRefs } from 'vue'
 
 const { proxy } = getCurrentInstance()!
 const { sys_normal_disable } = proxy!.useDict('sys_normal_disable')
@@ -21,6 +22,7 @@ const title = ref('')
 const deptOptions = ref<any[]>([])
 const isExpandAll = ref(true)
 const refreshTable = ref(true)
+const queryRef = ref<typeof ElForm>()
 
 const data = reactive<{
   form: any
@@ -134,13 +136,13 @@ function submitForm() {
   ;(proxy?.$refs.deptRef as any).validate((valid: any) => {
     if (valid) {
       if (form.value.deptId !== undefined) {
-        updateDept(form.value).then((response) => {
+        updateDept(form.value).then(() => {
           proxy!.$modal.msgSuccess('修改成功')
           open.value = false
           getList()
         })
       } else {
-        addDept(form.value).then((response) => {
+        addDept(form.value).then(() => {
           proxy!.$modal.msgSuccess('新增成功')
           open.value = false
           getList()
@@ -278,7 +280,7 @@ getList()
             新增
           </el-button>
           <el-button
-            v-if="scope.row.parentId != 0"
+            v-if="scope.row.parentId !== 0"
             v-hasPermi="['system:dept:remove']"
             link
             type="primary"

@@ -1,5 +1,4 @@
 <script setup name="Config" lang="ts">
-import { getCurrentInstance, reactive, ref, toRefs } from 'vue'
 import {
   addConfig,
   delConfig,
@@ -9,6 +8,8 @@ import {
   updateConfig,
 } from '@/api/system/config'
 import { parseTime } from '@/utils/ruoyi'
+import { ElForm } from 'element-plus'
+import { getCurrentInstance, reactive, ref, toRefs } from 'vue'
 
 const { proxy } = getCurrentInstance()!
 const { sys_yes_no } = proxy!.useDict('sys_yes_no')
@@ -23,6 +24,7 @@ const multiple = ref(true)
 const total = ref(0)
 const title = ref('')
 const dateRange = ref<any>([])
+const queryRef = ref<typeof ElForm>()
 
 const data = reactive<{
   form: any
@@ -118,13 +120,13 @@ function submitForm() {
   ;(proxy?.$refs.configRef as any).validate((valid: any) => {
     if (valid) {
       if (form.value.configId) {
-        updateConfig(form.value).then((response) => {
+        updateConfig(form.value).then(() => {
           proxy?.$modal.msgSuccess('修改成功')
           open.value = false
           getList()
         })
       } else {
-        addConfig(form.value).then((response) => {
+        addConfig(form.value).then(() => {
           proxy?.$modal.msgSuccess('新增成功')
           open.value = false
           getList()

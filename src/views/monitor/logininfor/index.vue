@@ -1,5 +1,4 @@
 <script setup name="Logininfor" lang="ts">
-import { getCurrentInstance, ref } from 'vue'
 import {
   cleanLogininfor,
   delLogininfor,
@@ -7,7 +6,8 @@ import {
   unlockLogininfor,
 } from '@/api/monitor/logininfor'
 import { parseTime } from '@/utils/ruoyi'
-import type { Sort } from 'element-plus'
+import type { ElForm, Sort } from 'element-plus'
+import { getCurrentInstance, ref } from 'vue'
 
 const { proxy } = getCurrentInstance()!
 const { sys_common_status } = proxy!.useDict('sys_common_status')
@@ -22,6 +22,7 @@ const selectName = ref<any>('')
 const total = ref(0)
 const dateRange = ref<any>([])
 const defaultSort = ref<Sort>({ prop: 'loginTime', order: 'descending' })
+const queryRef = ref<typeof ElForm>()
 
 // 查询参数
 const queryParams = ref({
@@ -68,7 +69,7 @@ function handleSelectionChange(selection: any[]) {
   selectName.value = selection.map((item) => item.userName)
 }
 /** 排序触发事件 */
-function handleSortChange(column: any, prop: any, order: any) {
+function handleSortChange(column: any) {
   queryParams.value.orderByColumn = column.prop
   queryParams.value.isAsc = column.order
   getList()
