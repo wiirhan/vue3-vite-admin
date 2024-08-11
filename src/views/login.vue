@@ -1,11 +1,11 @@
 <script setup lang="ts">
+import { getCodeImg } from '@/api/login'
+import { useUserStore } from '@/store/modules/user'
+import { decrypt, encrypt } from '@/utils/jsencrypt'
+import type { FormInstance } from 'element-plus'
 import Cookies from 'js-cookie'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { getCodeImg } from '@/api/login'
-import useUserStore from '@/store/modules/user'
-import { decrypt, encrypt } from '@/utils/jsencrypt'
-import type { FormInstance } from 'element-plus'
 
 const userStore = useUserStore()
 const router = useRouter()

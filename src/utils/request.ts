@@ -1,3 +1,8 @@
+import cache from '@/plugins/cache'
+import { useUserStore } from '@/store/modules/user'
+import { getToken } from '@/utils/auth'
+import errorCode from '@/utils/errorCode'
+import { blobValidate, tansParams } from '@/utils/ruoyi'
 import axios from 'axios'
 import {
   ElLoading,
@@ -6,11 +11,6 @@ import {
   ElNotification,
 } from 'element-plus'
 import { saveAs } from 'file-saver'
-import cache from '@/plugins/cache'
-import useUserStore from '@/store/modules/user'
-import { getToken } from '@/utils/auth'
-import errorCode from '@/utils/errorCode'
-import { blobValidate, tansParams } from '@/utils/ruoyi'
 
 let downloadLoadingInstance: ReturnType<typeof ElLoading.service>
 

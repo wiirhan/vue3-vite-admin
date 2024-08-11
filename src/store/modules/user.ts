@@ -1,7 +1,7 @@
-import { defineStore } from 'pinia'
 import { getInfo, login, logout } from '@/api/login'
 import defAva from '@/assets/images/profile.jpg'
 import { getToken, removeToken, setToken } from '@/utils/auth'
+import { defineStore } from 'pinia'
 
 const useUserStore = defineStore('user', {
   state: (): {
@@ -87,4 +87,4 @@ const useUserStore = defineStore('user', {
   },
 })
 
-export default useUserStore
+export { useUserStore }

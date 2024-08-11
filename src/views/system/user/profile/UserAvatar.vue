@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { uploadAvatar } from '@/api/system/user'
-import useUserStore from '@/store/modules/user'
+import { useUserStore } from '@/store/modules/user'
 import { getCurrentInstance, reactive, ref } from 'vue'
 import { VueCropper } from 'vue-cropper'
 import 'vue-cropper/dist/index.css'

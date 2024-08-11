@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ElMessageBox } from 'element-plus'
 import Breadcrumb from '@/components/Breadcrumb/index.vue'
 import Hamburger from '@/components/Hamburger/index.vue'
 import HeaderSearch from '@/components/HeaderSearch/index.vue'
@@ -8,7 +7,8 @@ import SizeSelect from '@/components/SizeSelect/index.vue'
 import TopNav from '@/components/TopNav/index.vue'
 import useAppStore from '@/store/modules/app'
 import useSettingsStore from '@/store/modules/settings'
-import useUserStore from '@/store/modules/user'
+import { useUserStore } from '@/store/modules/user'
+import { ElMessageBox } from 'element-plus'
 
 const emits = defineEmits(['setLayout'])
 const appStore = useAppStore()

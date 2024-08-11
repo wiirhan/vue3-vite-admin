@@ -1,6 +1,6 @@
 import { usePermissionStore } from '@/store/modules/permission'
 import useSettingsStore from '@/store/modules/settings'
-import useUserStore from '@/store/modules/user'
+import { useUserStore } from '@/store/modules/user'
 import { getToken } from '@/utils/auth'
 import { isRelogin } from '@/utils/request'
 import { isHttp } from '@/utils/validate'
