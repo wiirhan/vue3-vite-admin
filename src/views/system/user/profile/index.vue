@@ -1,9 +1,9 @@
 <script setup name="Profile" lang="ts">
-import { reactive, ref } from 'vue'
 import { getUserProfile } from '@/api/system/user'
-import resetPwd from './resetPwd.vue'
-import userAvatar from './userAvatar.vue'
-import userInfo from './userInfo.vue'
+import { reactive, ref } from 'vue'
+import ResetPwd from './ResetPwd.vue'
+import UserAvatar from './UserAvatar.vue'
+import UserInfo from './UserInfo.vue'
 
 const activeTab = ref('userinfo')
 const state = reactive<{
@@ -39,7 +39,7 @@ getUser()
           </template>
           <div>
             <div class="text-center">
-              <userAvatar :user="state.user" />
+              <UserAvatar :user="state.user" />
             </div>
             <ul class="list-group list-group-striped">
               <li class="list-group-item">
@@ -91,10 +91,10 @@ getUser()
           </template>
           <el-tabs v-model="activeTab">
             <el-tab-pane label="基本资料" name="userinfo">
-              <userInfo :user="state.user" />
+              <UserInfo :user="state.user" />
             </el-tab-pane>
             <el-tab-pane label="修改密码" name="resetPwd">
-              <resetPwd />
+              <ResetPwd />
             </el-tab-pane>
           </el-tabs>
         </el-card>

@@ -141,7 +141,7 @@ export const dynamicRoutes: RouteRecordRaw[] = [
     children: [
       {
         path: String.raw`index/:dictId(\d+)`,
-        component: () => import('@/views/system/dict/data.vue'),
+        component: () => import('@/views/system/dict/DictData.vue'),
         name: 'Data',
         meta: { title: '字典数据', activeMenu: '/system/dict' },
       },

@@ -1,5 +1,4 @@
 <script setup name="Notice" lang="ts">
-import { getCurrentInstance, reactive, ref, toRefs } from 'vue'
 import {
   addNotice,
   delNotice,
@@ -8,6 +7,8 @@ import {
   updateNotice,
 } from '@/api/system/notice'
 import { parseTime } from '@/utils/ruoyi'
+import { ElForm } from 'element-plus'
+import { getCurrentInstance, reactive, ref, toRefs } from 'vue'
 
 const { proxy } = getCurrentInstance()!
 
@@ -25,6 +26,7 @@ const single = ref(true)
 const multiple = ref(true)
 const total = ref(0)
 const title = ref('')
+const queryRef = ref<typeof ElForm>()
 
 const data = reactive<{
   form: any
@@ -113,13 +115,13 @@ function submitForm() {
   ;(proxy?.$refs.noticeRef as any).validate((valid: any) => {
     if (valid) {
       if (form.value.noticeId !== undefined) {
-        updateNotice(form.value).then((response) => {
+        updateNotice(form.value).then(() => {
           proxy!.$modal.msgSuccess('修改成功')
           open.value = false
           getList()
         })
       } else {
-        addNotice(form.value).then((response) => {
+        addNotice(form.value).then(() => {
           proxy!.$modal.msgSuccess('新增成功')
           open.value = false
           getList()

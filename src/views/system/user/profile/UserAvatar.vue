@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { getCurrentInstance, reactive, ref } from 'vue'
-import { VueCropper } from 'vue-cropper'
 import { uploadAvatar } from '@/api/system/user'
 import useUserStore from '@/store/modules/user'
+import { getCurrentInstance, reactive, ref } from 'vue'
+import { VueCropper } from 'vue-cropper'
 import 'vue-cropper/dist/index.css'
 
 const userStore = useUserStore()
@@ -40,10 +40,6 @@ function editCropper() {
 /** 打开弹出层结束时的回调 */
 function modalOpened() {
   visible.value = true
-}
-/** 覆盖默认上传行为 */
-function requestUpload() {
-  console.log('覆盖默认上传行为')
 }
 /** 向左旋转 */
 function rotateLeft() {
@@ -136,7 +132,6 @@ function closeDialog() {
         <el-col :lg="2" :md="2">
           <el-upload
             action="#"
-            :http-request="requestUpload"
             :show-file-list="false"
             :before-upload="beforeUpload"
           >

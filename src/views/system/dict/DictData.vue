@@ -1,6 +1,4 @@
 <script setup name="Data" lang="ts">
-import { getCurrentInstance, reactive, ref, toRefs } from 'vue'
-import { useRoute } from 'vue-router'
 import {
   addData,
   delData,
@@ -14,6 +12,9 @@ import {
 } from '@/api/system/dict/type'
 import useDictStore from '@/store/modules/dict'
 import { parseTime } from '@/utils/ruoyi'
+import { ElForm } from 'element-plus'
+import { getCurrentInstance, reactive, ref, toRefs } from 'vue'
+import { useRoute } from 'vue-router'
 
 const { proxy } = getCurrentInstance()!
 
@@ -40,6 +41,7 @@ const listClassOptions = ref([
   { value: 'warning', label: '警告' },
   { value: 'danger', label: '危险' },
 ])
+const queryRef = ref<typeof ElForm>()
 
 const data = reactive<{
   form: any
@@ -156,14 +158,14 @@ function submitForm() {
   ;(proxy?.$refs.dataRef as any).validate((valid: any) => {
     if (valid) {
       if (form.value.dictCode !== undefined) {
-        updateData(form.value).then((response) => {
+        updateData(form.value).then(() => {
           useDictStore().removeDict(queryParams.value.dictType)
           proxy!.$modal.msgSuccess('修改成功')
           open.value = false
           getList()
         })
       } else {
-        addData(form.value).then((response) => {
+        addData(form.value).then(() => {
           useDictStore().removeDict(queryParams.value.dictType)
           proxy!.$modal.msgSuccess('新增成功')
           open.value = false
@@ -320,12 +322,14 @@ getTypeList()
       <el-table-column label="字典标签" align="center" prop="dictLabel">
         <template #default="scope">
           <span
-            v-if="scope.row.listClass == '' || scope.row.listClass == 'default'"
+            v-if="
+              scope.row.listClass === '' || scope.row.listClass === 'default'
+            "
             >{{ scope.row.dictLabel }}</span
           >
           <el-tag
             v-else
-            :type="scope.row.listClass == 'primary' ? '' : scope.row.listClass"
+            :type="scope.row.listClass === 'primary' ? '' : scope.row.listClass"
           >
             {{ scope.row.dictLabel }}
           </el-tag>
