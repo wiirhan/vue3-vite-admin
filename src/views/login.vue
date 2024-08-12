@@ -5,11 +5,12 @@ import { decrypt, encrypt } from '@/utils/jsencrypt'
 import type { FormInstance } from 'element-plus'
 import Cookies from 'js-cookie'
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 const userStore = useUserStore()
 const router = useRouter()
-const loginForm = ref<any>({
+const route = useRoute()
+const loginForm = ref({
   username: 'admin',
   password: 'admin123',
   rememberMe: false,
@@ -29,7 +30,7 @@ const loading = ref(false)
 const captchaEnabled = ref(true)
 // 注册开关
 const register = ref(false)
-const redirect = ref(undefined)
+const redirect = ref(route.query.redirect as string)
 const loginRef = ref<FormInstance>()
 
 function handleLogin() {
@@ -71,15 +72,14 @@ function handleLogin() {
   })
 }
 
-function getCode() {
-  getCodeImg().then((res: any) => {
-    captchaEnabled.value =
-      res.captchaEnabled === undefined ? true : res.captchaEnabled
-    if (captchaEnabled.value) {
-      codeUrl.value = `data:image/gif;base64,${res.img}`
-      loginForm.value.uuid = res.uuid
-    }
-  })
+async function getCode() {
+  const res = await getCodeImg()
+  captchaEnabled.value =
+    res.captchaEnabled === undefined ? true : res.captchaEnabled
+  if (captchaEnabled.value) {
+    codeUrl.value = `data:image/gif;base64,${res.img}`
+    loginForm.value.uuid = res.uuid
+  }
 }
 
 function getCookie() {
@@ -87,17 +87,20 @@ function getCookie() {
   const password = Cookies.get('password')
   const rememberMe = Cookies.get('rememberMe')
   loginForm.value = {
+    ...loginForm.value,
     username: username === undefined ? loginForm.value.username : username,
     password:
       password === undefined
         ? loginForm.value.password
         : decrypt(password) || '',
-    rememberMe: rememberMe === undefined ? false : Boolean(rememberMe),
+    rememberMe: rememberMe !== undefined,
   }
 }
 
-getCode()
-getCookie()
+onMounted(() => {
+  getCode()
+  getCookie()
+})
 </script>
 
 <template>

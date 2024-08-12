@@ -15,7 +15,7 @@ import { saveAs } from 'file-saver'
 let downloadLoadingInstance: ReturnType<typeof ElLoading.service>
 
 // 是否显示重新登录
-export const isRelogin = { show: false }
+export const isReLogin = { show: false }
 
 // 创建axios实例
 const service = axios.create({
@@ -105,8 +105,8 @@ service.interceptors.response.use(
       return res.data
     }
     if (code === 401) {
-      if (!isRelogin.show) {
-        isRelogin.show = true
+      if (!isReLogin.show) {
+        isReLogin.show = true
         ElMessageBox.confirm(
           '登录状态已过期，您可以继续留在该页面，或者重新登录',
           '系统提示',
@@ -117,7 +117,7 @@ service.interceptors.response.use(
           },
         )
           .then(() => {
-            isRelogin.show = false
+            isReLogin.show = false
             useUserStore()
               .logOut()
               .then(() => {
@@ -125,7 +125,7 @@ service.interceptors.response.use(
               })
           })
           .catch(() => {
-            isRelogin.show = false
+            isReLogin.show = false
           })
       }
       return Promise.reject('无效的会话，或者会话已过期，请重新登录。')

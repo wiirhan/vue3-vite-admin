@@ -1,18 +1,8 @@
 import request from '@/utils/request'
+import type { LoginCaptchaImage, LoginReq, LoginRes } from './types'
 
 // 登录方法
-export function login(
-  username: string,
-  password: string,
-  code: string,
-  uuid: string,
-) {
-  const data = {
-    username,
-    password,
-    code,
-    uuid,
-  }
+export function login(data: LoginReq): Promise<LoginRes> {
   return request({
     url: '/login',
     headers: {
@@ -52,7 +42,7 @@ export function logout() {
 }
 
 // 获取验证码
-export function getCodeImg() {
+export function getCodeImg(): Promise<LoginCaptchaImage> {
   return request({
     url: '/captchaImage',
     headers: {

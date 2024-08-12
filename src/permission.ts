@@ -2,7 +2,7 @@ import { usePermissionStore } from '@/store/modules/permission'
 import useSettingsStore from '@/store/modules/settings'
 import { useUserStore } from '@/store/modules/user'
 import { getToken } from '@/utils/auth'
-import { isRelogin } from '@/utils/request'
+import { isReLogin } from '@/utils/request'
 import { isHttp } from '@/utils/validate'
 import { ElMessage } from 'element-plus'
 import NProgress from 'nprogress'
@@ -22,12 +22,12 @@ router.beforeEach((to, from, next) => {
       next({ path: '/' })
       NProgress.done()
     } else if (useUserStore().roles.length === 0) {
-      isRelogin.show = true
+      isReLogin.show = true
       // 判断当前用户是否已拉取完user_info信息
       useUserStore()
         .getInfo()
         .then(() => {
-          isRelogin.show = false
+          isReLogin.show = false
           usePermissionStore()
             .generateRoutes()
             .then((accessRoutes) => {
