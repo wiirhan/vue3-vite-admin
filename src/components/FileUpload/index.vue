@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { computed, getCurrentInstance, ref, watch } from 'vue'
 import { getToken } from '@/utils/auth'
+import { computed, getCurrentInstance, ref, watch } from 'vue'
 
 const props = defineProps({
   modelValue: [String, Object, Array] as any,
@@ -94,7 +94,7 @@ function handleExceed() {
 }
 
 // 上传失败
-function handleUploadError(err: any) {
+function handleUploadError() {
   proxy!.$modal.msgError('上传文件失败')
 }
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import CrontabDay from './day.vue'
 import CrontabHour from './hour.vue'
 import CrontabMin from './min.vue'
@@ -21,8 +21,8 @@ const props = defineProps({
 })
 const emit = defineEmits(['hide', 'fill'])
 const tabTitles = ref(['秒', '分钟', '小时', '日', '月', '周', '年'])
-const hideComponent = ref<string[]>([])
-const expression = ref('')
+const hideComponent = ref<string[]>(props.hideComponent)
+const expression = ref(props.expression)
 const crontabValueObj = ref<Record<string, string>>({
   second: '*',
   min: '*',
@@ -102,10 +102,6 @@ function clearCron() {
     year: '',
   }
 }
-onMounted(() => {
-  expression.value = props.expression
-  hideComponent.value = props.hideComponent
-})
 </script>
 
 <template>
