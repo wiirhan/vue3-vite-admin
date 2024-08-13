@@ -20,7 +20,7 @@
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true
   },
-  "types": ["element-plus/global", "vite/client"],
+  "types": ["element-plus/global", "vite/client", "@vue/test-utils"],
   "exclude": [
     "dist",
     "node_modules",

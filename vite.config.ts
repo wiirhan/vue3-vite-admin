@@ -45,7 +45,14 @@ export default defineConfig(({ mode, command }) => {
       },
     },
     test: {
+      globals: true,
+      setupFiles: './vitest.setup.ts',
       environment: 'jsdom',
+      server: {
+        deps: {
+          inline: ['element-plus'],
+        },
+      },
     },
   }
 })
