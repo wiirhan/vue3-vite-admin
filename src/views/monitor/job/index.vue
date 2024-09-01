@@ -39,7 +39,7 @@ const crontabRef = ref<typeof Crontab>()
 const data = reactive<{
   form: any
   queryParams: any
-  rules: any
+  rules: Record<string, any>
 }>({
   form: {},
   queryParams: {

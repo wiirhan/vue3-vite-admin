@@ -1,6 +1,6 @@
 <script setup name="User" lang="ts">
-import { ElForm, ElTree } from 'element-plus'
-import { getCurrentInstance, reactive, ref, toRefs, watch } from 'vue'
+import { ElForm, ElTree, type FormRules } from 'element-plus'
+import { getCurrentInstance, reactive, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import {
   addUser,
@@ -33,7 +33,7 @@ const single = ref(true)
 const multiple = ref(true)
 const total = ref(0)
 const title = ref('')
-const dateRange = ref<any>([])
+const dateRange = ref([])
 const deptName = ref('')
 const deptOptions = ref(undefined)
 const initPassword = ref(undefined)
@@ -64,61 +64,48 @@ const columns = ref([
   { key: 5, label: `状态`, visible: true },
   { key: 6, label: `创建时间`, visible: true },
 ])
-
-const data = reactive<{
-  form: any
-  queryParams: any
-  rules: any
-}>({
-  form: {},
-  queryParams: {
-    pageNum: 1,
-    pageSize: 10,
-    userName: undefined,
-    phonenumber: undefined,
-    status: undefined,
-    deptId: undefined,
-  },
-  rules: {
-    userName: [
-      { required: true, message: '用户名称不能为空', trigger: 'blur' },
-      {
-        min: 2,
-        max: 20,
-        message: '用户名称长度必须介于 2 和 20 之间',
-        trigger: 'blur',
-      },
-    ],
-    nickName: [
-      { required: true, message: '用户昵称不能为空', trigger: 'blur' },
-    ],
-    password: [
-      { required: true, message: '用户密码不能为空', trigger: 'blur' },
-      {
-        min: 5,
-        max: 20,
-        message: '用户密码长度必须介于 5 和 20 之间',
-        trigger: 'blur',
-      },
-    ],
-    email: [
-      {
-        type: 'email',
-        message: '请输入正确的邮箱地址',
-        trigger: ['blur', 'change'],
-      },
-    ],
-    phonenumber: [
-      {
-        pattern: /^1[3-9|]\d{9}$/,
-        message: '请输入正确的手机号码',
-        trigger: 'blur',
-      },
-    ],
-  },
+const form = ref({} as Record<string, any>)
+const queryParams = ref({
+  pageNum: 1,
+  pageSize: 10,
+  userName: undefined,
+  phonenumber: undefined,
+  status: undefined,
+  deptId: undefined,
 })
-
-const { queryParams, form, rules } = toRefs(data)
+const rules = ref<FormRules>({
+  userName: [
+    { required: true, message: '用户名称不能为空', trigger: 'blur' },
+    {
+      min: 2,
+      max: 20,
+      message: '用户名称长度必须介于 2 和 20 之间',
+      trigger: 'blur',
+    },
+  ],
+  nickName: [{ required: true, message: '用户昵称不能为空', trigger: 'blur' }],
+  password: [
+    { required: true, message: '用户密码不能为空', trigger: 'blur' },
+    {
+      min: 5,
+      max: 20,
+      message: '用户密码长度必须介于 5 和 20 之间',
+      trigger: 'blur',
+    },
+  ],
+  email: {
+    type: 'email',
+    message: '请输入正确的邮箱地址',
+    trigger: ['blur', 'change'],
+  },
+  phonenumber: [
+    {
+      pattern: /^1[3-9|]\d{9}$/,
+      message: '请输入正确的手机号码',
+      trigger: 'blur',
+    },
+  ],
+})
 
 /** 通过条件过滤节点  */
 function filterNode(value: any, data: any) {

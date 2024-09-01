@@ -38,5 +38,6 @@
     "jsonc",
     "yaml"
   ],
-  "cSpell.words": ["pinia", "sxzz", "unocss", "vueuse"]
+  "cSpell.words": ["pinia", "sxzz", "unocss", "vueuse"],
+  "typescript.tsdk": "node_modules/typescript/lib"
 }

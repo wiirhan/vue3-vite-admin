@@ -57,7 +57,11 @@ export function resetForm(refName: string) {
 }
 
 // 添加日期范围
-export function addDateRange(params: any, dateRange: any[], propName?: string) {
+export function addDateRange(
+  params: Record<string, any>,
+  dateRange: any[],
+  propName?: string,
+) {
   const search = params
   search.params =
     typeof search.params === 'object' &&
